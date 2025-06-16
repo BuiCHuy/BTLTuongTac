@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý nhân viên - FiveH</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .modal-content {
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body class="min-h-screen" style="background-color: #e8e5f3">
+<!-- Header -->
+<header class="flex items-center justify-between px-11 py-5 bg-white shadow-sm">
+    <h1 class="text-3xl font-normal text-blue-600">FiveH</h1>
+    <div class="flex items-center space-x-8">
+        <div class="flex items-center space-x-2 cursor-pointer hover:text-indigo-600 transition-colors">
+            <i class="fas fa-cog text-gray-600 text-lg"></i>
+            <span class="text-gray-700 font-medium">Cài đặt</span>
+        </div>
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-gray-200 rounded-full border border-gray-300 flex items-center justify-center">
+                <div class="w-6 h-1.5 bg-gray-500 rounded"></div>
+            </div>
+            <div class="flex flex-col">
+                <span class="text-gray-700 font-medium">Quản lý</span>
+                <span class="text-gray-500 text-sm cursor-pointer hover:text-indigo-600">Đăng xuất</span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Navigation -->
+<nav class="bg-gradient-to-r from-purple-600 to-rose-500 py-4 px-6 shadow-md">
+    <div class="max-w-7xl mx-auto flex justify-center items-center text-white gap-28">
+        <a href="Trangchu.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors text-white/90">
+            <i class="fas fa-home text-lg"></i>
+            <span class="text-lg font-normal">Trang chủ</span>
+        </a>
+        <a href="QLbanhang.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors text-white/90">
+            <i class="fas fa-shopping-cart text-lg"></i>
+            <span class="text-lg font-normal">Bán hàng</span>
+        </a>
+        <div class="flex items-center space-x-2 cursor-pointer text-white">
+            <i class="fas fa-users text-lg"></i>
+            <span class="text-lg font-normal">Nhân viên</span>
+        </div>
+        <a href="PageQLMH.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors text-white/90">
+            <i class="fas fa-box text-lg"></i>
+            <span class="text-lg font-normal">Mặt hàng</span>
+        </a>
+        <a href="PageQLCTKM.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors text-white/90">
+            <i class="fas fa-tags text-lg"></i>
+            <span class="text-lg font-normal">CT Khuyến mại</span>
+        </a>
+        <a href="PageQLDT.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors text-white/90">
+            <i class="fas fa-chart-line text-lg"></i>
+            <span class="text-lg font-normal">Doanh thu</span>
+        </a>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<main class="px-9 py-8">
+    <h2 class="text-2xl font-bold text-black mb-12">Quản lý nhân viên</h2>
+
+    <!-- Search and Add Section -->
+    <div class="flex justify-between items-center mb-8">
+        <div class="flex items-center gap-2">
+            <div class="relative">
+                <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Tìm kiếm theo tên, theo mã"
+                        class="w-[540px] h-10 px-7 py-2.5 bg-gray-50 rounded-md shadow-md border border-neutral-400 text-base text-black font-semibold focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder-gray-400"
+                />
+            </div>
+            <button
+                    id="searchBtn"
+                    class="w-10 h-10 bg-gradient-to-b from-purple-600 to-purple-700 rounded-xl shadow-md flex items-center justify-center hover:from-purple-700 hover:to-purple-800 transition-colors"
+            >
+                <i class="fas fa-search text-white text-sm"></i>
+            </button>
+        </div>
+        <button
+                id="addNewBtn"
+                class="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-4 py-2 rounded-md shadow-md hover:from-purple-700 hover:to-purple-800 transition-colors flex items-center space-x-2 h-10"
+        >
+            <i class="fas fa-plus text-sm"></i>
+            <span class="font-semibold">Thêm mới</span>
+        </button>
+    </div>
+
+    <!-- Employee Table -->
+    <div class="bg-white rounded-lg shadow-md border border-violet-200 overflow-hidden">
+        <table class="w-full">
+            <thead>
+            <tr class="bg-violet-200 h-24">
+                <th class="px-3 py-5 text-left text-xl font-semibold text-black">Mã NV</th>
+                <th class="px-3 py-5 text-left text-xl font-semibold text-black">Tên nhân viên</th>
+                <th class="px-3 py-5 text-left text-xl font-semibold text-black">Ca làm việc</th>
+                <th class="px-3 py-5 text-left text-xl font-semibold text-black">Vai trò</th>
+                <th class="px-3 py-5 text-left text-xl font-semibold text-black">Chi nhánh</th>
+                <th class="px-3 py-5 text-left text-xl font-semibold text-black">Trạng thái</th>
+                <th class="px-3 py-5 text-center text-xl font-semibold text-black">Hành động</th>
+            </tr>
+            </thead>
+            <tbody id="employeeTableBody"></tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex items-center justify-center mt-8 gap-2" id="pagination"></div>
+</main>
+
+<!-- Add/Edit Employee Modal -->
+<div id="employeeModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 hidden">
+    <div class="w-full max-w-4xl bg-gray-100 rounded-lg border-2 border-purple-600 modal-content">
+        <div class="flex items-center justify-between p-6 border-b-4 border-black">
+            <h2 id="modalTitle" class="text-2xl font-bold text-black"></h2>
+            <button id="closeModalBtn" class="w-6 h-6 flex items-center justify-center hover:bg-gray-200 rounded">
+                <i class="fas fa-times text-black"></i>
+            </button>
+        </div>
+        <div class="p-6 space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="block text-black text-base font-normal">Mã nhân viên:</label>
+                    <input type="text" id="employeeId" name="employeeId" class="w-full h-10 px-4 py-2 bg-gray-50 rounded-md shadow-md border border-neutral-400 focus:outline-none focus:ring-2 focus:ring-purple-500" />
+                    <p id="employeeIdError" class="text-red-500 text-sm mt-1 hidden"></p>
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-black text-base font-normal">Giới tính:</label>
+                    <div class="flex items-center gap-8">
+                        <label class="flex items-center gap-2">
+                            <input type="radio" name="gender" value="Nam" checked class="w-4 h-4" />
+                            <span class="text-black text-base">Nam</span>
+                        </label>
+                        <label class="flex items-center gap-2">
+                            <input type="radio" name="gender" value="Nữ" class="w-4 h-4" />
+                            <span class="text-black text-base">Nữ</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="block text-black text-base font-normal">Tên nhân viên:</label>
+                    <input type="text" id="name" name="name" class="w-full h-10 px-4 py-2 bg-gray-50 rounded-md shadow-md border border-neutral-400 focus:outline-none focus:ring-2 focus:ring-purple-500" />
+                    <p id="nameError" class="text-red-500 text-sm mt-1 hidden"></p>
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-black text-base font-normal">Ngày sinh:</label>
+                    <input type="date" id="birthDate" name="birthDate" class="w-full h-10 px-4 py-2 bg-gray-50 rounded-md shadow-md border border-neutral-400 focus:outline-none focus:ring-2 focus:ring-purple-500" />
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="block text-black text-base font-normal">Số điện thoại:</label>
+                    <input type="text" id="phone" name="phone" placeholder="0123456789" class="w-full h-10 px-4 py-2 bg-gray-50 rounded-md shadow-md border border-neutral-400 focus:outline-none focus:ring-2 focus:ring-purple-500" />
+                    <p id="phoneError" class="text-red-500 text-sm mt-1 hidden"></p>
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-black text-base font-normal">Email:</label>
+                    <input type="email" id="email" name="email" placeholder="example@email.com" class="w-full h-10 px-4 py-2 bg-gray-50 rounded-md shadow-md border border-neutral-400 focus:outline-none focus:ring-2 focus:ring-purple-500" />
+                    <p id="emailError" class="text-red-500 text-sm mt-1 hidden"></p>
+                </div>
+            </div>
+            <hr class="border-black border-t-2" />
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="block text-black text-base font-normal">Chức vụ:</label>
+                    <input type="text" id="position" name="position" placeholder="Nhân viên pha chế" class="w-full h-10 px-4 py-2 bg-gray-50 rounded-md shadow-md border border-neutral-400 focus:outline-none focus:ring-2 focus:ring-purple-500" />
+                    <p id="positionError" class="text-red-500 text-sm mt-1 hidden"></p>
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-black text-base font-normal">Chi nhánh:</label>
+                    <div class="relative">
+                        <select id="branch" name="branch" class="w-full h-10 px-4 py-2 bg-gray-50 rounded-md shadow-md border border-neutral-400 focus:outline-none focus:ring-2 focus:ring-purple-500 appearance-none">
+                            <option value="">Chọn chi nhánh</option>
+                            <option value="Tây Sơn">Tây Sơn</option>
+                            <option value="Phạm Ngọc Thạch">Phạm Ngọc Thạch</option>
+                            <option value="Quang Trung">Quang Trung</option>
+                            <option value="Khương Thượng">Khương Thượng</option>
+                        </select>
+                        <i class="fas fa-chevron-down absolute right-3 top-3 text-gray-600 pointer-events-none"></i>
+                    </div>
+                    <p id="branchError" class="text-red-500 text-sm mt-1 hidden"></p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="block text-black text-base font-normal">Ca làm việc:</label>
+                    <div class="relative">
+                        <select id="shift" name="shift" class="w-full h-10 px-4 py-2 bg-gray-50 rounded-md shadow-md border border-neutral-400 focus:outline-none focus:ring-2 focus:ring-purple-500 appearance-none">
+                            <option value="Sáng">Sáng</option>
+                            <option value="Chiều">Chiều</option>
+                            <option value="Tối">Tối</option>
+                        </select>
+                        <i class="fas fa-chevron-down absolute right-3 top-3 text-gray-600 pointer-events-none"></i>
+                    </div>
+                </div>
+            </div>
+            <hr class="border-black border-t" />
+            <div class="space-y-4">
+                <label class="block text-black text-base font-normal">Thêm ảnh nhân viên:</label>
+                <div class="flex items-start gap-4">
+                    <div id="imagePreview" class="w-28 h-36 bg-gray-50 rounded-xl flex items-center justify-center overflow-hidden">
+                        <i class="fas fa-image text-4xl text-gray-400"></i>
+                    </div>
+                    <label class="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-violet-50 rounded-md shadow-md border border-gray-200 hover:bg-violet-100 transition-colors">
+                        <i class="fas fa-plus text-gray-600"></i>
+                        <span class="text-black text-base font-semibold">Thêm ảnh</span>
+                        <input type="file" id="imageUpload" accept="image/*" class="hidden" />
+                    </label>
+                </div>
+            </div>
+            <div class="flex justify-end gap-4 pt-4">
+                <button id="saveBtn" class="px-6 py-2 bg-green-700 hover:bg-green-800 text-white rounded-md shadow-md transition-colors inline-flex items-center gap-2">
+                    <i class="fas fa-save"></i>
+                    <span class="font-semibold">Lưu</span>
+                </button>
+                <button id="cancelModalBtn" class="px-6 py-2 bg-violet-50 hover:bg-gray-100 text-neutral-700 rounded-md shadow-md border border-gray-200 transition-colors font-semibold">
+                    Thoát
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Search Results Modal -->
+<div id="searchModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 hidden">
+    <div class="w-[1500px] max-w-[95vw] bg-white rounded-[5px] border border-black relative">
+        <button id="closeSearchModalBtn" class="absolute top-4 right-4 w-6 h-6 flex items-center justify-center hover:bg-gray-200 rounded z-10">
+            <i class="fas fa-times text-black text-lg font-bold"></i>
+        </button>
+        <div class="p-8">
+            <div class="mb-8">
+                <h2 class="block text-black text-2xl font-bold mb-6">Kết quả tìm kiếm</h2>
+                <p id="searchInstruction" class="block text-black text-base font-normal hidden">Nhấn vào để xem thông tin chi tiết</p>
+            </div>
+            <div class="border border-violet-200 rounded-[5px] overflow-hidden mb-8">
+                <div class="bg-violet-200 border-b border-violet-200 px-4 py-6">
+                    <div class="grid grid-cols-6 gap-4">
+                        <div class="block text-black text-xl font-semibold">Mã NV</div>
+                        <div class="block text-black text-xl font-semibold">Tên nhân viên</div>
+                        <div class="block text-black text-xl font-semibold">Ca làm việc</div>
+                        <div class="block text-black text-xl font-semibold">Vai trò</div>
+                        <div class="block text-black text-xl font-semibold">Chi nhánh</div>
+                        <div class="block text-black text-xl font-semibold">Trạng thái</div>
+                    </div>
+                </div>
+                <div id="searchResults" class="bg-white min-h-[80px]"></div>
+            </div>
+            <div class="flex justify-end">
+                <button id="exitSearchBtn" class="w-44 h-10 px-1.5 py-1 bg-gradient-to-r from-violet-50 rounded-[5px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] border border-gray-200 flex justify-center items-center hover:from-violet-100 transition-colors">
+                    <span class="block text-neutral-700 text-base font-normal">Thoát</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Dialog -->
+<div id="deleteConfirmModal" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 hidden">
+    <div class="w-[600px] bg-white rounded-2xl border border-gray-300 p-12">
+        <div class="flex flex-col items-center space-y-8">
+            <div class="w-20 h-20 border-4 border-black rounded-full flex items-center justify-center">
+                <i class="fas fa-exclamation text-black text-3xl"></i>
+            </div>
+            <div class="text-center">
+                <h3 class="text-3xl font-bold text-black mb-6">Bạn có chắc chắn muốn xóa không?</h3>
+                <p class="text-xl text-gray-700">Sau khi xóa, thông tin nhân viên sẽ bị mất vĩnh viễn</p>
+            </div>
+            <div class="flex gap-6 mt-8">
+                <button id="confirmDeleteBtn" class="px-16 py-4 bg-black text-white text-xl font-medium rounded-xl hover:bg-gray-800 transition-colors">Có</button>
+                <button id="cancelDeleteBtn" class="px-16 py-4 bg-gray-200 text-gray-700 text-xl font-medium rounded-xl hover:bg-gray-300 transition-colors">Không</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Success Dialog -->
+<div id="deleteSuccessModal" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 hidden">
+    <div class="w-[467px] h-72 bg-white rounded-[5px] border border-black overflow-hidden">
+        <div class="w-80 h-52 mx-auto mt-9 flex flex-col justify-between items-center">
+            <div class="w-12 h-12 relative overflow-hidden">
+                <div class="w-10 h-10 mx-auto mt-1 border-4 border-gray-800 rounded-full flex items-center justify-center">
+                    <i class="fas fa-check text-gray-800 text-xl"></i>
+                </div>
+            </div>
+            <div class="text-center text-black text-2xl font-bold font-['Inter']">Xóa thành công</div>
+            <div class="w-72 text-center text-black text-base font-normal font-['Inter']">Thông tin nhân viên đã được xóa bỏ</div>
+            <button id="exitDeleteSuccessBtn" class="w-44 h-10 px-1.5 py-1 bg-gradient-to-r from-violet-50 rounded-[5px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] border border-gray-200 flex justify-center items-center">
+                <span class="text-neutral-700 text-base font-semibold font-['Inter']">Thoát</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Add/Edit Confirmation Dialog -->
+<div id="saveConfirmModal" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 hidden">
+    <div class="w-[600px] bg-white rounded-2xl border border-gray-300 p-8">
+        <div class="flex flex-col items-center space-y-6">
+            <div class="w-16 h-16 border-4 border-black rounded-full flex items-center justify-center">
+                <i class="fas fa-exclamation text-black text-2xl"></i>
+            </div>
+            <div class="text-center">
+                <h3 id="saveConfirmTitle" class="text-2xl font-bold text-black mb-4"></h3>
+                <p class="text-lg text-gray-700">Sau khi lưu, thông tin nhân viên sẽ được cập nhật vĩnh viễn</p>
+            </div>
+            <div class="flex gap-4 mt-8">
+                <button id="confirmSaveBtn" class="px-12 py-3 bg-black text-white text-lg font-medium rounded-lg hover:bg-gray-800 transition-colors">Có</button>
+                <button id="cancelSaveBtn" class="px-12 py-3 bg-gray-200 text-gray-700 text-lg font-medium rounded-lg hover:bg-gray-300 transition-colors">Không</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add/Edit Success Dialog -->
+<div id="saveSuccessModal" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 hidden">
+    <div class="w-[467px] h-72 bg-white rounded-[5px] border border-black overflow-hidden">
+        <div class="w-80 h-52 mx-auto mt-9 flex flex-col justify-between items-center">
+            <div class="w-12 h-12 relative overflow-hidden">
+                <div class="w-10 h-10 mx-auto mt-1 border-4 border-gray-800 rounded-full flex items-center justify-center">
+                    <i class="fas fa-check text-gray-800 text-xl"></i>
+                </div>
+            </div>
+            <div id="saveSuccessTitle" class="text-center text-black text-2xl font-bold font-['Inter']"></div>
+            <div class="w-72 text-center text-black text-base font-normal font-['Inter']">Thông tin nhân viên đã được cập nhật</div>
+            <button id="exitSaveSuccessBtn" class="w-44 h-10 px-1.5 py-1 bg-gradient-to-r from-violet-50 rounded-[5px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] border border-gray-200 flex justify-center items-center">
+                <span class="text-neutral-700 text-base font-semibold font-['Inter']">Thoát</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let employees = JSON.parse(localStorage.getItem('employees')) || [
+        { id: "001", name: "Nguyễn Văn An", shift: "Sáng", role: "Nhân viên pha chế", branch: "Tây Sơn", status: "Đang hoạt động", statusType: "active", phone: "0123456789", email: "vanan@gmail.com", gender: "Nam", birthDate: "2000-01-01", image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-MGWA4DVGT9c4D20xzNyiCXDhrZW2M3.png" },
+        { id: "002", name: "Trần Thị Bình", shift: "Chiều", role: "Nhân viên thu ngân", branch: "Tây Sơn", status: "Không hoạt động", statusType: "inactive", phone: "0123456789", email: "vanan@gmail.com", gender: "Nữ", birthDate: "2000-01-01", image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-MGWA4DVGT9c4D20xzNyiCXDhrZW2M3.png" },
+        { id: "003", name: "Lê Văn Cấc", shift: "Sáng", role: "Nhân viên thu ngân", branch: "Phạm Ngọc Thạch", status: "Đang hoạt động", statusType: "active", phone: "0123456789", email: "vanan@gmail.com", gender: "Nam", birthDate: "2000-01-01", image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-MGWA4DVGT9c4D20xzNyiCXDhrZW2M3.png" },
+        { id: "004", name: "Phạm Thị Dung", shift: "Tối", role: "Nhân viên pha chế", branch: "Quang Trung", status: "Không hoạt động", statusType: "inactive", phone: "0123456789", email: "vanan@gmail.com", gender: "Nữ", birthDate: "2000-01-01", image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-MGWA4DVGT9c4D20xzNyiCXDhrZW2M3.png" },
+        { id: "005", name: "Dương Văn Giáp", shift: "Chiều", role: "Nhân viên pha chế", branch: "Khương Thượng", status: "Không hoạt động", statusType: "inactive", phone: "0123456789", email: "vanan@gmail.com", gender: "Nam", birthDate: "2000-01-01", image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-MGWA4DVGT9c4D20xzNyiCXDhrZW2M3.png" }
+    ];
+    let currentPage = 1;
+    const itemsPerPage = 5;
+    let selectedEmployee = null;
+    let isEditMode = false;
+
+    // Lưu nhân viên vào Local Storage khi khởi tạo
+    if (!localStorage.getItem('employees')) {
+        localStorage.setItem('employees', JSON.stringify(employees));
+    }
+
+    // Validation functions
+    const validateEmployeeId = (value) => !value.trim() ? 'Mã nhân viên không được để trống' : '';
+    const validateName = (value) => !value.trim() ? 'Tên nhân viên không được để trống' : '';
+    const validatePhone = (value) => {
+        if (!value.trim()) return 'Số điện thoại không được để trống';
+        return /^[0-9]{10}$/.test(value.replace(/\s/g, '')) ? '' : 'Số điện thoại phải đủ 10 chữ số';
+    };
+    const validateEmail = (value) => {
+        if (!value.trim()) return 'Email không được để trống';
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? '' : 'Email phải có định dạng a@example.com';
+    };
+    const validatePosition = (value) => !value.trim() ? 'Chức vụ không được để trống' : '';
+    const validateBranch = (value) => !value.trim() ? 'Hãy lựa chọn chi nhánh' : '';
+
+    const validateField = (name, value) => {
+        switch (name) {
+            case 'employeeId': return validateEmployeeId(value);
+            case 'name': return validateName(value);
+            case 'phone': return validatePhone(value);
+            case 'email': return validateEmail(value);
+            case 'position': return validatePosition(value);
+            case 'branch': return validateBranch(value);
+            default: return '';
+        }
+    };
+
+    const validateAllFields = () => {
+        const fields = ['employeeId', 'name', 'phone', 'email', 'position', 'branch'];
+        const errors = {};
+        fields.forEach(field => {
+            const value = document.getElementById(field).value;
+            const error = validateField(field, value);
+            if (error) errors[field] = error;
+            document.getElementById(`${field}Error`).textContent = error;
+            document.getElementById(`${field}Error`).classList.toggle('hidden', !error);
+            document.getElementById(field).classList.toggle('border-red-500', !!error);
+            document.getElementById(field).classList.toggle('border-neutral-400', !error);
+        });
+        return Object.keys(errors).length === 0;
+    };
+
+    // Render employee table
+    function renderEmployees() {
+        const totalPages = Math.ceil(employees.length / itemsPerPage);
+        const start = (currentPage - 1) * itemsPerPage;
+        const paginatedEmployees = employees.slice(start, start + itemsPerPage);
+        const tbody = document.getElementById('employeeTableBody');
+        tbody.innerHTML = '';
+        paginatedEmployees.forEach((employee, index) => {
+            const tr = document.createElement('tr');
+            tr.className = `h-20 border-b border-violet-200 ${index % 2 === 0 ? 'bg-white' : 'bg-violet-50'} hover:bg-gray-100 transition-colors`;
+            tr.innerHTML = `
+                    <td class="px-3 py-2 text-base text-black">${employee.id}</td>
+                    <td class="px-3 py-2 text-base text-black">${employee.name}</td>
+                    <td class="px-3 py-2 text-base text-black">${employee.shift}</td>
+                    <td class="px-3 py-2 text-base text-black">${employee.role}</td>
+                    <td class="px-3 py-2 text-base text-black">${employee.branch}</td>
+                    <td class="px-3 py-2 text-base text-black">${employee.status}</td>
+                    <td class="px-3 py-2">
+                        <div class="flex items-center justify-center gap-14">
+                            <button onclick="viewEmployee('${employee.id}')" class="text-gray-600 hover:text-gray-800 p-1 hover:bg-gray-100 rounded transition-colors" title="Xem chi tiết">
+                                <i class="fas fa-eye text-lg"></i>
+                            </button>
+                            <button onclick="openEditModal('${employee.id}')" class="text-gray-600 hover:text-gray-800 p-1 hover:bg-gray-100 rounded transition-colors" title="Chỉnh sửa">
+                                <i class="fas fa-edit text-lg"></i>
+                            </button>
+                            <button onclick="openDeleteConfirm('${employee.id}')" class="text-gray-600 hover:text-gray-800 p-1 hover:bg-gray-100 rounded transition-colors" title="Xóa">
+                                <i class="fas fa-trash text-lg"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+            tbody.appendChild(tr);
+        });
+        renderPagination(totalPages);
+    }
+
+    // Render pagination
+    function renderPagination(totalPages) {
+        const pagination = document.getElementById('pagination');
+        pagination.innerHTML = `
+                <button id="prevPage" class="px-3 py-2 rounded-lg flex items-center gap-2 text-base font-normal text-gray-700 hover:bg-gray-100 transition-colors ${currentPage === 1 ? 'opacity-50' : ''}" ${currentPage === 1 ? 'disabled' : ''}>
+                    <i class="fas fa-chevron-left text-sm"></i> Previous
+                </button>
+                <div class="flex items-center gap-2">
+                    <button onclick="changePage(1)" class="px-3 py-2 rounded-lg text-base font-normal transition-colors ${currentPage === 1 ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-gray-100'}">1</button>
+                    ${totalPages > 1 ? `<button onclick="changePage(2)" class="px-3 py-2 rounded-lg text-base font-normal transition-colors ${currentPage === 2 ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-gray-100'}">2</button>` : ''}
+                    ${totalPages > 2 ? `<div class="px-4 py-2 text-base font-bold text-black">...</div>` : ''}
+                    ${totalPages > 2 ? `<button onclick="changePage(${totalPages})" class="px-3 py-2 rounded-lg text-base font-normal text-gray-700 hover:bg-gray-100 transition-colors">${totalPages}</button>` : ''}
+                </div>
+                <button id="nextPage" class="px-3 py-2 rounded-lg flex items-center gap-2 text-base font-normal text-gray-700 hover:bg-gray-100 transition-colors ${currentPage === totalPages ? 'opacity-50' : ''}" ${currentPage === totalPages ? 'disabled' : ''}>
+                    Next <i class="fas fa-chevron-right text-sm"></i>
+                </button>
+            `;
+        document.getElementById('prevPage').addEventListener('click', () => changePage(currentPage - 1));
+        document.getElementById('nextPage').addEventListener('click', () => changePage(currentPage + 1));
+    }
+
+    // Change page
+    function changePage(page) {
+        const totalPages = Math.ceil(employees.length / itemsPerPage);
+        if (page >= 1 && page <= totalPages) {
+            currentPage = page;
+            renderEmployees();
+        }
+    }
+
+    // Open add/edit modal
+    function openModal(editMode = false, employeeId = null) {
+        isEditMode = editMode;
+        document.getElementById('modalTitle').textContent = editMode ? 'Sửa nhân viên' : 'Thêm nhân viên mới';
+        document.getElementById('employeeModal').classList.remove('hidden');
+        resetForm();
+        if (editMode) {
+            selectedEmployee = employees.find(e => e.id === employeeId);
+            if (selectedEmployee) {
+                document.getElementById('employeeId').value = selectedEmployee.id;
+                document.getElementById('name').value = selectedEmployee.name;
+                document.getElementById('phone').value = selectedEmployee.phone;
+                document.getElementById('email').value = selectedEmployee.email;
+                document.getElementById('position').value = selectedEmployee.role;
+                document.getElementById('branch').value = selectedEmployee.branch;
+                document.getElementById('shift').value = selectedEmployee.shift;
+                document.getElementById('birthDate').value = selectedEmployee.birthDate;
+                document.querySelector(`input[name="gender"][value="${selectedEmployee.gender}"]`).checked = true;
+                const preview = document.getElementById('imagePreview');
+                preview.innerHTML = selectedEmployee.image ? `<img src="${selectedEmployee.image}" alt="Preview" class="w-full h-full object-cover" />` : `<i class="fas fa-image text-4xl text-gray-400"></i>`;
+            }
+        }
+    }
+
+    // Reset form
+    function resetForm() {
+        ['employeeId', 'name', 'phone', 'email', 'position', 'branch'].forEach(field => {
+            document.getElementById(field).value = '';
+            document.getElementById(`${field}Error`).classList.add('hidden');
+            document.getElementById(field).classList.remove('border-red-500');
+            document.getElementById(field).classList.add('border-neutral-400');
+        });
+        document.getElementById('shift').value = 'Sáng';
+        document.getElementById('birthDate').value = '2000-01-01';
+        document.querySelector('input[name="gender"][value="Nam"]').checked = true;
+        document.getElementById('imagePreview').innerHTML = `<i class="fas fa-image text-4xl text-gray-400"></i>`;
+        document.getElementById('imageUpload').value = '';
+    }
+
+    // Save employee
+    function saveEmployee() {
+        if (!validateAllFields()) return;
+        document.getElementById('saveConfirmModal').classList.remove('hidden');
+        document.getElementById('saveConfirmTitle').textContent = isEditMode ? 'Bạn có chắc chắn muốn chỉnh sửa không ?' : 'Bạn có chắc chắn muốn thêm không ?';
+    }
+
+    // Confirm save
+    function confirmSave() {
+        const employeeData = {
+            id: document.getElementById('employeeId').value,
+            name: document.getElementById('name').value,
+            phone: document.getElementById('phone').value,
+            email: document.getElementById('email').value,
+            role: document.getElementById('position').value,
+            branch: document.getElementById('branch').value,
+            shift: document.getElementById('shift').value,
+            birthDate: document.getElementById('birthDate').value,
+            gender: document.querySelector('input[name="gender"]:checked').value,
+            image: document.getElementById('imagePreview').querySelector('img')?.src || null,
+            status: isEditMode ? (selectedEmployee?.status || 'Đang hoạt động') : 'Đang hoạt động',
+            statusType: isEditMode ? (selectedEmployee?.statusType || 'active') : 'active'
+        };
+        if (isEditMode) {
+            employees = employees.map(e => e.id === employeeData.id ? employeeData : e);
+        } else {
+            employees.push(employeeData);
+        }
+        localStorage.setItem('employees', JSON.stringify(employees));
+        document.getElementById('saveConfirmModal').classList.add('hidden');
+        document.getElementById('saveSuccessModal').classList.remove('hidden');
+        document.getElementById('saveSuccessTitle').textContent = isEditMode ? 'Chỉnh sửa thành công' : 'Thêm thành công';
+    }
+
+    // Handle image upload
+    document.getElementById('imageUpload').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                document.getElementById('imagePreview').innerHTML = `<img src="${event.target.result}" alt="Preview" class="w-full h-full object-cover" />`;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Search employees
+    function searchEmployees() {
+        const searchTerm = document.getElementById('searchInput').value.trim();
+        const results = searchTerm ? employees.filter(e =>
+            e.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            e.id.toLowerCase().includes(searchTerm.toLowerCase())
+        ) : [];
+        const searchResults = document.getElementById('searchResults');
+        searchResults.innerHTML = '';
+        document.getElementById('searchInstruction').classList.toggle('hidden', results.length === 0);
+        if (results.length === 0) {
+            searchResults.innerHTML = `
+                    <div class="flex items-center justify-center py-16">
+                        <div class="w-full max-w-4xl mx-8">
+                            <div class="bg-violet-200 rounded-lg py-16 px-8 text-center">
+                                <p class="block text-black text-2xl font-normal">Không tìm thấy kết quả, vui lòng thử lại</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+        } else {
+            results.forEach(employee => {
+                const div = document.createElement('div');
+                div.className = 'px-4 py-6 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors cursor-pointer';
+                div.innerHTML = `
+                        <div class="grid grid-cols-6 gap-4">
+                            <div class="block text-black text-base font-normal">${employee.id}</div>
+                            <div class="block text-black text-base font-normal">${employee.name}</div>
+                            <div class="block text-black text-base font-normal">${employee.shift}</div>
+                            <div class="block text-black text-base font-normal">${employee.role}</div>
+                            <div class="block text-black text-base font-normal">${employee.branch}</div>
+                            <div class="block text-black text-base font-normal">${employee.status}</div>
+                        </div>
+                    `;
+                div.addEventListener('click', () => {
+                    document.getElementById('searchModal').classList.add('hidden');
+                    openEditModal(employee.id);
+                });
+                searchResults.appendChild(div);
+            });
+        }
+        document.getElementById('searchModal').classList.remove('hidden');
+    }
+
+    // Open edit modal
+    function openEditModal(employeeId) {
+        openModal(true, employeeId);
+    }
+
+    // View employee (open edit modal in view mode)
+    function viewEmployee(employeeId) {
+        openEditModal(employeeId);
+        // Disable inputs for view mode
+        ['employeeId', 'name', 'phone', 'email', 'position', 'branch', 'shift', 'birthDate'].forEach(id => {
+            document.getElementById(id).disabled = true;
+        });
+        document.querySelectorAll('input[name="gender"]').forEach(input => input.disabled = true);
+        document.getElementById('imageUpload').disabled = true;
+        document.getElementById('saveBtn').classList.add('hidden');
+    }
+
+    // Open delete confirmation
+    function openDeleteConfirm(employeeId) {
+        selectedEmployee = employees.find(e => e.id === employeeId);
+        document.getElementById('deleteConfirmModal').classList.remove('hidden');
+    }
+
+    // Confirm delete
+    function confirmDelete() {
+        employees = employees.filter(e => e.id !== selectedEmployee.id);
+        localStorage.setItem('employees', JSON.stringify(employees));
+        document.getElementById('deleteConfirmModal').classList.add('hidden');
+        document.getElementById('deleteSuccessModal').classList.remove('hidden');
+    }
+
+    // Event listeners
+    document.getElementById('addNewBtn').addEventListener('click', () => openModal(false));
+    document.getElementById('closeModalBtn').addEventListener('click', () => document.getElementById('employeeModal').classList.add('hidden'));
+    document.getElementById('cancelModalBtn').addEventListener('click', () => document.getElementById('employeeModal').classList.add('hidden'));
+    document.getElementById('saveBtn').addEventListener('click', saveEmployee);
+    document.getElementById('confirmSaveBtn').addEventListener('click', confirmSave);
+    document.getElementById('cancelSaveBtn').addEventListener('click', () => document.getElementById('saveConfirmModal').classList.add('hidden'));
+    document.getElementById('exitSaveSuccessBtn').addEventListener('click', () => {
+        document.getElementById('saveSuccessModal').classList.add('hidden');
+        document.getElementById('employeeModal').classList.add('hidden');
+        renderEmployees();
+    });
+    document.getElementById('searchBtn').addEventListener('click', searchEmployees);
+    document.getElementById('searchInput').addEventListener('keypress', (e) => e.key === 'Enter' && searchEmployees());
+    document.getElementById('closeSearchModalBtn').addEventListener('click', () => document.getElementById('searchModal').classList.add('hidden'));
+    document.getElementById('exitSearchBtn').addEventListener('click', () => document.getElementById('searchModal').classList.add('hidden'));
+    document.getElementById('confirmDeleteBtn').addEventListener('click', confirmDelete);
+    document.getElementById('cancelDeleteBtn').addEventListener('click', () => document.getElementById('deleteConfirmModal').classList.add('hidden'));
+    document.getElementById('exitDeleteSuccessBtn').addEventListener('click', () => {
+        document.getElementById('deleteSuccessModal').classList.add('hidden');
+        renderEmployees();
+    });
+
+    // Initialize
+    renderEmployees();
+</script>
+</body>
+</html>
