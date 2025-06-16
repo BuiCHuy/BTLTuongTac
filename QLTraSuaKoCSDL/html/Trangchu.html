@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FiveH Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+  function Dashboard() {
+    return (
+            <div className="w-full min-h-screen bg-gray-100 font-sans">
+              {/* Header */}
+              <header className="flex items-center justify-between px-6 py-4 bg-white shadow-sm">
+                <h1 className="text-3xl font-bold text-indigo-600">FiveH</h1>
+                <div className="flex items-center space-x-6">
+                  <div className="flex items-center space-x-2 cursor-pointer hover:text-indigo-600 transition-colors">
+                    <i className="fas fa-cog text-gray-600 text-lg"></i>
+                    <span className="text-gray-700 font-medium">Cài đặt</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <img
+                            src="https://placehold.co/40x40"
+                            alt="Profile"
+                            className="w-10 h-10 rounded-full border border-gray-300"
+                    />
+                    <div className="flex flex-col">
+                      <span className="text-gray-700 font-medium">Quản lý</span>
+                      <span className="text-gray-500 text-sm cursor-pointer hover:text-indigo-600">
+                                    Đăng xuất
+                                </span>
+                    </div>
+                  </div>
+                </div>
+              </header>
+
+              {/* Navigation Bar */}
+              <nav className="bg-gradient-to-r from-purple-600 to-rose-500 py-4 px-6 shadow-md">
+                <div className="max-w-7xl mx-auto flex justify-between items-center text-white">
+                  {[
+                    { icon: "fa-home", label: "Trang chủ", href: "TrangChu.html", active: true },
+                    { icon: "fa-shopping-cart", label: "Bán hàng", href: "PageBanHang.html" },
+                    { icon: "fa-users", label: "Nhân viên", href: "Staff.html" },
+                    { icon: "fa-box", label: "Mặt hàng", href: "Products.html" },
+                    { icon: "fa-tags", label: "CT Khuyến mại", href: "PageQLCTKM.html" },
+                    { icon: "fa-chart-line", label: "Doanh thu", href: "Revenue.html" },
+                  ].map((item, index) => (
+                          <a
+                                  key={index}
+                                  href={item.href}
+                                  className={`flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors ${item.active ? "text-pink-100" : ""}`}
+                          >
+                            <i className={`fas ${item.icon} text-lg`}></i>
+                            <span className="text-lg font-semibold">{item.label}</span>
+                          </a>
+                  ))}
+                </div>
+              </nav>
+
+              {/* Main Content */}
+              <main className="max-w-7xl mx-auto mt-8 px-6">
+                <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center animate-fade-in">
+                  Chào mừng, quản lý H
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Revenue Card */}
+                  <div className="bg-white p-6 rounded-lg shadow-md flex items-center space-x-4 hover:shadow-lg transition-shadow duration-300 animate-fade-in">
+                    <i className="fas fa-money-bill-wave text-4xl text-indigo-600"></i>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-800">Doanh thu hôm nay</h3>
+                      <p className="text-2xl font-bold text-gray-900">10.000.000 VND</p>
+                    </div>
+                  </div>
+
+                  {/* Customer Visits Card */}
+                  <div className="bg-white p-6 rounded-lg shadow-md flex items-center space-x-4 hover:shadow-lg transition-shadow duration-300 animate-fade-in">
+                    <i className="fas fa-users text-4xl text-indigo-600"></i>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-800">Số lượt khách hôm nay</h3>
+                      <p className="text-2xl font-bold text-gray-900">1.000 lượt</p>
+                    </div>
+                  </div>
+
+                  {/* Top Selling Items */}
+                  <div className="bg-white p-6 rounded-lg shadow-md md:row-span-2 animate-fade-in">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Mặt hàng bán chạy hôm nay</h3>
+                    <div className="space-y-3">
+                      {[
+                        { name: "Hồng trà", sold: 100, maxSold: 100 },
+                        { name: "Matcha Latte", sold: 80, maxSold: 100 },
+                        { name: "Trà tắc", sold: 60, maxSold: 100 },
+                      ].map((item, index) => (
+                              <div key={index} className="flex flex-col space-y-1">
+                                <div className="flex justify-between items-center">
+                                  <span className="text-sm font-medium text-gray-700">{item.name}</span>
+                                  <span className="text-sm font-medium text-gray-600">{item.sold} đã bán</span>
+                                </div>
+                                <div className="w-full bg-gray-200 rounded-full h-2">
+                                  <div
+                                          className="bg-indigo-600 h-2 rounded-full"
+                                          style={{ width: `${(item.sold / item.maxSold) * 100}%` }}
+                                  ></div>
+                                </div>
+                              </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Recent Orders */}
+                  <div className="bg-white p-6 rounded-lg shadow-md md:col-span-2 animate-fade-in">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Đơn hàng gần đây</h3>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left">
+                        <thead>
+                        <tr className="text-sm font-semibold text-gray-600">
+                          <th className="p-3">Khách hàng</th>
+                          <th className="p-3">Mặt hàng</th>
+                          <th className="p-3">Giá</th>
+                          <th className="p-3">Thời gian</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {[
+                          {
+                            customer: "Anh Huy",
+                            items: "3 Trà tắc + 1 Hồng trà",
+                            price: "110.000 VND",
+                            time: "2025-06-15 08:30",
+                          },
+                          {
+                            customer: "Anh Hoàng",
+                            items: "3 Matcha Latte",
+                            price: "150.000 VND",
+                            time: "2025-06-15 08:15",
+                          },
+                          {
+                            customer: "Anh Hải",
+                            items: "2 Matcha Latte",
+                            price: "100.000 VND",
+                            time: "2025-06-15 08:00",
+                          },
+                          {
+                            customer: "Anh Hùng",
+                            items: "3 Matcha Latte + 1 Trà tắc",
+                            price: "170.000 VND",
+                            time: "2025-06-15 07:45",
+                          },
+                        ].map((order, index) => (
+                                <tr
+                                        key={index}
+                                        className="border-t border-gray-200 hover:bg-gray-50 transition-colors"
+                                >
+                                  <td className="p-3 text-sm text-gray-700">{order.customer}</td>
+                                  <td className="p-3 text-sm text-gray-600">{order.items}</td>
+                                  <td className="p-3 text-sm font-semibold text-gray-700">{order.price}</td>
+                                  <td className="p-3 text-sm text-gray-600">{order.time}</td>
+                                </tr>
+                        ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </main>
+            </div>
+    );
+  }
+
+  ReactDOM.render(<Dashboard />, document.getElementById('root'));
+</script>
+
+<style>
+  /* Custom animation for fade-in effect */
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out;
+  }
+</style>
+</body>
+</html>
