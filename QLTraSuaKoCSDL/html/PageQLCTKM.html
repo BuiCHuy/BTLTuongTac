@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FiveH Promotions Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -16,835 +13,899 @@
         .animate-fade-in { animation: fade-in 0.3s ease-out forwards; }
         @keyframes slide-up { from { transform: translateY(20px); opacity: 0.5; } to { transform: translateY(0); opacity: 1; } }
         .animate-slide-up { animation: slide-up 0.35s ease-out forwards; }
+        .peer-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
+        input[type="radio"]:checked + .radio-dot { background-color: #7C3AED; border-color: #7C3AED; }
+        input[type="radio"]:focus + .radio-dot { outline: 2px solid #C084FC; outline-offset: 2px; }
+        .radio-dot { width: 1.25rem; height: 1.25rem; border-radius: 9999px; border: 2px solid #D1D5DB; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .radio-dot-inner { width: 0.375rem; height: 0.375rem; background-color: white; border-radius: 9999px; }
     </style>
 </head>
-<body>
-<div id="root"></div>
-
-<script type="text/babel">
-    const { useState, useEffect } = React;
-
-    function FormGroup({ label, children, htmlFor }) {
-        return (
-            <div>
-                <label htmlFor={htmlFor} className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
-                {children}
+<body class="bg-gray-100 min-h-screen font-sans">
+<!-- Header -->
+<header class="flex items-center justify-between px-6 py-4 bg-white shadow-sm">
+    <h1 class="text-3xl font-bold text-indigo-600">FiveH</h1>
+    <div class="flex items-center space-x-6">
+        <div class="flex items-center space-x-2 cursor-pointer hover:text-indigo-600 transition-colors">
+            <i class="fas fa-cog text-gray-600 text-lg"></i>
+            <span class="text-gray-700 font-medium">Cài đặt</span>
+        </div>
+        <div class="flex items-center space-x-3">
+            <img src="https://placehold.co/40x40" alt="Profile" class="w-10 h-10 rounded-full border border-gray-300">
+            <div class="flex flex-col">
+                <span class="text-gray-700 font-medium">Quản lý</span>
+                <span class="text-gray-500 text-sm cursor-pointer hover:text-indigo-600">Đăng xuất</span>
             </div>
-        );
-    }
+        </div>
+    </div>
+</header>
 
-    function CustomRadio({ name, value, label, checked, onChange }) {
-        return (
-            <label className="flex items-center space-x-3 cursor-pointer">
-                <input type="radio" name={name} value={value} checked={checked} onChange={onChange} className="peer sr-only" />
-                <div className="w-5 h-5 rounded-full border-2 border-gray-300 ring-offset-2 peer-checked:bg-purple-600 peer-checked:border-purple-600 peer-focus:ring-2 peer-focus:ring-purple-400 flex items-center justify-center transition">
-                    <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-                </div>
-                <span className="text-gray-800">{label}</span>
-            </label>
-        );
-    }
+<!-- Navigation -->
+<nav class="bg-gradient-to-r from-purple-600 to-rose-500 py-4 px-6 shadow-md">
+    <div class="max-w-7xl mx-auto flex justify-between items-center text-white">
+        <a href="TrangChu.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors text-pink-100">
+            <i class="fas fa-home text-lg"></i><span class="text-lg font-semibold">Trang chủ</span>
+        </a>
+        <a href="PageBanHang.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
+            <i class="fas fa-shopping-cart text-lg"></i><span class="text-lg font-semibold">Bán hàng</span>
+        </a>
+        <a href="Staff.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
+            <i class="fas fa-users text-lg"></i><span class="text-lg font-semibold">Nhân viên</span>
+        </a>
+        <a href="PageQLMH.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
+            <i class="fas fa-box text-lg"></i><span class="text-lg font-semibold">Mặt hàng</span>
+        </a>
+        <a href="PageQLCTKM.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
+            <i class="fas fa-tags text-lg"></i><span class="text-lg font-semibold">CT Khuyến mại</span>
+        </a>
+        <a href="Revenue.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
+            <i class="fas fa-chart-line text-lg"></i><span class="text-lg font-semibold">Doanh thu</span>
+        </a>
+    </div>
+</nav>
 
-    function SuccessModal({ isOpen, onClose }) {
-        if (!isOpen) return null;
-        return (
-            <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4 animate-fade-in">
-                <div className="bg-white rounded-lg shadow-xl p-8 max-w-sm w-full text-center animate-slide-up">
-                    <div className="mx-auto mb-4 w-16 h-16 flex items-center justify-center rounded-full border-2 border-gray-500">
-                        <i className="fas fa-check fa-2x text-green-600"></i>
-                    </div>
-                    <h2 className="text-2xl font-bold text-gray-800 mb-2">Thêm thành công</h2>
-                    <p className="text-gray-600 mb-6">Bạn đã thêm thành công chương trình khuyến mại mới.</p>
-                    <button onClick={onClose} className="h-11 px-6 bg-gray-100 border border-gray-200 text-gray-800 font-semibold rounded-lg shadow-md hover:bg-gray-200 transition-colors shadow-sm">Thoát</button>
-                </div>
+<!-- Main Content -->
+<main class="max-w-7xl mx-auto mt-8 px-6">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">QUẢN LÝ CHƯƠNG TRÌNH KHUYẾN MẠI</h2>
+    <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center space-x-4">
+            <div class="relative">
+                <input type="text" id="searchInput" placeholder="Tìm kiếm theo tên, theo mã" class="w-96 px-4 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600">
+                <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
             </div>
-        );
-    }
+            <button onclick="handleSearch()" class="bg-purple-600 text-white px-4 py-2 rounded-md shadow-lg hover:bg-purple-700 hover:shadow-xl transform hover:-translate-y-px transition-all flex items-center space-x-2">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+        <div class="flex space-x-4">
+            <button onclick="openModal('filter')" class="bg-purple-600 text-white px-4 py-2 rounded-md shadow-lg hover:bg-purple-700 hover:shadow-xl transform hover:-translate-y-px transition-all flex items-center space-x-2">
+                <i class="fas fa-filter"></i><span>Lọc</span>
+            </button>
+            <button onclick="openModal('add')" class="bg-purple-600 text-white px-4 py-2 rounded-md shadow-lg hover:bg-purple-700 hover:shadow-xl transform hover:-translate-y-px transition-all flex items-center space-x-2">
+                <i class="fas fa-plus"></i><span>Thêm mới</span>
+            </button>
+        </div>
+    </div>
+    <div class="bg-white rounded-lg shadow-md border border-violet-200">
+        <table class="w-full table-fixed" id="promotionsTable">
+            <thead>
+            <tr class="bg-violet-200 h-16">
+                <th class="w-1/12 px-4 py-2 text-left text-xl font-semibold text-gray-800">Mã CT</th>
+                <th class="w-2/12 px-4 py-2 text-left text-xl font-semibold text-gray-800">Tên CT</th>
+                <th class="w-2/12 px-4 py-2 text-left text-xl font-semibold text-gray-800">Ngày bắt đầu</th>
+                <th class="w-2/12 px-4 py-2 text-left text-xl font-semibold text-gray-800">Ngày kết thúc</th>
+                <th class="w-3/12 px-4 py-2 text-left text-xl font-semibold text-gray-800">Hình thức</th>
+                <th class="w-2/12 px-4 py-2 text-left text-xl font-semibold text-gray-800">Mức giảm giá/Quà tặng</th>
+                <th class="w-2/12 px-4 py-2 text-left text-xl font-semibold text-gray-800">Trạng thái</th>
+                <th class="w-2/12 px-4 py-2 text-left text-xl font-semibold text-gray-800">Hành động</th>
+            </tr>
+            </thead>
+            <tbody id="promotionsTableBody"></tbody>
+        </table>
+    </div>
+    <div id="pagination" class="flex items-center justify-between mt-6"></div>
+</main>
 
-    function ConfirmDeleteModal({ isOpen, onClose, onConfirm, promotionName }) {
-        if (!isOpen) return null;
-        return (
-            <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4 animate-fade-in">
-                <div className="bg-white rounded-lg shadow-xl p-8 max-w-sm w-full text-center animate-slide-up">
-                    <div className="mx-auto mb-4 w-16 h-16 flex items-center justify-center rounded-full border-2 border-yellow-500 bg-yellow-100">
-                        <i className="fas fa-exclamation-triangle fa-2x text-yellow-600"></i>
-                    </div>
-                    <h2 className="text-xl font-bold text-gray-800 mb-2">Bạn có chắc chắn muốn xóa?</h2>
-                    <p className="text-gray-600 mb-4">Sau khi xóa, "<span className="font-semibold">{promotionName}</span>" sẽ không thể khôi phục lại.</p>
-                    <div className="flex justify-center space-x-4">
-                        <button onClick={onConfirm} className="flex-1 h-11 px-6 bg-gray-900 text-white font-semibold rounded-lg shadow-md hover:bg-gray-800 focus:outline-none focus-ring-2 focus-ring-gray-700 transition-colors">Có</button>
-                        <button onClick={onClose} className="flex-1 h-11 px-6 bg-white border border-gray-300 text-gray-800 font-semibold rounded-lg shadow-md hover:bg-gray-100 focus:outline-none focus-ring-2 focus-ring-gray-300 transition-colors">Không</button>
-                    </div>
-                </div>
-            </div>
-        );
-    }
+<!-- Modals -->
+<div id="modalContainer"></div>
 
-    function DeleteSuccessModal({ isOpen, onClose, promotionName }) {
-        if (!isOpen) return null;
-        return (
-            <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4 animate-fade-in">
-                <div className="bg-white rounded-lg shadow-xl p-8 max-w-sm w-full text-center animate-slide-up">
-                    <div className="mx-auto mb-4 w-16 h-16 flex items-center justify-center rounded-full border-2 border-green-500 bg-green-100">
-                        <i className="fas fa-check fa-2x text-green-600"></i>
-                    </div>
-                    <h2 className="text-2xl font-bold text-gray-800 mb-2">Xóa thành công</h2>
-                    <p className="text-gray-600 mb-6">Chương trình khuyến mại đã được xóa bỏ.</p>
-                    <button onClick={onClose} className="h-11 px-6 bg-gray-100 border border-gray-200 text-gray-800 font-semibold rounded-lg shadow-md hover:bg-gray-200 transition-colors shadow-sm">Thoát</button>
-                </div>
-            </div>
-        );
-    }
+<script>
+    // State management
+    let activeModal = null;
+    let promotionToDelete = null;
+    let promotionToEdit = null;
+    let promotionToView = null;
+    let promotions = [];
+    let filteredPromotions = [];
+    let searchResults = [];
+    let searchQuery = '';
+    let currentPage = 1;
+    const recordsPerPage = 5;
+    let promotionDataToSave = null;
+    let conditions = [];
 
-    function ConfirmEditModal({ isOpen, onClose, onConfirm }) {
-        if (!isOpen) return null;
-        return (
-            <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4 animate-fade-in">
-                <div className="bg-white rounded-lg shadow-xl p-8 max-w-sm w-full text-center animate-slide-up">
-                    <div className="mx-auto mb-4 w-16 h-16 flex items-center justify-center rounded-full border-2 border-blue-500 bg-blue-100">
-                        <i className="fas fa-question fa-2x text-blue-600"></i>
-                    </div>
-                    <h2 className="text-xl font-bold text-gray-800 mb-2">Xác nhận sửa</h2>
-                    <p className="text-gray-600 mb-4">Thông tin của chương trình khuyến mại sẽ được cập nhật. Bạn có chắc chắn không?</p>
-                    <div className="flex justify-center space-x-4">
-                        <button onClick={onConfirm} className="flex-1 h-11 px-6 bg-gray-900 text-white font-semibold rounded-lg shadow-md hover:bg-gray-800 focus:outline-none focus-ring-2 focus-ring-gray-700 transition-colors">Có, Cập nhật</button>
-                        <button onClick={onClose} className="flex-1 h-11 px-6 bg-white border border-gray-300 text-gray-800 font-semibold rounded-lg shadow-md hover:bg-gray-100 focus:outline-none focus-ring-2 focus-ring-gray-300 transition-colors">Không</button>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    function AddPromotionModal({ isOpen, onClose, onSave, existingPromotions, promotionToEdit }) {
-        const [formData, setFormData] = useState({});
-        const [errors, setErrors] = useState({});
-        const [conditions, setConditions] = useState([]);
-
-        const addCondition = () => {
-            const newCondition = { id: Date.now(), type: 'Giá trị tối thiểu', value: '' };
-            setConditions(prev => [...prev, newCondition]);
-        };
-
-        const removeCondition = (id) => {
-            setConditions(prev => prev.filter(condition => condition.id !== id));
-        };
-
-        const handleConditionChange = (id, field, value) => {
-            setConditions(prev => prev.map(c => (c.id === id ? { ...c, [field]: value } : c)));
-        };
-
-        useEffect(() => {
-            if (isOpen) {
-                if (promotionToEdit) {
-                    const typeParts = promotionToEdit.type.split('-');
-                    const discountParts = promotionToEdit.discount.match(/(\d+)/);
-                    setFormData({
-                        id: promotionToEdit.id,
-                        promoName: promotionToEdit.name,
-                        status: promotionToEdit.status === "Kích hoạt" ? 'active' : 'inactive',
-                        notes: promotionToEdit.notes || '',
-                        promoBy: typeParts[0] ? typeParts[0].trim() : 'Hóa đơn',
-                        promoType: typeParts[1] ? typeParts[1].trim() : 'Giảm giá theo %',
-                        discountValue: discountParts ? discountParts[0] : '',
-                        startDate: promotionToEdit.startDate,
-                        endDate: promotionToEdit.endDate,
-                        scope: promotionToEdit.scope === 'Toàn bộ chi nhánh' ? 'all' : 'specific',
-                        branch: promotionToEdit.scope !== 'Toàn bộ chi nhánh' ? promotionToEdit.scope : 'Chi nhánh A'
-                    });
-                    setConditions(promotionToEdit.conditions || []);
-                } else {
-                    setFormData({
-                        id: '', promoName: '', status: 'active', notes: '',
-                        promoBy: 'Hóa đơn', promoType: 'Giảm giá theo %', discountValue: '',
-                        startDate: '2025-06-15', endDate: '2025-07-15',
-                        scope: 'all', branch: 'Chi nhánh A'
-                    });
-                    setConditions([]);
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', () => {
+        let storedPromotions = localStorage.getItem('promotions');
+        if (!storedPromotions) {
+            promotions = [
+                {
+                    id: "CT001",
+                    name: "Khai trương chi nhánh A",
+                    startDate: "2025-06-01",
+                    endDate: "2025-06-30",
+                    type: "Hóa đơn-Giảm giá theo %",
+                    discount: "10 %",
+                    status: "Kích hoạt",
+                    scope: "Chi nhánh A",
+                    notes: "Khuyến mại khai trương",
+                    conditions: [{ id: 1, type: "Giá trị tối thiểu", value: "500000" }]
+                },
+                {
+                    id: "CT002",
+                    name: "Mua 2 tặng 1",
+                    startDate: "2025-06-10",
+                    endDate: "2025-07-10",
+                    type: "Sản phẩm-Giảm giá trực tiếp (VND)",
+                    discount: "100000 VND",
+                    status: "Kích hoạt",
+                    scope: "Toàn bộ chi nhánh",
+                    notes: "Áp dụng cho sản phẩm cụ thể",
+                    conditions: [{ id: 2, type: "Số lượng sản phẩm tối thiểu", value: "2" }]
+                },
+                {
+                    id: "CT003",
+                    name: "Giảm giá mùa hè",
+                    startDate: "2025-07-01",
+                    endDate: "2025-08-31",
+                    type: "Hóa đơn-Giảm giá theo %",
+                    discount: "15 %",
+                    status: "Chưa kích hoạt",
+                    scope: "Chi nhánh B",
+                    notes: "Chương trình mùa hè",
+                    conditions: [{ id: 3, type: "Giá trị tối thiểu", value: "1000000" }]
+                },
+                {
+                    id: "CT004",
+                    name: "Black Friday",
+                    startDate: "2025-11-20",
+                    endDate: "2025-11-30",
+                    type: "Hóa đơn-Giảm giá theo %",
+                    discount: "20 %",
+                    status: "Chưa kích hoạt",
+                    scope: "Toàn bộ chi nhánh",
+                    notes: "Sự kiện Black Friday",
+                    conditions: []
+                },
+                {
+                    id: "CT005",
+                    name: "Tặng quà khách VIP",
+                    startDate: "2025-06-15",
+                    endDate: "2025-12-31",
+                    type: "Sản phẩm-Giảm giá trực tiếp (VND)",
+                    discount: "50000 VND",
+                    status: "Kích hoạt",
+                    scope: "Chi nhánh C",
+                    notes: "Dành cho khách VIP",
+                    conditions: [{ id: 4, type: "Giá trị tối thiểu", value: "2000000" }]
                 }
-                setErrors({});
-            }
-        }, [isOpen, promotionToEdit]);
+            ];
+            localStorage.setItem('promotions', JSON.stringify(promotions));
+        } else {
+            promotions = JSON.parse(storedPromotions);
+        }
+        filteredPromotions = [...promotions];
+        renderTable();
+        renderPagination();
+    });
 
-        const handleChange = (e) => {
-            const { id, value, name, type } = e.target;
-            const key = type === 'radio' ? name : id;
-            setFormData(prev => ({ ...prev, [key]: value }));
-        };
-
-        const handleSave = () => {
-            const validationErrors = {};
-            const trimmedId = formData.id ? formData.id.trim() : '';
-            if (!formData.id || !formData.id.trim()) {
-                validationErrors.id = 'Mã chương trình không được để trống';
-            } else if (existingPromotions.some(promo => promo.id === trimmedId && (!promotionToEdit || promo.id !== promotionToEdit.id))) {
-                validationErrors.id = 'Mã chương trình này đã tồn tại';
-            }
-            if (!formData.promoName || !formData.promoName.trim()) {
-                validationErrors.promoName = 'Tên chương trình không được để trống';
-            }
-            if (!formData.discountValue || formData.discountValue.trim() === '' || isNaN(formData.discountValue) || Number(formData.discountValue) <= 0) {
-                validationErrors.discountValue = 'Mức giảm không được để trống và phải là số lớn hơn 0';
-            }
-            const startDate = new Date(formData.startDate);
-            const endDate = new Date(formData.endDate);
-            if (startDate > endDate) {
-                validationErrors.date = 'Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu';
-            }
-
-            if (Object.keys(validationErrors).length > 0) {
-                setErrors(validationErrors);
-                return;
-            }
-
-            setErrors({});
-            const finalId = formData.id || `CT${Date.now().toString().slice(-4)}`;
-            let finalScope = formData.scope === 'all' ? 'Toàn bộ chi nhánh' : formData.branch;
-            const promotionData = {
-                id: trimmedId,
-                name: formData.promoName,
-                startDate: formData.startDate,
-                endDate: formData.endDate,
-                type: `${formData.promoBy}-${formData.promoType}`,
-                discount: `${formData.discountValue || 0} ${formData.promoType === 'Giảm giá theo %' ? '%' : 'VND'}`,
-                status: formData.status === 'active' ? "Kích hoạt" : "Chưa kích hoạt",
-                scope: finalScope,
-                notes: formData.notes || 'Không có',
-                conditions: conditions
-            };
-            onSave(promotionData);
-        };
-
-        if (!isOpen) return null;
-        return (
-            <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4 animate-fade-in">
-                <div className="w-full max-w-5xl max-h-[95vh] bg-gray-50 rounded-lg shadow-2xl flex flex-col animate-slide-up">
-                    <header className="flex items-center justify-between p-5 border-b border-gray-200 rounded-t-lg">
-                        <h2 className="text-xl font-bold text-gray-800">{promotionToEdit ? 'Sửa chương trình khuyến mại' : 'Thêm chương trình khuyến mại'}</h2>
-                        <button onClick={onClose} className="w-10 h-10 rounded-full text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition-colors flex items-center justify-center">
-                            <i className="fas fa-times fa-lg"></i>
+    // Modal templates
+    const modalTemplates = {
+        success: `
+                <div class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4 animate-fade-in">
+                    <div class="bg-white rounded-lg shadow-xl p-8 max-w-sm w-full text-center animate-slide-up">
+                        <div class="mx-auto mb-4 w-16 h-16 flex items-center justify-center rounded-full border-2 border-gray-500">
+                            <i class="fas fa-check fa-2x text-green-600"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800 mb-2">Thêm thành công</h2>
+                        <p class="text-gray-600 mb-6">Bạn đã thêm thành công chương trình khuyến mại mới.</p>
+                        <button onclick="closeModal()" class="h-11 px-6 bg-gray-100 border border-gray-200 text-gray-800 font-semibold rounded-lg shadow-md hover:bg-gray-200 transition-colors shadow-sm">Thoát</button>
+                    </div>
+                </div>
+            `,
+        deleteConfirm: (name) => `
+                <div class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4 animate-fade-in">
+                    <div class="bg-white rounded-lg shadow-xl p-8 max-w-sm w-full text-center animate-slide-up">
+                        <div class="mx-auto mb-4 w-16 h-16 flex items-center justify-center rounded-full border-2 border-yellow-500 bg-yellow-100">
+                            <i class="fas fa-exclamation-triangle fa-2x text-yellow-600"></i>
+                        </div>
+                        <h2 class="text-xl font-bold text-gray-800 mb-2">Bạn có chắc chắn muốn xóa?</h2>
+                        <p class="text-gray-600 mb-4">Sau khi xóa, "<span class="font-semibold">${name}</span>" sẽ không thể khôi phục lại.</p>
+                        <div class="flex justify-center space-x-4">
+                            <button onclick="handleConfirmDelete()" class="flex-1 h-11 px-6 bg-gray-900 text-white font-semibold rounded-lg shadow-md hover:bg-gray-800 transition-colors">Có</button>
+                            <button onclick="closeDeleteConfirmModal()" class="flex-1 h-11 px-6 bg-white border border-gray-300 text-gray-800 font-semibold rounded-lg shadow-md hover:bg-gray-100 transition-colors">Không</button>
+                        </div>
+                    </div>
+                </div>
+            `,
+        deleteSuccess: `
+                <div class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4 animate-fade-in">
+                    <div class="bg-white rounded-lg shadow-xl p-8 max-w-sm w-full text-center animate-slide-up">
+                        <div class="mx-auto mb-4 w-16 h-16 flex items-center justify-center rounded-full border-2 border-green-500 bg-green-100">
+                            <i class="fas fa-check fa-2x text-green-600"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800 mb-2">Xóa thành công</h2>
+                        <p class="text-gray-600 mb-6">Chương trình khuyến mại đã được xóa bỏ.</p>
+                        <button onclick="closeModal()" class="h-11 px-6 bg-gray-100 border border-gray-200 text-gray-800 font-semibold rounded-lg shadow-md hover:bg-gray-200 transition-colors shadow-sm">Thoát</button>
+                    </div>
+                </div>
+            `,
+        editConfirm: `
+                <div class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4 animate-fade-in">
+                    <div class="bg-white rounded-lg shadow-xl p-8 max-w-sm w-full text-center animate-slide-up">
+                        <div class="mx-auto mb-4 w-16 h-16 flex items-center justify-center rounded-full border-2 border-blue-500 bg-blue-100">
+                            <i class="fas fa-question fa-2x text-blue-600"></i>
+                        </div>
+                        <h2 class="text-xl font-bold text-gray-800 mb-2">Xác nhận sửa</h2>
+                        <p class="text-gray-600 mb-4">Thông tin của chương trình khuyến mại sẽ được cập nhật. Bạn có chắc chắn không?</p>
+                        <div class="flex justify-center space-x-4">
+                            <button onclick="handleConfirmEdit()" class="flex-1 h-11 px-6 bg-gray-900 text-white font-semibold rounded-lg shadow-md hover:bg-gray-800 transition-colors">Có, Cập nhật</button>
+                            <button onclick="closeModal()" class="flex-1 h-11 px-6 bg-white border border-gray-300 text-gray-800 font-semibold rounded-lg shadow-md hover:bg-gray-100 transition-colors">Không</button>
+                        </div>
+                    </div>
+                </div>
+            `,
+        add: (isEdit, data = {}, conditions = []) => `
+            <div class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4 animate-fade-in">
+                <div class="w-full max-w-5xl max-h-[95vh] bg-gray-50 rounded-lg shadow-2xl flex flex-col animate-slide-up">
+                    <header class="flex items-center justify-between p-5 border-b border-gray-200 rounded-t-lg">
+                        <h2 class="text-xl font-bold text-gray-800">${isEdit ? 'Sửa chương trình khuyến mại' : 'Thêm chương trình khuyến mại'}</h2>
+                        <button onclick="closeModal()" class="w-10 h-10 rounded-full text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition-colors flex items-center justify-center">
+                            <i class="fas fa-times fa-lg"></i>
                         </button>
                     </header>
-                    <div className="p-8 space-y-8 overflow-y-auto">
-                        <fieldset className="space-y-6">
-                            <legend className="text-lg font-semibold text-purple-700">Thông tin chung</legend>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <FormGroup label="Mã chương trình" htmlFor="id">
-                                    <input type="text" id="id" value={formData.id || ''} onChange={handleChange} placeholder="Nhập mã chương trình" className="w-full h-10 px-4 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500" />
-                                    {errors.id && <p className="text-red-600 text-sm mt-1">{errors.id}</p>}
-                                </FormGroup>
-                                <FormGroup label="Tên chương trình" htmlFor="promoName">
-                                    <input type="text" id="promoName" value={formData.promoName || ''} onChange={handleChange} placeholder="VD: Khai trương hồng phát" className="w-full h-10 px-4 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500" />
-                                    {errors.promoName && <p className="text-red-600 text-sm mt-1">{errors.promoName}</p>}
-                                </FormGroup>
-                                <FormGroup label="Trạng thái">
-                                    <div className="flex items-center space-x-6 h-10">
-                                        <CustomRadio name="status" value="active" label="Kích hoạt" checked={formData.status === 'active'} onChange={handleChange} />
-                                        <CustomRadio name="status" value="inactive" label="Chưa kích hoạt" checked={formData.status === 'inactive'} onChange={handleChange} />
-                                    </div>
-                                </FormGroup>
-                                <FormGroup label="Ghi chú" htmlFor="notes">
-                                    <input type="text" id="notes" value={formData.notes || ''} onChange={handleChange} placeholder="Thông tin thêm về chương trình" className="w-full h-10 px-4 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500" />
-                                </FormGroup>
-                            </div>
-                        </fieldset>
-                        <fieldset className="space-y-6">
-                            <legend className="text-lg font-semibold text-purple-700">Hình thức & Mức giảm</legend>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                <FormGroup label="Khuyến mại theo" htmlFor="promoBy"><select id="promoBy" value={formData.promoBy || 'Hóa đơn'} onChange={handleChange} className="w-full h-10 px-3 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500"><option>Hóa đơn</option><option>Sản phẩm</option></select></FormGroup>
-                                <FormGroup label="Hình thức" htmlFor="promoType"><select id="promoType" value={formData.promoType || 'Giảm giá theo %'} onChange={handleChange} className="w-full h-10 px-3 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500"><option>Giảm giá theo %</option><option>Giảm giá trực tiếp (VND)</option></select></FormGroup>
-                                <FormGroup label="Mức giảm" htmlFor="discountValue">
-                                    <div className="relative">
-                                        <input type="number" id="discountValue" value={formData.discountValue || ''} onChange={handleChange} placeholder="VD: 10" className="w-full h-10 pl-4 pr-10 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500" />
-                                        <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500">{formData.promoType === 'Giảm giá theo %' ? '%' : 'VND'}</span>
-                                    </div>
-                                    {errors.discountValue && <p className="text-red-600 text-sm mt-1">{errors.discountValue}</p>}
-                                </FormGroup>
-                            </div>
-                        </fieldset>
-                        <fieldset className="space-y-6">
-                            <legend className="text-lg font-semibold text-purple-700">Thời gian & Phạm vi</legend>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6">
-                                <div className="space-y-6">
-                                    <FormGroup label="Ngày bắt đầu" htmlFor="startDate"><input type="date" id="startDate" value={formData.startDate || ''} onChange={handleChange} className="w-full h-10 px-4 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500" /></FormGroup>
-                                    <FormGroup label="Ngày kết thúc" htmlFor="endDate"><input type="date" id="endDate" value={formData.endDate || ''} onChange={handleChange} className="w-full h-10 px-4 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500" /></FormGroup>
-                                    {errors.date && <p className="text-red-600 text-sm mt-1">{errors.date}</p>}
+                    <div class="p-8 space-y-8 overflow-y-auto">
+                        <fieldset class="space-y-6">
+                            <legend class="text-lg font-semibold text-purple-700">Thông tin chung</legend>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="id" class="block text-sm font-medium text-gray-700 mb-1">Mã chương trình</label>
+                                    <input type="text" id="id" value="${data.id || ''}" placeholder="Nhập mã chương trình" class="w-full h-10 px-4 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500" ${isEdit ? 'readonly' : ''}>
+                                    <p id="error-id" class="text-red-600 text-sm mt-1 hidden"></p>
                                 </div>
-                                <div className="space-y-4">
-                                    <label className="block text-sm font-medium text-gray-700">Phạm vi áp dụng</label>
-                                    <div className="space-y-4">
-                                        <CustomRadio name="scope" value="all" label="Toàn bộ chi nhánh" checked={formData.scope === 'all'} onChange={handleChange} />
-                                        <div className="flex items-center">
-                                            <CustomRadio name="scope" value="specific" label="Chi nhánh cụ thể" checked={formData.scope === 'specific'} onChange={handleChange} />
-                                            <select id="branch" value={formData.branch || ''} onChange={handleChange} disabled={formData.scope !== 'specific'} className={`ml-5 flex-grow h-10 px-3 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500 transition-colors ${formData.scope !== 'specific' ? 'bg-gray-200 cursor-not-allowed' : ''}`}>
-                                                <option>Chi nhánh A</option>
-                                                <option>Chi nhánh B</option>
-                                                <option>Chi nhánh C</option>
+                                <div>
+                                    <label for="promoName" class="block text-sm font-medium text-gray-700 mb-1">Tên chương trình</label>
+                                    <input type="text" id="promoName" value="${data.promoName || ''}" placeholder="VD: Khai trương hồng phát" class="w-full h-10 px-4 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500">
+                                    <p id="error-promoName" class="text-red-600 text-sm mt-1 hidden"></p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Trạng thái</label>
+                                    <div class="flex items-center space-x-6 h-10">
+                                        <label class="flex items-center space-x-3 cursor-pointer">
+                                            <input type="radio" name="status" value="active" ${data.status === 'active' || !isEdit ? 'checked' : ''} class="peer-sr-only">
+                                            <div class="radio-dot"><div class="radio-dot-inner"></div></div>
+                                            <span class="text-gray-800">Kích hoạt</span>
+                                        </label>
+                                        <label class="flex items-center space-x-3 cursor-pointer">
+                                            <input type="radio" name="status" value="inactive" ${data.status === 'inactive' && isEdit ? 'checked' : ''} class="peer-sr-only">
+                                            <div class="radio-dot"><div class="radio-dot-inner"></div></div>
+                                            <span class="text-gray-800">Chưa kích hoạt</span>
+                                        </label>
+                                    </div>
+                                    <p id="error-status" class="text-red-600 text-sm mt-1 hidden"></p>
+                                </div>
+                                <div>
+                                    <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">Ghi chú</label>
+                                    <input type="text" id="notes" value="${data.notes || ''}" placeholder="Thông tin thêm về chương trình" class="w-full h-10 px-4 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500">
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset class="space-y-6">
+                            <legend class="text-lg font-semibold text-purple-700">Hình thức & Mức giảm</legend>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <div>
+                                    <label for="promoBy" class="block text-sm font-medium text-gray-700 mb-1">Khuyến mại theo</label>
+                                    <select id="promoBy" class="w-full h-10 px-3 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500">
+                                        <option value="Hóa đơn" ${data.promoBy === 'Hóa đơn' ? 'selected' : ''}>Hóa đơn</option>
+                                        <option value="Sản phẩm" ${data.promoBy === 'Sản phẩm' ? 'selected' : ''}>Sản phẩm</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="promoType" class="block text-sm font-medium text-gray-700 mb-1">Hình thức</label>
+                                    <select id="promoType" class="w-full h-10 px-3 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500" onchange="updateDiscountUnit()">
+                                        <option value="Giảm giá theo %" ${data.promoType === 'Giảm giá theo %' ? 'selected' : ''}>Giảm giá theo %</option>
+                                        <option value="Giảm giá trực tiếp (VND)" ${data.promoType === 'Giảm giá trực tiếp (VND)' ? 'selected' : ''}>Giảm giá trực tiếp (VND)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="discountValue" class="block text-sm font-medium text-gray-700 mb-1">Mức giảm</label>
+                                    <div class="relative">
+                                        <input type="number" id="discountValue" value="${data.discountValue || ''}" placeholder="VD: 10" class="w-full h-10 pl-4 pr-10 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500">
+                                        <span id="discountUnit" class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500">${data.promoType === 'Giảm giá theo %' ? '%' : 'VND'}</span>
+                                    </div>
+                                    <p id="error-discountValue" class="text-red-600 text-sm mt-1 hidden"></p>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset class="space-y-6">
+                            <legend class="text-lg font-semibold text-purple-700">Thời gian & Phạm vi</legend>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6">
+                                <div class="space-y-6">
+                                    <div>
+                                        <label for="startDate" class="block text-sm font-medium text-gray-700 mb-1">Ngày bắt đầu</label>
+                                        <input type="date" id="startDate" value="${data.startDate || '2025-06-15'}" class="w-full h-10 px-4 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500">
+                                    </div>
+                                    <div>
+                                        <label for="endDate" class="block text-sm font-medium text-gray-700 mb-1">Ngày kết thúc</label>
+                                        <input type="date" id="endDate" value="${data.endDate || '2025-07-15'}" class="w-full h-10 px-4 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500">
+                                    </div>
+                                    <p id="error-date" class="text-red-600 text-sm mt-1 hidden"></p>
+                                </div>
+                                <div class="space-y-4">
+                                    <label class="block text-sm font-medium text-gray-700">Phạm vi áp dụng</label>
+                                    <div class="space-y-4">
+                                        <label class="flex items-center space-x-3 cursor-pointer">
+                                            <input type="radio" name="scope" value="all" ${data.scope === 'all' || !isEdit ? 'checked' : ''} class="peer-sr-only" onchange="toggleBranchSelect()">
+                                            <div class="radio-dot"><div class="radio-dot-inner"></div></div>
+                                            <span class="text-gray-800">Toàn bộ chi nhánh</span>
+                                        </label>
+                                        <div class="flex items-center">
+                                            <label class="flex items-center space-x-3 cursor-pointer">
+                                                <input type="radio" name="scope" value="specific" ${data.scope === 'specific' && isEdit ? 'checked' : ''} class="peer-sr-only" onchange="toggleBranchSelect()">
+                                                <div class="radio-dot"><div class="radio-dot-inner"></div></div>
+                                                <span class="text-gray-800">Chi nhánh cụ thể</span>
+                                            </label>
+                                            <select id="branch" class="ml-5 flex-grow h-10 px-3 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500 transition-colors ${data.scope !== 'specific' ? 'bg-gray-200 cursor-not-allowed' : ''}" ${data.scope !== 'specific' ? 'disabled' : ''}>
+                                                <option value="Chi nhánh A" ${data.branch === 'Chi nhánh A' ? 'selected' : ''}>Chi nhánh A</option>
+                                                <option value="Chi nhánh B" ${data.branch === 'Chi nhánh B' ? 'selected' : ''}>Chi nhánh B</option>
+                                                <option value="Chi nhánh C" ${data.branch === 'Chi nhánh C' ? 'selected' : ''}>Chi nhánh C</option>
                                             </select>
                                         </div>
                                     </div>
+                                    <p id="error-scope" class="text-red-600 text-sm mt-1 hidden"></p>
                                 </div>
                             </div>
                         </fieldset>
                         <fieldset>
-                            <legend className="text-lg font-semibold text-purple-700">Điều kiện áp dụng</legend>
-                            <div className="mt-4 space-y-4">
-                                {conditions.map((condition, index) => (
-                                    <div key={condition.id} className="flex items-center space-x-4 p-4 bg-purple-50 rounded-lg animate-fade-in">
-                                        <span className="font-bold text-gray-600">#{index + 1}</span>
-                                        <select value={condition.type} onChange={(e) => handleConditionChange(condition.id, 'type', e.target.value)} className="w-1/3 h-10 px-3 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500 transition">
-                                            <option value="Giá trị tối thiểu">Giá trị tối thiểu</option>
-                                            <option value="Số lượng sản phẩm tối thiểu">Số lượng sản phẩm tối thiểu</option>
+                            <legend class="text-lg font-semibold text-purple-700">Điều kiện áp dụng</legend>
+                            <div id="conditionsContainer" class="mt-4 space-y-4">
+                                ${conditions.map((c, i) => `
+                                    <div class="flex items-center space-x-4 p-4 bg-purple-50 rounded-lg animate-fade-in" data-id="${c.id}">
+                                        <span class="font-bold text-gray-600">#${i + 1}</span>
+                                        <select class="w-1/3 h-10 px-3 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500 transition" onchange="updateCondition(${c.id}, 'type', this.value)">
+                                            <option value="Giá trị tối thiểu" ${c.type === 'Giá trị tối thiểu' ? 'selected' : ''}>Giá trị tối thiểu</option>
+                                            <option value="Số lượng sản phẩm tối thiểu" ${c.type === 'Số lượng sản phẩm tối thiểu' ? 'selected' : ''}>Số lượng sản phẩm tối thiểu</option>
                                         </select>
-                                        <input type="text" placeholder="Nhập giá trị (VD: 500000 hoặc VIP)" value={condition.value} onChange={(e) => handleConditionChange(condition.id, 'value', e.target.value)} className="flex-grow h-10 px-4 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500 transition" />
-                                        <button onClick={() => removeCondition(condition.id)} className="w-10 h-10 flex-shrink-0 text-red-500 hover:bg-red-100 rounded-full flex items-center justify-center transition-colors" title="Xóa điều kiện">
-                                            <i className="fas fa-trash-alt"></i>
+                                        <input type="text" placeholder="Nhập giá trị (VD: 500000 hoặc VIP)" value="${c.value}" class="flex-grow h-10 px-4 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500 transition" oninput="updateCondition(${c.id}, 'value', this.value)">
+                                        <button onclick="removeCondition(${c.id})" class="w-10 h-10 flex-shrink-0 text-red-500 hover:bg-red-100 rounded-full flex items-center justify-center transition-colors" title="Xóa điều kiện">
+                                            <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </div>
-                                ))}
-                                <button type="button" onClick={addCondition} className="h-10 px-4 py-2 bg-purple-100 text-purple-700 font-semibold rounded-lg shadow-sm hover:bg-purple-200 transition-colors flex items-center gap-2">
-                                    <i className="fas fa-plus"></i>
-                                    <span>Thêm điều kiện</span>
-                                </button>
-                                <p className="text-xs text-gray-500 mt-2">VD: Tổng hóa đơn tối thiểu 500,000 VND.</p>
+                                `).join('')}
                             </div>
+                            <button type="button" onclick="addCondition()" class="h-10 px-4 py-2 bg-purple-100 text-purple-700 font-semibold rounded-lg shadow-sm hover:bg-purple-200 transition-colors flex items-center gap-2">
+                                <i class="fas fa-plus"></i><span>Thêm điều kiện</span>
+                            </button>
+                            <p class="text-xs text-gray-500 mt-2">VD: Tổng hóa đơn tối thiểu 500,000 VND.</p>
                         </fieldset>
                     </div>
-                    <footer className="flex justify-end items-center p-5 space-x-4 border-t border-gray-200 bg-gray-100 rounded-b-lg mt-auto">
-                        <button onClick={onClose} className="h-11 px-6 bg-white border border-gray-300 text-gray-800 font-semibold rounded-lg hover:bg-gray-100 transition-colors shadow-sm">Thoát</button>
-                        <button onClick={handleSave} className="h-11 px-8 text-white font-semibold rounded-lg bg-gradient-to-r from-purple-600 to-rose-500 hover:from-purple-700 hover:to-rose-600 shadow-md transition-all transform hover:scale-105 flex items-center gap-2">
-                            <i className="fas fa-save"></i><span>Lưu chương trình</span>
+                    <footer class="flex justify-end items-center p-5 space-x-4 border-t border-gray-200 bg-gray-100 rounded-b-lg mt-auto">
+                        <button onclick="closeModal()" class="h-11 px-6 bg-white border border-gray-300 text-gray-800 font-semibold rounded-lg hover:bg-gray-100 transition-colors shadow-sm">Thoát</button>
+                        <button onclick="handleSave()" class="h-11 px-8 text-white font-semibold rounded-lg bg-gradient-to-r from-purple-600 to-rose-500 hover:from-purple-700 hover:to-rose-600 shadow-md transition-all transform hover:scale-105 flex items-center gap-2">
+                            <i class="fas fa-save"></i><span>Lưu chương trình</span>
                         </button>
                     </footer>
                 </div>
             </div>
-        );
-    }
-
-    function FilterModal({ isOpen, onClose, onFilter }) {
-        const [filterData, setFilterData] = useState({
-            branch: 'Tất cả',
-            status: 'Tất cả',
-            validity: 'Tất cả'
-        });
-
-        const handleChange = (e) => {
-            const { name, value } = e.target;
-            setFilterData(prev => ({ ...prev, [name]: value }));
-        };
-
-        const handleFilter = () => {
-            onFilter(filterData);
-            onClose();
-        };
-
-        if (!isOpen) return null;
-
-        return (
-            <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4 animate-fade-in">
-                <div className="bg-white rounded-lg shadow-xl p-6 w-96 animate-slide-up">
-                    <h2 className="text-xl font-bold text-gray-800 mb-6 text-center">Lọc chương trình khuyến mãi</h2>
-                    <div className="space-y-6">
-                        <FormGroup label="Chi nhánh:" htmlFor="branch">
-                            <select id="branch" name="branch" value={filterData.branch} onChange={handleChange} className="w-full h-10 px-3 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500">
-                                <option>Tất cả</option>
-                                <option>Chi nhánh A</option>
-                                <option>Chi nhánh B</option>
-                                <option>Chi nhánh C</option>
+        `,
+        filter: `
+            <div class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4 animate-fade-in">
+                <div class="bg-white rounded-lg shadow-xl p-6 w-96 animate-slide-up">
+                    <h2 class="text-xl font-bold text-gray-800 mb-6 text-center">Lọc chương trình khuyến mãi</h2>
+                    <div class="space-y-6">
+                        <div>
+                            <label for="filter-branch" class="block text-sm font-medium text-gray-700 mb-1">Chi nhánh:</label>
+                            <select id="filter-branch" class="w-full h-10 px-3 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500">
+                                <option value="Tất cả">Tất cả</option>
+                                <option value="Chi nhánh A">Chi nhánh A</option>
+                                <option value="Chi nhánh B">Chi nhánh B</option>
+                                <option value="Chi nhánh C">Chi nhánh C</option>
                             </select>
-                        </FormGroup>
-                        <FormGroup label="Trạng thái:" htmlFor="status">
-                            <div className="space-y-2">
-                                <CustomRadio name="status" value="Tất cả" label="Tất cả" checked={filterData.status === 'Tất cả'} onChange={handleChange} />
-                                <CustomRadio name="status" value="Kích hoạt" label="Kích hoạt" checked={filterData.status === 'Kích hoạt'} onChange={handleChange} />
-                                <CustomRadio name="status" value="Chưa kích hoạt" label="Chưa kích hoạt" checked={filterData.status === 'Chưa kích hoạt'} onChange={handleChange} />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Trạng thái:</label>
+                            <div class="space-y-2">
+                                <label class="flex items-center space-x-3 cursor-pointer">
+                                    <input type="radio" name="filter-status" value="Tất cả" checked class="peer-sr-only">
+                                    <div class="radio-dot"><div class="radio-dot-inner"></div></div>
+                                    <span class="text-gray-800">Tất cả</span>
+                                </label>
+                                <label class="flex items-center space-x-3 cursor-pointer">
+                                    <input type="radio" name="filter-status" value="Kích hoạt" class="peer-sr-only">
+                                    <div class="radio-dot"><div class="radio-dot-inner"></div></div>
+                                    <span class="text-gray-800">Kích hoạt</span>
+                                </label>
+                                <label class="flex items-center space-x-3 cursor-pointer">
+                                    <input type="radio" name="filter-status" value="Chưa kích hoạt" class="peer-sr-only">
+                                    <div class="radio-dot"><div class="radio-dot-inner"></div></div>
+                                    <span class="text-gray-800">Chưa kích hoạt</span>
+                                </label>
                             </div>
-                        </FormGroup>
-                        <FormGroup label="Hiệu lực:" htmlFor="validity">
-                            <div className="space-y-2">
-                                <CustomRadio name="validity" value="Tất cả" label="Tất cả" checked={filterData.validity === 'Tất cả'} onChange={handleChange} />
-                                <CustomRadio name="validity" value="Còn hiệu lực" label="Còn hiệu lực" checked={filterData.validity === 'Còn hiệu lực'} onChange={handleChange} />
-                                <CustomRadio name="validity" value="Hết hiệu lực" label="Hết hiệu lực" checked={filterData.validity === 'Hết hiệu lực'} onChange={handleChange} />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Hiệu lực:</label>
+                            <div class="space-y-2">
+                                <label class="flex items-center space-x-3 cursor-pointer">
+                                    <input type="radio" name="filter-validity" value="Tất cả" checked class="peer-sr-only">
+                                    <div class="radio-dot"><div class="radio-dot-inner"></div></div>
+                                    <span class="text-gray-800">Tất cả</span>
+                                </label>
+                                <label class="flex items-center space-x-3 cursor-pointer">
+                                    <input type="radio" name="filter-validity" value="Còn hiệu lực" class="peer-sr-only">
+                                    <div class="radio-dot"><div class="radio-dot-inner"></div></div>
+                                    <span class="text-gray-800">Còn hiệu lực</span>
+                                </label>
+                                <label class="flex items-center space-x-3 cursor-pointer">
+                                    <input type="radio" name="filter-validity" value="Hết hiệu lực" class="peer-sr-only">
+                                    <div class="radio-dot"><div class="radio-dot-inner"></div></div>
+                                    <span class="text-gray-800">Hết hiệu lực</span>
+                                </label>
                             </div>
-                        </FormGroup>
+                        </div>
                     </div>
-                    <div className="flex justify-end space-x-4 mt-8">
-                        <button onClick={onClose} className="h-11 px-6 bg-white border border-gray-300 text-gray-800 font-semibold rounded-lg hover:bg-gray-100 transition-colors">Thoát</button>
-                        <button onClick={handleFilter} className="h-11 px-6 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors">Lọc</button>
+                    <div class="flex justify-end space-x-4 mt-8">
+                        <button onclick="closeModal()" class="h-11 px-6 bg-white border border-gray-300 text-gray-800 font-semibold rounded-lg hover:bg-gray-100 transition-colors">Thoát</button>
+                        <button onclick="handleFilter()" class="h-11 px-6 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors">Lọc</button>
                     </div>
                 </div>
             </div>
-        );
-    }
+        `,
+        details: (promotion) => {
+            const currentDate = new Date();
+            const startDate = new Date(promotion.startDate);
+            const endDate = new Date(promotion.endDate);
+            const isActive = promotion.status === "Kích hoạt";
+            const isValid = endDate > currentDate;
+            const validity = isActive ? (isValid ? "Còn hiệu lực" : "Hết hiệu lực") : "Chưa kích hoạt";
+            return `
+                    <div class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4 animate-fade-in">
+                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl animate-slide-up">
+                            <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-4">
+                                <h2 class="text-xl font-bold text-gray-800">Thông tin chương trình khuyến mại</h2>
+                                <button onclick="closeModal()" class="w-10 h-10 rounded-full text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition-colors flex items-center justify-center">
+                                    <i class="fas fa-times fa-lg"></i>
+                                </button>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div><span class="font-medium">Mã CT:</span> <span>${promotion.id}</span></div>
+                                    <div><span class="font-medium">Tên CT:</span> <span>${promotion.name}</span></div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div><span class="font-medium">Hình thức:</span> <span>${promotion.type}</span></div>
+                                    <div><span class="font-medium">Trạng thái:</span> <span>${promotion.status}</span></div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div><span class="font-medium">Hiệu lực:</span> <span>${promotion.startDate} đến ${promotion.endDate}</span></div>
+                                    <div><span class="font-medium">Ghi chú:</span> <span>${promotion.notes || 'Không có'}</span></div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div><span class="font-medium">Chi nhánh áp dụng:</span> <span>${promotion.scope}</span></div>
+                                    <div><span class="font-medium">Điều kiện áp dụng:</span> <span>${promotion.conditions.length > 0 ? promotion.conditions.map(c => `${c.type}: ${c.value}`).join(', ') : 'Không có'}</span></div>
+                                </div>
+                            </div>
+                            <div class="flex justify-end mt-6">
+                                <button onclick="closeModal()" class="h-10 px-6 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 transition-colors">Thoát</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+        },
+        search: (results) => `
+                <div class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4 animate-fade-in">
+                    <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-3xl animate-slide-up">
+                        <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-4">
+                            <h2 class="text-xl font-bold text-gray-800">Kết quả tìm kiếm</h2>
+                            <button onclick="closeModal()" class="w-10 h-10 rounded-full text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition-colors flex items-center justify-center">
+                                <i class="fas fa-times fa-lg"></i>
+                            </button>
+                        </div>
+                        <p class="text-gray-600 mb-4">Nhấn vào để xem thông tin chi tiết</p>
+                        <div class="overflow-y-auto max-h-[60vh]">
+                            ${results.length > 0 ? `
+                                <table class="w-full table-fixed">
+                                    <thead>
+                                        <tr class="bg-purple-100 text-left">
+                                            <th class="w-1/6 px-4 py-2 font-semibold text-gray-800">Mã CT</th>
+                                            <th class="w-2/6 px-4 py-2 font-semibold text-gray-800">Tên CT</th>
+                                            <th class="w-1/6 px-4 py-2 font-semibold text-gray-800">Ngày bắt đầu</th>
+                                            <th class="w-1/6 px-4 py-2 font-semibold text-gray-800">Ngày kết thúc</th>
+                                            <th class="w-1/6 px-4 py-2 font-semibold text-gray-800">Hình thức</th>
+                                            <th class="w-1/6 px-4 py-2 font-semibold text-gray-800">Mức giảm giá/Quà tặng</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${results.map(p => `
+                                            <tr class="hover:bg-gray-100 cursor-pointer" onclick='openModal("details", ${JSON.stringify(p)})'>
+                                                <td class="px-4 py-2 text-gray-700">${p.id}</td>
+                                                <td class="px-4 py-2 text-gray-700">${p.name}</td>
+                                                <td class="px-4 py-2 text-gray-700">${new Date(p.startDate).toLocaleDateString('vi-VN')}</td>
+                                                <td class="px-4 py-2 text-gray-700">${new Date(p.endDate).toLocaleDateString('vi-VN')}</td>
+                                                <td class="px-4 py-2 text-gray-700">${p.type}</td>
+                                                <td class="px-4 py-2 text-gray-700">${p.discount}</td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            ` : `
+                                <p class="text-center text-gray-500">Không có kết quả nào.</p>
+                            `}
+                        </div>
+                        <div class="flex justify-end mt-6">
+                            <button onclick="closeModal()" class="h-10 px-6 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 transition-colors">Thoát</button>
+                        </div>
+                    </div>
+                </div>
+            `
+    };
 
-    function Pagination({ recordsPerPage, totalRecords, paginate, nextPage, prevPage, currentPage }) {
-        const pageNumbers = [];
-        for (let i = 1; i <= Math.ceil(totalRecords / recordsPerPage); i++) {
-            pageNumbers.push(i);
+    // Modal management
+    function openModal(type, data = null) {
+        activeModal = type;
+        conditions = []; // Reset conditions for new modal
+        if (type === 'add') {
+            promotionToEdit = null; // Ensure we're in add mode
+            document.getElementById('modalContainer').innerHTML = modalTemplates.add(false, {});
+        } else if (type === 'edit') {
+            promotionToEdit = data; // Set the promotion to edit
+            let formData = {
+                id: data.id,
+                promoName: data.name,
+                status: data.status === 'Kích hoạt' ? 'active' : 'inactive',
+                notes: data.notes || '',
+                promoBy: data.type.split('-')[0].trim(),
+                promoType: data.type.split('-')[1].trim(),
+                discountValue: data.discount.match(/(\d+)/)[0],
+                startDate: data.startDate,
+                endDate: data.endDate,
+                scope: data.scope === 'Toàn bộ chi nhánh' ? 'all' : 'specific',
+                branch: data.scope !== 'Toàn bộ chi nhánh' ? data.scope : 'Chi nhánh A'
+            };
+            conditions = [...(data.conditions || [])]; // Load existing conditions
+            document.getElementById('modalContainer').innerHTML = modalTemplates.add(true, formData, conditions);
+        } else if (type === 'deleteConfirm') {
+            promotionToDelete = data;
+            document.getElementById('modalContainer').innerHTML = modalTemplates.deleteConfirm(data.name);
+        } else if (type === 'details') {
+            promotionToView = data;
+            document.getElementById('modalContainer').innerHTML = modalTemplates.details(data);
+        } else if (type === 'search') {
+            document.getElementById('modalContainer').innerHTML = modalTemplates.search(searchResults);
+        } else {
+            document.getElementById('modalContainer').innerHTML = modalTemplates[type];
         }
-        if (pageNumbers.length <= 1) return null;
-        return (
-            <div className="flex items-center justify-between mt-6">
-                <button onClick={prevPage} disabled={currentPage === 1} className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                    <i className="fas fa-chevron-left"></i>
-                    <span>Previous</span>
-                </button>
-                <div className="flex space-x-2">
-                    {pageNumbers.map(number => (
-                        <button key={number} onClick={() => paginate(number)} className={`w-10 h-10 rounded-lg ${currentPage === number ? 'bg-purple-600 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'} transition-colors`}>{number}</button>
-                    ))}
-                </div>
-                <button onClick={nextPage} disabled={currentPage === pageNumbers.length} className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                    <span>Next</span>
-                    <i className="fas fa-chevron-right"></i>
-                </button>
-            </div>
-        );
     }
 
-    function DetailsModal({ isOpen, onClose, promotion }) {
-        if (!isOpen || !promotion) return null;
-
-        const currentDate = new Date('2025-06-15T19:10:00+07:00');
-        const startDate = new Date(promotion.startDate);
-        const endDate = new Date(promotion.endDate);
-        const isActive = promotion.status === "Kích hoạt";
-        const isValid = endDate > currentDate;
-
-        const validity = isActive
-            ? (isValid ? "Còn hiệu lực" : "Hết hiệu lực")
-            : "Chưa kích hoạt";
-
-        return (
-            <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4 animate-fade-in">
-                <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl animate-slide-up">
-                    <div className="flex justify-between items-center border-b border-gray-200 pb-4 mb-4">
-                        <h2 className="text-xl font-bold text-gray-800">Thông tin chương trình khuyến mại</h2>
-                        <button onClick={onClose} className="w-10 h-10 rounded-full text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition-colors flex items-center justify-center">
-                            <i className="fas fa-times fa-lg"></i>
-                        </button>
-                    </div>
-                    <div className="space-y-4">
-                        <div className="grid grid-cols-2 gap-4">
-                            <div><span className="font-medium">Mã CT:</span> <span>{promotion.id}</span></div>
-                            <div><span className="font-medium">Tên CT:</span> <span>{promotion.name}</span></div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div><span className="font-medium">Hình thức:</span> <span>{promotion.type}</span></div>
-                            <div><span className="font-medium">Trạng thái:</span> <span>{promotion.status}</span></div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div><span className="font-medium">Hiệu lực:</span> <span>{validity}</span></div>
-                            <div><span className="font-medium">Ghi chú:</span> <span>{promotion.notes || 'Không có'}</span></div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div><span className="font-medium">Chi nhánh áp dụng:</span> <span>{promotion.scope}</span></div>
-                            <div><span className="font-medium">Điều kiện áp dụng:</span> <span>{promotion.conditions.length > 0 ? promotion.conditions.map(c => `${c.type}: ${c.value}`).join(', ') : 'Không có'}</span></div>
-                        </div>
-                    </div>
-                    <div className="flex justify-end mt-6">
-                        <button onClick={onClose} className="h-10 px-6 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 transition-colors">Thoát</button>
-                    </div>
-                </div>
-            </div>
-        );
+    function closeModal() {
+        activeModal = null;
+        promotionToEdit = null;
+        promotionToDelete = null;
+        promotionDataToSave = null;
+        promotionToView = null;
+        searchResults = [];
+        searchQuery = '';
+        conditions = [];
+        document.getElementById('modalContainer').innerHTML = '';
     }
 
-    function SearchResultsModal({ isOpen, onClose, results, onViewDetails }) {
-        if (!isOpen) return null;
-
-        return (
-            <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4 animate-fade-in">
-                <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-3xl animate-slide-up">
-                    <div className="flex justify-between items-center border-b border-gray-200 pb-4 mb-4">
-                        <h2 className="text-xl font-bold text-gray-800">Kết quả tìm kiếm</h2>
-                        <button onClick={onClose} className="w-10 h-10 rounded-full text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition-colors flex items-center justify-center">
-                            <i className="fas fa-times fa-lg"></i>
-                        </button>
-                    </div>
-                    <p className="text-gray-600 mb-4">Nhấn vào để xem thông tin chi tiết</p>
-                    <div className="overflow-y-auto max-h-[60vh]">
-                        {results.length > 0 ? (
-                            <table className="w-full table-fixed">
-                                <thead>
-                                <tr className="bg-purple-100 text-left">
-                                    <th className="w-1/6 px-4 py-2 font-semibold text-gray-800">Mã CT</th>
-                                    <th className="w-2/6 px-4 py-2 font-semibold text-gray-800">Tên CT</th>
-                                    <th className="w-1/6 px-4 py-2 font-semibold text-gray-800">Ngày bắt đầu</th>
-                                    <th className="w-1/6 px-4 py-2 font-semibold text-gray-800">Ngày kết thúc</th>
-                                    <th className="w-1/6 px-4 py-2 font-semibold text-gray-800">Hình thức</th>
-                                    <th className="w-1/6 px-4 py-2 font-semibold text-gray-800">Mức giảm giá/Quà tặng</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {results.map((promotion) => (
-                                    <tr
-                                        key={promotion.id}
-                                        className="hover:bg-gray-100 cursor-pointer"
-                                        onClick={() => onViewDetails(promotion)}
-                                    >
-                                        <td className="px-4 py-2 text-gray-700">{promotion.id}</td>
-                                        <td className="px-4 py-2 text-gray-700">{promotion.name}</td>
-                                        <td className="px-4 py-2 text-gray-700">{new Date(promotion.startDate).toLocaleDateString('vi-VN')}</td>
-                                        <td className="px-4 py-2 text-gray-700">{new Date(promotion.endDate).toLocaleDateString('vi-VN')}</td>
-                                        <td className="px-4 py-2 text-gray-700">{promotion.type}</td>
-                                        <td className="px-4 py-2 text-gray-700">{promotion.discount}</td>
-                                    </tr>
-                                ))}
-                                </tbody>
-                            </table>
-                        ) : (
-                            <p className="text-center text-gray-500">Không có kết quả nào.</p>
-                        )}
-                    </div>
-                    <div className="flex justify-end mt-6">
-                        <button onClick={onClose} className="h-10 px-6 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 transition-colors">Thoát</button>
-                    </div>
-                </div>
-            </div>
-        );
+    function closeDeleteConfirmModal() {
+        promotionToDelete = null;
+        closeModal();
     }
 
-    function PromotionsDashboard() {
-        const [activeModal, setActiveModal] = useState(null);
-        const [promotionToDelete, setPromotionToDelete] = useState(null);
-        const [promotionToEdit, setPromotionToEdit] = useState(null);
-        const [promotionToView, setPromotionToView] = useState(null);
-        const [promotions, setPromotions] = useState([]);
-        const [promotionDataToSave, setPromotionDataToSave] = useState(null);
-        const [filteredPromotions, setFilteredPromotions] = useState([]);
-        const [searchResults, setSearchResults] = useState([]);
-        const [searchQuery, setSearchQuery] = useState('');
-        const [currentPage, setCurrentPage] = useState(1);
-        const [recordsPerPage] = useState(5);
-
-        useEffect(() => {
-            const storedPromotions = sessionStorage.getItem('promotions');
-            if (storedPromotions) {
-                const parsedPromotions = JSON.parse(storedPromotions);
-                setPromotions(parsedPromotions);
-                setFilteredPromotions(parsedPromotions);
-            } else {
-                sessionStorage.setItem('promotions', JSON.stringify([]));
-                setPromotions([]);
-                setFilteredPromotions([]);
-            }
-        }, []);
-
-        const openAddModal = () => {
-            setPromotionToEdit(null);
-            setActiveModal('add');
-        };
-
-        const closeModal = () => {
-            setActiveModal(null);
-            setPromotionToEdit(null);
-            setPromotionDataToSave(null);
-            setPromotionToView(null);
-            setSearchResults([]);
-            setSearchQuery('');
-        };
-
-        const openSuccessModal = () => setActiveModal('success');
-        const closeSuccessModal = () => setActiveModal(null);
-        const openDeleteConfirmModal = (promotion) => {
-            setPromotionToDelete(promotion);
-            setActiveModal('deleteConfirm');
-        };
-        const closeDeleteConfirmModal = () => {
-            setPromotionToDelete(null);
-            setPromotionToEdit(null);
-            setActiveModal(null);
-        };
-        const openDeleteSuccessModal = () => setActiveModal('deleteSuccess');
-        const closeDeleteSuccessModal = () => setActiveModal(null);
-        const openEditModal = (promotion) => {
-            setPromotionToEdit(promotion);
-            setActiveModal('add');
-        };
-        const openEditConfirmModal = () => setActiveModal('editConfirm');
-        const openFilterModal = () => setActiveModal('filter');
-        const openDetailsModal = (promotion) => {
-            setPromotionToView(promotion);
-            setActiveModal('details');
-        };
-
-        const handleConfirmEdit = () => {
-            if (promotionDataToSave) {
-                handleUpdatePromotion(promotionDataToSave);
-            }
-        };
-
-        const handleAddPromotion = (newPromotion) => {
-            try {
-                const currentPromotions = JSON.parse(sessionStorage.getItem('promotions')) || [];
-                const updatedPromotions = [...currentPromotions, newPromotion];
-                sessionStorage.setItem('promotions', JSON.stringify(updatedPromotions));
-                setPromotions(updatedPromotions);
-                setFilteredPromotions(updatedPromotions);
-                closeModal();
-                openSuccessModal();
-            } catch (error) {
-                console.error("Lỗi khi thêm mới:", error);
-            }
-        };
-
-        const handleUpdatePromotion = (updatedPromotion) => {
-            try {
-                const currentPromotions = JSON.parse(sessionStorage.getItem('promotions')) || [];
-                const updatedPromotions = currentPromotions.map(p =>
-                    p.id === (promotionToEdit?.id || updatedPromotion.id) ? updatedPromotion : p
-                );
-                sessionStorage.setItem('promotions', JSON.stringify(updatedPromotions));
-                setPromotions(updatedPromotions);
-                setFilteredPromotions(updatedPromotions);
-                closeModal();
-            } catch (error) {
-                console.error("Lỗi khi cập nhật:", error);
-            }
-        };
-
-        const handleDeletePromotion = (idToDelete) => {
-            try {
-                const currentPromotions = JSON.parse(sessionStorage.getItem('promotions')) || [];
-                const updatedPromotions = currentPromotions.filter(promo => promo.id !== idToDelete);
-                sessionStorage.setItem('promotions', JSON.stringify(updatedPromotions));
-                setPromotions(updatedPromotions);
-                setFilteredPromotions(updatedPromotions);
-                closeDeleteConfirmModal();
-                openDeleteSuccessModal();
-            } catch (error) {
-                console.error("Lỗi khi xóa:", error);
-            }
-        };
-
-        const handleConfirmDelete = () => {
-            if (promotionToDelete && promotionToDelete.id) {
-                handleDeletePromotion(promotionToDelete.id);
-            }
-        };
-
-        const handleSave = (promotionData) => {
-            if (promotionToEdit) {
-                setPromotionDataToSave(promotionData);
-                openEditConfirmModal();
-            } else {
-                handleAddPromotion(promotionData);
-            }
-        };
-
-        const handleFilter = (filterData) => {
-            let filtered = [...promotions];
-            if (filterData.branch !== 'Tất cả') {
-                filtered = filtered.filter(p => p.scope === filterData.branch || (p.scope === 'Toàn bộ chi nhánh' && filterData.branch === 'Chi nhánh A'));
-            }
-            if (filterData.status !== 'Tất cả') {
-                filtered = filtered.filter(p => p.status === filterData.status);
-            }
-            if (filterData.validity !== 'Tất cả') {
-                const now = new Date('2025-06-15T20:03:00+07:00');
-                filtered = filtered.filter(p => {
-                    const endDate = new Date(p.endDate);
-                    if (filterData.validity === 'Còn hiệu lực') {
-                        return endDate > now;
-                    } else if (filterData.validity === 'Hết hiệu lực') {
-                        return endDate <= now;
-                    }
-                    return true;
-                });
-            }
-            setFilteredPromotions(filtered);
-            setCurrentPage(1);
-        };
-
-        const handleSearch = () => {
-            if (!searchQuery.trim()) {
-                setSearchResults([]);
-                setActiveModal('search');
-                return;
-            }
-            if (searchQuery.trim().length < 2) {
-                setSearchResults([]);
-                setActiveModal('search');
-                return;
-            }
-            const results = promotions.filter(promo =>
-                promo.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                promo.name.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-            setSearchResults(results);
-            setActiveModal('search');
-        };
-
+    // Table rendering
+    function renderTable() {
         const indexOfLastRecord = currentPage * recordsPerPage;
         const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
         const currentRecords = filteredPromotions.slice(indexOfFirstRecord, indexOfLastRecord);
-
-        const paginate = (pageNumber) => setCurrentPage(pageNumber);
-        const nextPage = () => {
-            if (currentPage < Math.ceil(filteredPromotions.length / recordsPerPage)) {
-                setCurrentPage(currentPage + 1);
-            }
-        };
-        const prevPage = () => {
-            if (currentPage > 1) {
-                setCurrentPage(currentPage - 1);
-            }
-        };
-
-        return (
-            <div className="w-full min-h-screen bg-gray-100 font-sans">
-                <header className="flex items-center justify-between px-6 py-4 bg-white shadow-sm">
-                    <h1 className="text-3xl font-bold text-indigo-600">FiveH</h1>
-                    <div className="flex items-center space-x-6">
-                        <div className="flex items-center space-x-2 cursor-pointer hover:text-indigo-600 transition-colors">
-                            <i className="fas fa-cog text-gray-600 text-lg"></i>
-                            <span className="text-gray-700 font-medium">Cài đặt</span>
+        const tbody = document.getElementById('promotionsTableBody');
+        tbody.innerHTML = currentRecords.map((p, i) => `
+                <tr class="h-20 ${i % 2 === 0 ? 'bg-white' : 'bg-violet-50'} hover:bg-violet-100 transition-colors">
+                    <td class="px-6 py-2 text-base text-gray-600">${p.id}</td>
+                    <td class="px-6 py-2 text-base text-gray-600">${p.name}</td>
+                    <td class="px-6 py-2 text-base text-gray-600">${new Date(p.startDate).toLocaleDateString('vi-VN')}</td>
+                    <td class="px-6 py-2 text-base text-gray-600">${new Date(p.endDate).toLocaleDateString('vi-VN')}</td>
+                    <td class="px-6 py-2 text-base text-gray-600">${p.type}</td>
+                    <td class="px-6 py-2 text-base text-gray-600">${p.discount}</td>
+                    <td class="px-6 py-2 text-base text-gray-600">${p.status}</td>
+                    <td class="px-6 py-2">
+                        <div class="flex space-x-4">
+                            <button onclick='openModal("details", ${JSON.stringify(p)})' class="text-gray-600 hover:text-gray-800"><i class="fas fa-eye"></i></button>
+                            <button onclick='openModal("edit", ${JSON.stringify(p)})' class="text-gray-600 hover:text-gray-800"><i class="fas fa-edit"></i></button>
+                            <button onclick='openModal("deleteConfirm", ${JSON.stringify(p)})' class="text-gray-600 hover:text-red-600"><i class="fas fa-trash"></i></button>
                         </div>
-                        <div className="flex items-center space-x-3">
-                            <img
-                                src="https://placehold.co/40x40"
-                                alt="Profile"
-                                className="w-10 h-10 rounded-full border border-gray-300"
-                            />
-                            <div className="flex flex-col">
-                                <span className="text-gray-700 font-medium">Quản lý</span>
-                                <span className="text-gray-500 text-sm cursor-pointer hover:text-indigo-600">
-                                    Đăng xuất
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </header>
-                <nav className="bg-gradient-to-r from-purple-600 to-rose-500 py-4 px-6 shadow-md">
-                    <div className="max-w-7xl mx-auto flex justify-between items-center text-white">{[{ icon: "fa-home", label: "Trang chủ", href: "TrangChu.html", active: true },{ icon: "fa-shopping-cart", label: "Bán hàng", href: "PageBanHang.html" },{ icon: "fa-users", label: "Nhân viên", href: "Staff.html" },{ icon: "fa-box", label: "Mặt hàng", href: "Products.html" },{ icon: "fa-tags", label: "CT Khuyến mại", href: "PageQLCTKM.html" },{ icon: "fa-chart-line", label: "Doanh thu", href: "Revenue.html" }].map((item, index) => (<a key={index} href={item.href} className={`flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors ${item.active ? "text-pink-100" : ""}`}><i className={`fas ${item.icon} text-lg`}></i><span className="text-lg font-semibold">{item.label}</span></a>))}</div>
-                </nav>
-                <main className="max-w-7xl mx-auto mt-8 px-6">
-                    <h2 className="text-2xl font-bold text-gray-800 mb-6">QUẢN LÝ CHƯƠNG TRÌNH KHUYẾN MẠI</h2>
-                    <div className="flex items-center justify-between mb-6">
-                        <div className="flex items-center space-x-4">
-                            <div className="relative">
-                                <input
-                                    type="text"
-                                    placeholder="Tìm kiếm theo tên, theo mã"
-                                    className="w-96 px-4 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600"
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                />
-                                <i className="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                            </div>
-                            <button
-                                onClick={handleSearch}
-                                className="bg-purple-600 text-white px-4 py-2 rounded-md shadow-lg hover:bg-purple-700 hover:shadow-xl transform hover:-translate-y-px transition-all flex items-center space-x-2"
-                            >
-                                <i className="fas fa-search"></i>
-                            </button>
-                        </div>
-                        <div className="flex space-x-4">
-                            <button
-                                onClick={openFilterModal}
-                                className="bg-purple-600 text-white px-4 py-2 rounded-md shadow-lg hover:bg-purple-700 hover:shadow-xl transform hover:-translate-y-px transition-all flex items-center space-x-2"
-                            >
-                                <i className="fas fa-filter"></i><span>Lọc</span>
-                            </button>
-                            <button
-                                onClick={openAddModal}
-                                className="bg-purple-600 text-white px-4 py-2 rounded-md shadow-lg hover:bg-purple-700 hover:shadow-xl transform hover:-translate-y-px transition-all flex items-center space-x-2"
-                            >
-                                <i className="fas fa-plus"></i><span>Thêm mới</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div className="bg-white rounded-lg shadow-md border border-violet-200">
-                        <table className="w-full table-fixed">
-                            <thead><tr className="bg-violet-200 h-16"><th className="w-1/12 px-4 py-2 text-left text-xl font-semibold text-gray-800">Mã CT</th><th className="w-2/12 px-4 py-2 text-left text-xl font-semibold text-gray-800">Tên CT</th><th className="w-2/12 px-4 py-2 text-left text-xl font-semibold text-gray-800">Ngày bắt đầu</th><th className="w-2/12 px-4 py-2 text-left text-xl font-semibold text-gray-800">Ngày kết thúc</th><th className="w-3/12 px-4 py-2 text-left text-xl font-semibold text-gray-800">Hình thức</th><th className="w-2/12 px-4 py-2 text-left text-xl font-semibold text-gray-800">Mức giảm giá/Quà tặng</th><th className="w-2/12 px-4 py-2 text-left text-xl font-semibold text-gray-800">Trạng thái</th><th className="w-2/12 px-4 py-2 text-left text-xl font-semibold text-gray-800">Hành động</th></tr></thead>
-                            <tbody>
-                            {currentRecords.map((promotion, index) => (
-                                <tr key={promotion.id} className={`h-20 ${index % 2 === 0 ? "bg-white" : "bg-violet-50"} hover:bg-violet-100 transition-colors align-middle1`}>
-                                    <td className="px-4 py-2 text-base text-gray-700">{promotion.id}</td>
-                                    <td className="px-4 py-2 text-base text-gray-700">{promotion.name}</td>
-                                    <td className="px-4 py-2 text-base text-gray-700">{new Date(promotion.startDate).toLocaleDateString('vi-VN')}</td>
-                                    <td className="px-4 py-2 text-base text-gray-700">{new Date(promotion.endDate).toLocaleDateString('vi-VN')}</td>
-                                    <td className="px-4 py-2 text-base text-gray-700">{promotion.type}</td>
-                                    <td className="px-4 py-2 text-base text-gray-700">{promotion.discount}</td>
-                                    <td className="px-4 py-2 text-base text-gray-700">{promotion.status}</td>
-                                    <td className="px-4 py-2">
-                                        <div className="flex space-x-4">
-                                            <button onClick={() => openDetailsModal(promotion)} className="text-gray-600 hover:text-gray-800">
-                                                <i className="fas fa-eye"></i>
-                                            </button>
-                                            <button onClick={() => openEditModal(promotion)} className="text-gray-600 hover:text-gray-800">
-                                                <i className="fas fa-edit"></i>
-                                            </button>
-                                            <button onClick={() => openDeleteConfirmModal(promotion)} className="text-gray-600 hover:text-red-500">
-                                                <i className="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                            </tbody>
-                        </table>
-                    </div>
-                    <Pagination
-                        recordsPerPage={recordsPerPage}
-                        totalRecords={filteredPromotions.length}
-                        paginate={paginate}
-                        nextPage={nextPage}
-                        prevPage={prevPage}
-                        currentPage={currentPage}
-                    />
-                </main>
-                <AddPromotionModal
-                    isOpen={activeModal === 'add'}
-                    onClose={closeModal}
-                    onSave={handleSave}
-                    existingPromotions={promotions}
-                    promotionToEdit={promotionToEdit}
-                />
-                <SuccessModal
-                    isOpen={activeModal === 'success'}
-                    onClose={closeSuccessModal}
-                />
-                <ConfirmDeleteModal
-                    isOpen={activeModal === 'deleteConfirm'}
-                    onClose={closeDeleteConfirmModal}
-                    onConfirm={handleConfirmDelete}
-                    promotionName={promotionToDelete ? promotionToDelete.name : ''}
-                />
-                <DeleteSuccessModal
-                    isOpen={activeModal === 'deleteSuccess'}
-                    onClose={closeDeleteSuccessModal}
-                    promotionName={promotionToDelete ? promotionToDelete.name : ''}
-                />
-                <ConfirmEditModal
-                    isOpen={activeModal === 'editConfirm'}
-                    onClose={closeModal}
-                    onConfirm={handleConfirmEdit}
-                />
-                <FilterModal
-                    isOpen={activeModal === 'filter'}
-                    onClose={closeModal}
-                    onFilter={handleFilter}
-                />
-                <DetailsModal
-                    isOpen={activeModal === 'details'}
-                    onClose={closeModal}
-                    promotion={promotionToView}
-                />
-                <SearchResultsModal
-                    isOpen={activeModal === 'search'}
-                    onClose={closeModal}
-                    results={searchResults}
-                    onViewDetails={openDetailsModal}
-                />
-                <style>{/* Nội dung style của bạn được giữ nguyên */}</style>
-            </div>
-        );
+                    </td>
+                </tr>
+            `).join('');
     }
 
-    const container = document.getElementById('root');
-    const root = ReactDOM.createRoot(container);
-    root.render(<PromotionsDashboard />);
+    // Pagination rendering
+    function renderPagination() {
+        const pageNumbers = [];
+        for (let i = 1; i <= Math.ceil(filteredPromotions.length / recordsPerPage); i++) {
+            pageNumbers.push(i);
+        }
+        const pagination = document.getElementById('pagination');
+        pagination.innerHTML = `
+            <div class="flex items-center justify-between mt-6">
+                <button onclick="prevPage()" ${currentPage === 1 || filteredPromotions.length <= recordsPerPage ? 'disabled' : ''} class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i class="fas fa-chevron-left"></i>
+                    <span>Previous</span>
+                </button>
+                <div class="flex space-x-2">
+                    ${pageNumbers.map(n => `
+                        <button onclick="paginate(${n})" class="w-10 h-10 rounded-lg ${currentPage === n ? 'bg-purple-600 text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'} transition-colors ${filteredPromotions.length <= recordsPerPage ? 'pointer-events-none opacity-50' : ''}">${n}</button>
+                    `).join('')}
+                </div>
+                <button onclick="nextPage()" ${currentPage === pageNumbers.length || filteredPromotions.length <= recordsPerPage ? 'disabled' : ''} class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                    <span>Next</span>
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        `;
+    }
+
+    function paginate(pageNumber) {
+        if (filteredPromotions.length <= recordsPerPage) return;
+        currentPage = pageNumber;
+        renderTable();
+        renderPagination();
+    }
+
+    function nextPage() {
+        if (filteredPromotions.length <= recordsPerPage) return;
+        if (currentPage < Math.ceil(filteredPromotions.length / recordsPerPage)) {
+            currentPage++;
+            renderTable();
+            renderPagination();
+        }
+    }
+
+    function prevPage() {
+        if (filteredPromotions.length <= recordsPerPage) return;
+        if (currentPage > 1) {
+            currentPage--;
+            renderTable();
+            renderPagination();
+        }
+    }
+
+    // Form handling
+    function updateDiscountUnit() {
+        const promoType = document.getElementById('promoType').value;
+        document.getElementById('discountUnit').textContent = promoType === 'Giảm giá theo %' ? '%' : 'VND';
+    }
+
+    function toggleBranchSelect() {
+        const scope = document.querySelector('input[name="scope"]:checked').value;
+        const branchSelect = document.getElementById('branch');
+        if (scope === 'all') {
+            branchSelect.disabled = true;
+            branchSelect.classList.add('bg-gray-200', 'cursor-not-allowed');
+        } else {
+            branchSelect.disabled = false;
+            branchSelect.classList.remove('bg-gray-200', 'cursor-not-allowed');
+        }
+    }
+
+    function addCondition() {
+        const newCondition = { id: Date.now(), type: 'Giá trị tối thiểu', value: '' };
+        conditions.push(newCondition);
+        renderConditions();
+    }
+
+    function removeCondition(id) {
+        conditions = conditions.filter(c => c.id !== id);
+        renderConditions();
+    }
+
+    function updateCondition(id, field, value) {
+        conditions = conditions.map(c => c.id === id ? { ...c, [field]: value } : c);
+    }
+
+    function renderConditions() {
+        const container = document.getElementById('conditionsContainer');
+        container.innerHTML = conditions.map((c, i) => `
+                <div class="flex items-center space-x-4 p-4 bg-purple-50 rounded-lg animate-fade-in" data-id="${c.id}">
+                    <span class="font-bold text-gray-600">${i + 1}</span>
+                    <select class="w-1/3 h-10 px-3 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500 transition" onchange="updateCondition(${c.id}, 'type', this.value)">
+                        <option value="Giá trị tối thiểu" ${c.type === 'Giá trị tối thiểu' ? 'selected' : ''}>Giá trị tối thiểu</option>
+                        <option value="Số lượng sản phẩm tối thiểu" ${c.type === 'Số lượng sản phẩm tối thiểu' ? 'selected' : ''}>Số lượng sản phẩm tối thiểu</option>
+                    </select>
+                    <input type="text" placeholder="Nhập giá trị (VD: 500000 hoặc VIP)" value="${c.value}" class="flex-grow h-10 px-4 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500 transition" oninput="updateCondition(${c.id}, 'value', this.value)">
+                    <button onclick="removeCondition(${c.id})" class="w-10 h-10 flex-shrink-0 text-red-500 hover:bg-red-100 rounded-full flex items-center justify-center transition-colors" title="Xóa điều kiện">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+            `).join('');
+    }
+
+    function handleSave() {
+        const formData = {
+            id: document.getElementById('id').value.trim(),
+            promoName: document.getElementById('promoName').value.trim(),
+            status: document.querySelector('input[name="status"]:checked')?.value,
+            notes: document.getElementById('notes').value.trim(),
+            promoBy: document.getElementById('promoBy').value,
+            promoType: document.getElementById('promoType').value,
+            discountValue: document.getElementById('discountValue').value.trim(),
+            startDate: document.getElementById('startDate').value,
+            endDate: document.getElementById('endDate').value,
+            scope: document.querySelector('input[name="scope"]:checked')?.value,
+            branch: document.getElementById('branch').value
+        };
+
+        // Validation
+        const errors = {};
+        if (!formData.id) {
+            errors.id = 'Mã chương trình không được để trống';
+        } else if (!promotionToEdit && promotions.some(p => p.id === formData.id)) {
+            errors.id = 'Mã chương trình này đã tồn tại';
+        }
+        if (!formData.promoName) {
+            errors.promoName = 'Tên chương trình không được để trống';
+        }
+        if (!formData.status) {
+            errors.status = 'Vui lòng chọn trạng thái';
+        }
+        if (!formData.discountValue || isNaN(formData.discountValue) || Number(formData.discountValue) <= 0) {
+            errors.discountValue = 'Mức giảm không được để trống và phải là số lớn hơn 0';
+        }
+        if (!formData.startDate || !formData.endDate) {
+            errors.date = 'Vui lòng chọn ngày bắt đầu và kết thúc';
+        } else if (new Date(formData.startDate) > new Date(formData.endDate)) {
+            errors.date = 'Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu';
+        }
+        if (!formData.scope) {
+            errors.scope = 'Vui lòng chọn phạm vi áp dụng';
+        }
+
+        // Display errors
+        ['id', 'promoName', 'status', 'discountValue', 'date', 'scope'].forEach(field => {
+            const errorEl = document.getElementById(`error-${field}`);
+            if (errorEl) {
+                if (errors[field]) {
+                    errorEl.textContent = errors[field];
+                    errorEl.classList.remove('hidden');
+                } else {
+                    errorEl.classList.add('hidden');
+                }
+            }
+        });
+
+        if (Object.keys(errors).length > 0) return;
+
+        const promotionData = {
+            id: formData.id,
+            name: formData.promoName,
+            startDate: formData.startDate,
+            endDate: formData.endDate,
+            type: `${formData.promoBy}-${formData.promoType}`,
+            discount: `${formData.discountValue} ${formData.promoType === 'Giảm giá theo %' ? '%' : 'VND'}`,
+            status: formData.status === 'active' ? 'Kích hoạt' : 'Chưa kích hoạt',
+            scope: formData.scope === 'all' ? 'Toàn bộ chi nhánh' : formData.branch,
+            notes: formData.notes || 'Không có',
+            conditions: conditions.filter(c => c.value.trim() !== '') // Only save non-empty conditions
+        };
+
+        if (promotionToEdit) {
+            promotionDataToSave = promotionData;
+            openModal('editConfirm');
+        } else {
+            handleAddPromotion(promotionData);
+        }
+    }
+
+    // CRUD operations
+    function handleAddPromotion(newPromotion) {
+        try {
+            promotions.push(newPromotion);
+            localStorage.setItem('promotions', JSON.stringify(promotions));
+            filteredPromotions = [...promotions];
+            conditions = []; // Reset conditions after adding
+            closeModal();
+            openModal('success');
+            renderTable();
+            renderPagination();
+        } catch (error) {
+            console.error('Lỗi khi thêm mới:', error);
+        }
+    }
+
+    function handleUpdatePromotion(updatedPromotion) {
+        try {
+            promotions = promotions.map(p => p.id === updatedPromotion.id ? updatedPromotion : p);
+            localStorage.setItem('promotions', JSON.stringify(promotions));
+            filteredPromotions = [...promotions];
+            closeModal();
+            renderTable();
+            renderPagination();
+        } catch (error) {
+            console.error('Lỗi khi cập nhật:', error);
+        }
+    }
+
+    function handleDeletePromotion(id) {
+        try {
+            promotions = promotions.filter(p => p.id !== id);
+            localStorage.setItem('promotions', JSON.stringify(promotions));
+            filteredPromotions = [...promotions];
+            // Reset to page 1 if current page exceeds new total pages
+            const totalPages = Math.ceil(filteredPromotions.length / recordsPerPage);
+            if (currentPage > totalPages) {
+                currentPage = 1;
+            }
+            closeDeleteConfirmModal();
+            openModal('deleteSuccess');
+            renderTable();
+            renderPagination();
+        } catch (error) {
+            console.error('Lỗi khi xóa:', error);
+        }
+    }
+
+    function handleConfirmDelete() {
+        if (promotionToDelete && promotionToDelete.id) {
+            handleDeletePromotion(promotionToDelete.id);
+        }
+    }
+
+    function handleConfirmEdit() {
+        if (promotionDataToSave) {
+            handleUpdatePromotion(promotionDataToSave);
+        }
+    }
+
+    // Search and filter
+    function handleSearch() {
+        searchQuery = document.getElementById('searchInput').value.trim();
+        if (!searchQuery || searchQuery.length < 2) {
+            searchResults = [];
+            openModal('search');
+            return;
+        }
+        searchResults = promotions.filter(p =>
+            p.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            p.name.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+        openModal('search');
+    }
+
+    function handleFilter() {
+        const filterData = {
+            branch: document.getElementById('filter-branch').value,
+            status: document.querySelector('input[name="filter-status"]:checked').value,
+            validity: document.querySelector('input[name="filter-validity"]:checked').value
+        };
+        let filtered = [...promotions];
+        if (filterData.branch !== 'Tất cả') {
+            filtered = filtered.filter(p => p.scope === filterData.branch || p.scope === 'Toàn bộ chi nhánh');
+        }
+        if (filterData.status !== 'Tất cả') {
+            filtered = filtered.filter(p => p.status === filterData.status);
+        }
+        if (filterData.validity !== 'Tất cả') {
+            const now = new Date();
+            filtered = filtered.filter(p => {
+                const endDate = new Date(p.endDate);
+                return filterData.validity === 'Còn hiệu lực' ? endDate > now : endDate <= now;
+            });
+        }
+        filteredPromotions = filtered;
+        currentPage = 1;
+        renderTable();
+        renderPagination();
+        closeModal();
+    }
 </script>
 </body>
 </html>

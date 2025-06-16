@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FiveH Inventory Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="w-full min-h-screen bg-gray-100 font-sans">
+<!-- Header -->
+<header class="flex items-center justify-between px-6 py-4 bg-white shadow-sm">
+    <h1 class="text-3xl font-bold text-indigo-600">FiveH</h1>
+    <div class="flex items-center space-x-6">
+        <div class="flex items-center space-x-2 cursor-pointer hover:text-indigo-600 transition-colors">
+            <i class="fas fa-cog text-gray-600 text-lg"></i>
+            <span class="text-gray-700 font-medium">Cài đặt</span>
+        </div>
+        <div class="flex items-center space-x-3">
+            <img src="https://placehold.co/40x40" alt="Profile" class="w-10 h-10 rounded-full border border-gray-300">
+            <div class="flex flex-col">
+                <span class="text-gray-700 font-medium">Quản lý</span>
+                <span class="text-gray-500 text-sm cursor-pointer hover:text-indigo-600">Đăng xuất</span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Navigation -->
+<nav class="bg-gradient-to-r from-purple-600 to-rose-500 py-4 px-6 shadow-md">
+    <div class="max-w-7xl mx-auto flex justify-between items-center text-white">
+        <a href="TrangChu.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors text-pink-100">
+            <i class="fas fa-home text-lg"></i><span class="text-lg font-semibold">Trang chủ</span>
+        </a>
+        <a href="PageBanHang.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
+            <i class="fas fa-shopping-cart text-lg"></i><span class="text-lg font-semibold">Bán hàng</span>
+        </a>
+        <a href="Staff.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
+            <i class="fas fa-users text-lg"></i><span class="text-lg font-semibold">Nhân viên</span>
+        </a>
+        <a href="PageQLMH.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
+            <i class="fas fa-box text-lg"></i><span class="text-lg font-semibold">Mặt hàng</span>
+        </a>
+        <a href="PageQLCTKM.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
+            <i class="fas fa-tags text-lg"></i><span class="text-lg font-semibold">CT Khuyến mại</span>
+        </a>
+        <a href="Revenue.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
+            <i class="fas fa-chart-line text-lg"></i><span class="text-lg font-semibold">Doanh thu</span>
+        </a>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<main class="max-w-7xl mx-auto mt-8 px-6">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Quản lý mặt hàng</h2>
+
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">Tổng mặt hàng</p>
+                    <p id="totalItems" class="text-2xl font-bold text-gray-800">0</p>
+                </div>
+                <i class="fas fa-box text-purple-600 text-2xl"></i>
+            </div>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">Trà sữa</p>
+                    <p id="teaMilkCount" class="text-2xl font-bold text-gray-800">0</p>
+                </div>
+                <i class="fas fa-coffee text-amber-600 text-2xl"></i>
+            </div>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">Trà hoa quả</p>
+                    <p id="fruitTeaCount" class="text-2xl font-bold text-gray-800">0</p>
+                </div>
+                <i class="fas fa-leaf text-green-600 text-2xl"></i>
+            </div>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">Cà phê</p>
+                    <p id="coffeeCount" class="text-2xl font-bold text-gray-800">0</p>
+                </div>
+                <i class="fas fa-mug-hot text-orange-600 text-2xl"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Button -->
+    <div class="flex justify-end mb-6">
+        <button onclick="openAddModal()" class="bg-purple-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-purple-700 transition-colors flex items-center space-x-2 w-full sm:w-auto">
+            <i class="fas fa-plus"></i>
+            <span>Thêm mới</span>
+        </button>
+    </div>
+
+    <!-- Items Table -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                <tr class="bg-purple-200 h-12">
+                    <th class="px-4 py-2 text-left text-lg font-semibold text-gray-800">Loại</th>
+                    <th class="px-4 py-2 text-left text-lg font-semibold text-gray-800">Tên</th>
+                    <th class="px-4 py-2 text-left text-lg font-semibold text-gray-800">Ngày tạo</th>
+                    <th class="px-4 py-2 text-left text-lg font-semibold text-gray-800">Số tiền</th>
+                    <th class="px-4 py-2 text-left text-lg font-semibold text-gray-800">Ghi chú</th>
+                    <th class="px-4 py-2 text-left text-lg font-semibold text-gray-800">Hình ảnh</th>
+                    <th class="px-4 py-2 text-left text-lg font-semibold text-gray-800">Hành động</th>
+                </tr>
+                </thead>
+                <tbody id="itemsTableBody">
+                <!-- Items will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex items-center justify-between mt-4 text-sm text-gray-700 bg-purple-100 p-4 rounded">
+        <button id="prevPage" class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50 flex items-center gap-1 transition-colors" disabled>
+            <i class="fas fa-chevron-left"></i> Previous
+        </button>
+        <div class="flex items-center gap-2">
+            <span id="paginationInfo" class="text-sm text-gray-600">Trang 1 / 1 - Hiển thị 0 / 0 mặt hàng</span>
+        </div>
+        <div id="pageButtons" class="flex space-x-2">
+            <!-- Page buttons will be populated by JavaScript -->
+        </div>
+        <button id="nextPage" class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50 flex items-center gap-1 transition-colors" disabled>
+            Next <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+</main>
+
+<!-- Item Modal (Add/Edit) -->
+<div id="itemModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 hidden">
+    <div class="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-purple-50 rounded-lg shadow-xl border-2 border-purple-600">
+        <div class="border-b-4 border-black p-6 pb-4">
+            <div class="flex items-center justify-between">
+                <h2 id="itemModalTitle" class="text-xl font-bold text-black">Thêm mặt hàng</h2>
+                <button onclick="closeItemModal()" class="w-6 h-6 flex items-center justify-center hover:bg-gray-200 rounded">
+                    <i class="fas fa-times text-black"></i>
+                </button>
+            </div>
+        </div>
+        <div class="p-6 space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                    <label class="block text-base font-medium text-black">Loại:</label>
+                    <select id="itemType" class="w-full h-10 px-3 py-2 bg-gray-50 rounded-md shadow-md border border-neutral-400 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <option value="">Chọn loại</option>
+                        <option value="Trà sữa">Trà sữa</option>
+                        <option value="Trà hoa quả">Trà hoa quả</option>
+                        <option value="Cà phê">Cà phê</option>
+                    </select>
+                    <p id="typeError" class="text-red-600 text-sm hidden"></p>
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-base font-medium text-black">Tên:</label>
+                    <input id="itemName" type="text" placeholder="e.g., Trà sữa hoàng kim" class="w-full h-10 px-3 py-2 bg-gray-50 rounded-md shadow-md border border-neutral-400 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <p id="nameError" class="text-red-600 text-sm hidden"></p>
+                </div>
+            </div>
+            <div class="space-y-2">
+                <label class="block text-base font-medium text-black">Ghi chú:</label>
+                <textarea id="itemNote" placeholder="e.g., Trà sữa kèm với trân châu hoàng kim" class="w-full h-20 px-3 py-2 bg-gray-50 rounded-md shadow-md border border-neutral-400 focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"></textarea>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                    <label class="block text-base font-medium text-black">Ngày tạo:</label>
+                    <input id="itemCreatedDate" type="date" class="w-full h-10 px-3 py-2 bg-gray-50 rounded-md shadow-md border border-neutral-400 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <p id="createdDateError" class="text-red-600 text-sm hidden"></p>
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-base font-medium text-black">Giá bán:</label>
+                    <div class="flex items-center gap-2">
+                        <input id="itemPrice" type="number" placeholder="e.g., 20000" class="flex-1 h-10 px-3 py-2 bg-gray-50 rounded-md shadow-md border border-neutral-400 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <span class="text-base font-medium text-black">VNĐ</span>
+                    </div>
+                    <p id="priceError" class="text-red-600 text-sm hidden"></p>
+                </div>
+            </div>
+            <div class="space-y-4">
+                <label class="block text-base font-medium text-black">Hình ảnh:</label>
+                <div class="flex items-start gap-4">
+                    <div class="w-20 h-20 bg-zinc-300 rounded flex items-center justify-center overflow-hidden">
+                        <img id="itemImagePreview" src="https://placehold.co/80x80" alt="Preview" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label for="itemImage" class="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-gray-200 rounded-md shadow-md hover:bg-gray-300 transition-colors">
+                            <i class="fas fa-upload"></i>
+                            <span class="text-base font-semibold">Chọn ảnh</span>
+                        </label>
+                        <input id="itemImage" type="file" accept="image/*" class="hidden">
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-center gap-4 pt-4">
+                <button onclick="saveItem()" class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md shadow-md transition-colors inline-flex items-center gap-2">
+                    <i class="fas fa-save"></i>
+                    <span class="font-semibold">Lưu</span>
+                </button>
+                <button onclick="closeItemModal()" class="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-black rounded-md shadow-md transition-colors font-semibold">
+                    Thoát
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success Modal -->
+<div id="addSuccessModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 hidden">
+    <div class="w-full max-w-md bg-white rounded-lg border border-black shadow-xl overflow-hidden">
+        <div class="p-8">
+            <div class="flex flex-col items-center justify-center gap-6 text-center">
+                <div class="w-12 h-12 rounded-full border-4 border-green-500 flex items-center justify-center">
+                    <i class="fas fa-plus text-green-500 text-xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-black">Thêm mới thành công</h2>
+                <p class="text-base text-black">Bạn đã thêm một mặt hàng mới vào danh sách thành công.</p>
+                <button onclick="closeAddSuccessModal()" class="w-32 px-4 py-2 bg-gradient-to-r from-violet-50 rounded-md shadow-md border border-gray-200 hover:bg-gray-50 transition-colors">
+                    <span class="text-neutral-700 font-semibold">Thoát</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Success Modal -->
+<div id="editSuccessModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 hidden">
+    <div class="w-full max-w-md bg-white rounded-lg border border-black shadow-xl overflow-hidden">
+        <div class="p-8">
+            <div class="flex flex-col items-center justify-center gap-6 text-center">
+                <div class="w-12 h-12 rounded-full border-4 border-blue-500 flex items-center justify-center">
+                    <i class="fas fa-edit text-blue-500 text-xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-black">Chỉnh sửa thành công</h2>
+                <p class="text-base text-black">Thông tin mặt hàng đã được cập nhật thành công.</p>
+                <button onclick="closeEditSuccessModal()" class="w-32 px-4 py-2 bg-gradient-to-r from-violet-50 rounded-md shadow-md border border-gray-200 hover:bg-gray-50 transition-colors">
+                    <span class="text-neutral-700 font-semibold">Thoát</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteConfirmModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 hidden">
+    <div class="w-full max-w-md bg-white rounded-lg border border-black shadow-xl overflow-hidden">
+        <div class="p-8">
+            <div class="flex flex-col items-center justify-center gap-6 text-center">
+                <div class="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center">
+                    <i class="fas fa-exclamation-triangle text-yellow-600 text-xl"></i>
+                </div>
+                <h2 class="text-xl font-bold text-black">Bạn có chắc chắn muốn xóa không?</h2>
+                <p id="deleteItemName" class="text-base text-black">Sau khi xóa sẽ không thể khôi phục lại thông tin mặt hàng đó</p>
+                <div class="flex gap-4 w-full">
+                    <button onclick="confirmDelete()" class="flex-1 px-4 py-2 bg-black hover:bg-gray-800 text-white rounded-md shadow-md transition-colors font-semibold">
+                        Có
+                    </button>
+                    <button onclick="closeDeleteConfirmModal()" class="flex-1 px-4 py-2 bg-white hover:bg-gray-50 text-black rounded-md shadow-md border border-gray-300 transition-colors font-semibold">
+                        Không
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Success Modal -->
+<div id="deleteSuccessModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 hidden">
+    <div class="w-full max-w-md bg-white rounded-lg border border-black shadow-xl overflow-hidden">
+        <div class="p-8">
+            <div class="flex flex-col items-center justify-center gap-6 text-center">
+                <div class="w-12 h-12 rounded-full border-4 border-red-500 flex items-center justify-center">
+                    <i class="fas fa-trash-alt text-red-500 text-xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-black">Xóa thành công</h2>
+                <p class="text-base text-black">Thông tin mặt hàng đã được xóa bỏ</p>
+                <button onclick="closeDeleteSuccessModal()" class="w-32 px-4 py-2 bg-gradient-to-r from-violet-50 rounded-md shadow-md border border-gray-200 hover:bg-gray-50 transition-colors">
+                    <span class="text-neutral-700 font-semibold">Thoát</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Confirmation Modal -->
+<div id="editConfirmModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 hidden">
+    <div class="w-full max-w-md bg-white rounded-lg border border-black shadow-xl overflow-hidden">
+        <div class="p-8">
+            <div class="flex flex-col items-center justify-center gap-6 text-center">
+                <div class="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center">
+                    <i class="fas fa-exclamation-triangle text-yellow-600 text-xl"></i>
+                </div>
+                <h2 class="text-xl font-bold text-black">Bạn có chắc chắn muốn sửa không?</h2>
+                <p id="editItemName" class="text-base text-black">Sau khi sửa, thông tin mặt hàng sẽ bị thay đổi vĩnh viễn</p>
+                <div class="flex gap-4 w-full">
+                    <button onclick="confirmEdit()" class="flex-1 px-4 py-2 bg-black hover:bg-gray-800 text-white rounded-md shadow-md transition-colors font-semibold">
+                        Có
+                    </button>
+                    <button onclick="closeEditConfirmModal()" class="flex-1 px-4 py-2 bg-white hover:bg-gray-50 text-black rounded-md shadow-md border border-gray-300 transition-colors font-semibold">
+                        Không
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Error Message -->
+<div id="errorMessage" class="fixed top-4 right-4 bg-red-600 text-white px-4 py-2 rounded-md shadow-md hidden">
+    <span id="errorText"></span>
+</div>
+
+<!-- JavaScript -->
+<script>
+    let items = [];
+    let currentPage = 1;
+    const itemsPerPage = 5;
+    let editItemId = null;
+    let deleteItemId = null;
+    let pendingEditItem = null;
+
+    // Load items from localStorage
+    function loadItems() {
+        try {
+            const storedItems = localStorage.getItem('items');
+            items = storedItems ? JSON.parse(storedItems) : [];
+            renderTable();
+            updateSummaryCards();
+            updatePagination();
+        } catch (err) {
+            showError('Lỗi khi tải dữ liệu: ' + err.message);
+        }
+    }
+
+    // Render table rows
+    function renderTable() {
+        const tbody = document.getElementById('itemsTableBody');
+        tbody.innerHTML = '';
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const paginatedItems = items.slice(start, end);
+
+        if (paginatedItems.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" class="px-4 py-8 text-center text-gray-700">Không có dữ liệu</td></tr>';
+            return;
+        }
+
+        paginatedItems.forEach((item, index) => {
+            const row = document.createElement('tr');
+            row.className = `h-16 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-gray-100 transition-colors`;
+            row.innerHTML = `
+                    <td class="px-4 py-2 text-sm text-gray-700">
+                        <span class="px-2 py-1 rounded-full text-xs font-medium ${
+                item.type === 'Trà sữa' ? 'bg-amber-100 text-amber-800' :
+                    item.type === 'Trà hoa quả' ? 'bg-green-100 text-green-800' :
+                        item.type === 'Cà phê' ? 'bg-orange-100 text-orange-800' :
+                            'bg-gray-100 text-gray-800'
+            }">${item.type}</span>
+                    </td>
+                    <td class="px-4 py-2 text-sm text-gray-700 font-medium">${item.name}</td>
+                    <td class="px-4 py-2 text-sm text-gray-700">${item.createdDate}</td>
+                    <td class="px-4 py-2 text-sm text-gray-700 font-semibold text-green-600">${item.price}</td>
+                    <td class="px-4 py-2 text-sm text-gray-700 max-w-xs truncate" title="${item.note}">${item.note}</td>
+                    <td class="px-4 py-2">
+                        <img src="${item.image || 'https://placehold.co/80x80'}" alt="${item.name}" class="w-10 h-10 object-cover rounded-lg shadow-sm">
+                    </td>
+                    <td class="px-4 py-2">
+                        <div class="flex space-x-2">
+                            <button onclick="openEditModal('${item.id}')" class="text-blue-600 hover:text-blue-800 p-1 hover:bg-blue-50 rounded transition-colors" title="Chỉnh sửa">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="openDeleteConfirmModal('${item.id}')" class="text-red-600 hover:text-red-800 p-1 hover:bg-red-50 rounded transition-colors" title="Xóa">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+            tbody.appendChild(row);
+        });
+    }
+
+    // Update summary cards
+    function updateSummaryCards() {
+        document.getElementById('totalItems').textContent = items.length;
+        document.getElementById('teaMilkCount').textContent = items.filter(item => item.type === 'Trà sữa').length;
+        document.getElementById('fruitTeaCount').textContent = items.filter(item => item.type === 'Trà hoa quả').length;
+        document.getElementById('coffeeCount').textContent = items.filter(item => item.type === 'Cà phê').length;
+    }
+
+    // Update pagination
+    function updatePagination() {
+        const totalPages = Math.ceil(items.length / itemsPerPage);
+        document.getElementById('paginationInfo').textContent = `Trang ${currentPage} / ${totalPages} - Hiển thị ${Math.min(items.length, currentPage * itemsPerPage)} / ${items.length} mặt hàng`;
+        document.getElementById('prevPage').disabled = currentPage === 1;
+        document.getElementById('nextPage').disabled = currentPage === totalPages;
+
+        const pageButtons = document.getElementById('pageButtons');
+        pageButtons.innerHTML = '';
+        const maxButtons = Math.min(totalPages, 5);
+        let startPage = Math.max(1, currentPage - 2);
+        if (startPage + maxButtons - 1 > totalPages) startPage = Math.max(1, totalPages - maxButtons + 1);
+
+        for (let i = 0; i < maxButtons && startPage + i <= totalPages; i++) {
+            const page = startPage + i;
+            const button = document.createElement('button');
+            button.className = `px-3 py-1 rounded transition-colors ${page === currentPage ? 'bg-purple-600 text-white' : 'bg-gray-200 hover:bg-gray-300'}`;
+            button.textContent = page;
+            button.onclick = () => changePage(page);
+            pageButtons.appendChild(button);
+        }
+    }
+
+    // Change page
+    function changePage(page) {
+        currentPage = page;
+        renderTable();
+        updatePagination();
+    }
+
+    // Open add modal
+    function openAddModal() {
+        resetItemModal();
+        document.getElementById('itemModalTitle').textContent = 'Thêm mặt hàng';
+        document.getElementById('itemModal').classList.remove('hidden');
+    }
+
+    // Open edit modal
+    function openEditModal(id) {
+        const item = items.find(item => item.id === id);
+        if (!item) return;
+
+        editItemId = id;
+        document.getElementById('itemModalTitle').textContent = 'Chỉnh sửa mặt hàng';
+        document.getElementById('itemType').value = item.type;
+        document.getElementById('itemName').value = item.name;
+        document.getElementById('itemNote').value = item.note;
+        document.getElementById('itemCreatedDate').value = item.createdDate.split('/').reverse().join('-');
+        document.getElementById('itemPrice').value = item.price.replace(' VNĐ', '');
+        document.getElementById('itemImagePreview').src = item.image || 'https://placehold.co/80x80';
+        document.getElementById('itemModal').classList.remove('hidden');
+    }
+
+    // Close item modal
+    function closeItemModal() {
+        document.getElementById('itemModal').classList.add('hidden');
+        resetItemModal();
+        editItemId = null;
+    }
+
+    // Reset item modal
+    function resetItemModal() {
+        document.getElementById('itemType').value = '';
+        document.getElementById('itemName').value = '';
+        document.getElementById('itemNote').value = '';
+        document.getElementById('itemCreatedDate').value = '';
+        document.getElementById('itemPrice').value = '';
+        document.getElementById('itemImagePreview').src = 'https://placehold.co/80x80';
+        document.getElementById('itemImage').value = '';
+        ['typeError', 'nameError', 'createdDateError', 'priceError'].forEach(id => {
+            document.getElementById(id).classList.add('hidden');
+            document.getElementById(id).textContent = '';
+        });
+    }
+
+    // Handle image upload
+    document.getElementById('itemImage').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                document.getElementById('itemImagePreview').src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Save item
+    function saveItem() {
+        const type = document.getElementById('itemType').value;
+        const name = document.getElementById('itemName').value;
+        const note = document.getElementById('itemNote').value;
+        const createdDate = document.getElementById('itemCreatedDate').value;
+        const price = document.getElementById('itemPrice').value;
+        const image = document.getElementById('itemImagePreview').src;
+
+        // Validation
+        let hasError = false;
+        if (!type) {
+            document.getElementById('typeError').textContent = 'Loại không được để trống';
+            document.getElementById('typeError').classList.remove('hidden');
+            hasError = true;
+        }
+        if (!name) {
+            document.getElementById('nameError').textContent = 'Tên không được để trống';
+            document.getElementById('nameError').classList.remove('hidden');
+            hasError = true;
+        }
+        if (!createdDate) {
+            document.getElementById('createdDateError').textContent = 'Ngày tạo không được để trống';
+            document.getElementById('createdDateError').classList.remove('hidden');
+            hasError = true;
+        }
+        if (!price) {
+            document.getElementById('priceError').textContent = 'Giá bán không được để trống';
+            document.getElementById('priceError').classList.remove('hidden');
+            hasError = true;
+        }
+        if (hasError) return;
+
+        const dateObj = new Date(createdDate);
+        const formattedDate = `${dateObj.getDate().toString().padStart(2, '0')}/${(dateObj.getMonth() + 1).toString().padStart(2, '0')}/${dateObj.getFullYear()}`;
+        const formattedPrice = `${price} VNĐ`;
+
+        const newItem = {
+            id: editItemId || Date.now().toString(),
+            type,
+            name,
+            note,
+            createdDate: formattedDate,
+            price: formattedPrice,
+            image: image !== 'https://placehold.co/80x80' ? image : ''
+        };
+
+        if (editItemId) {
+            const originalItem = items.find(item => item.id === editItemId);
+            const isUnchanged = JSON.stringify(newItem) === JSON.stringify({
+                ...originalItem,
+                createdDate: originalItem.createdDate.split('/').reverse().join('-'),
+                price: originalItem.price.replace(' VNĐ', '')
+            });
+            if (isUnchanged) {
+                closeItemModal();
+                return;
+            }
+            pendingEditItem = newItem;
+            document.getElementById('editItemName').textContent = `Bạn có muốn sửa mặt hàng "${name}"? Sau khi sửa, thông tin mặt hàng sẽ bị thay đổi vĩnh viễn`;
+            document.getElementById('editConfirmModal').classList.remove('hidden');
+        } else {
+            try {
+                items.push(newItem);
+                localStorage.setItem('items', JSON.stringify(items));
+                closeItemModal();
+                document.getElementById('addSuccessModal').classList.remove('hidden');
+                renderTable();
+                updateSummaryCards();
+                updatePagination();
+            } catch (err) {
+                showError('Lỗi khi lưu dữ liệu: ' + err.message);
+            }
+        }
+    }
+
+    // Confirm edit
+    function confirmEdit() {
+        try {
+            items = items.map(item => item.id === editItemId ? pendingEditItem : item);
+            localStorage.setItem('items', JSON.stringify(items));
+            closeEditConfirmModal();
+            closeItemModal();
+            document.getElementById('editSuccessModal').classList.remove('hidden');
+            renderTable();
+            updateSummaryCards();
+            updatePagination();
+        } catch (err) {
+            showError('Lỗi khi cập nhật dữ liệu: ' + err.message);
+        }
+    }
+
+    // Close modals
+    function closeAddSuccessModal() {
+        document.getElementById('addSuccessModal').classList.add('hidden');
+    }
+    function closeEditSuccessModal() {
+        document.getElementById('editSuccessModal').classList.add('hidden');
+    }
+    function closeDeleteConfirmModal() {
+        document.getElementById('deleteConfirmModal').classList.add('hidden');
+        deleteItemId = null;
+    }
+    function closeDeleteSuccessModal() {
+        document.getElementById('deleteSuccessModal').classList.add('hidden');
+    }
+    function closeEditConfirmModal() {
+        document.getElementById('editConfirmModal').classList.add('hidden');
+        pendingEditItem = null;
+    }
+
+    // Open delete confirmation modal
+    function openDeleteConfirmModal(id) {
+        deleteItemId = id;
+        const item = items.find(item => item.id === id);
+        if (item) {
+            document.getElementById('deleteItemName').textContent = `Bạn có muốn xóa mặt hàng "${item.name}"? Sau khi xóa sẽ không thể khôi phục lại thông tin mặt hàng đó`;
+            document.getElementById('deleteConfirmModal').classList.remove('hidden');
+        }
+    }
+
+    // Confirm delete
+    function confirmDelete() {
+        try {
+            items = items.filter(item => item.id !== deleteItemId);
+            localStorage.setItem('items', JSON.stringify(items));
+            closeDeleteConfirmModal();
+            document.getElementById('deleteSuccessModal').classList.remove('hidden');
+            renderTable();
+            updateSummaryCards();
+            updatePagination();
+        } catch (err) {
+            showError('Lỗi khi xóa dữ liệu: ' + err.message);
+        }
+    }
+
+    // Show error
+    function showError(message) {
+        const errorDiv = document.getElementById('errorMessage');
+        document.getElementById('errorText').textContent = message;
+        errorDiv.classList.remove('hidden');
+        setTimeout(() => errorDiv.classList.add('hidden'), 3000);
+    }
+
+    // Event listeners
+    document.getElementById('prevPage').onclick = () => changePage(currentPage - 1);
+    document.getElementById('nextPage').onclick = () => changePage(currentPage + 1);
+
+    // Initialize
+    loadItems();
+</script>
+</body>
+</html>
