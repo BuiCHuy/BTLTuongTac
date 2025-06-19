@@ -6,21 +6,30 @@
   <title>FiveH Tạo Hóa Đơn</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slide-up { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .animate-fade-in { animation: fade-in 0.5s ease-out; }
+    .animate-slide-up { animation: slide-up 0.3s ease-out; }
+    .peer-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
+    input[type="radio"] { appearance: none; width: 1.25rem; height: 1.25rem; border: 2px solid #d1d5db; border-radius: 50%; background-color: #fff; cursor: pointer; }
+    input[type="radio"]:checked { background-color: #7c3aed; border-color: #7c3aed; position: relative; }
+    input[type="radio"]:checked::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 0.5rem; height: 0.5rem; background-color: white; border-radius: 50%; }
+    input[type="radio"]:hover { border-color: #6b7280; }
     .scrollable { max-height: 400px; overflow-y: auto; }
   </style>
 </head>
-<body class="min-h-screen bg-gray-100">
-<!-- Header -->
+<body class="min-h-screen bg-gray-100 font-sans">
 <header class="bg-white shadow-sm px-6 py-4 flex items-center justify-between">
-  <h1 class="text-2xl font-bold text-black">FiveH</h1>
+  <h1 class="text-3xl font-bold text-indigo-600">FiveH</h1>
   <div class="flex items-center space-x-6">
     <div class="flex items-center space-x-2 cursor-pointer hover:text-indigo-600 transition-colors">
       <i class="fas fa-cog text-gray-600 text-lg"></i>
-      <span class="text-gray-700">Cài đặt</span>
+      <span class="text-gray-700 font-medium">Cài đặt</span>
     </div>
     <div class="flex items-center space-x-3">
-      <div class="w-10 h-10 bg-gray-300 rounded-full"></div>
+      <img src="https://placehold.co/40x40" alt="Profile" class="w-10 h-10 rounded-full border border-gray-300">
       <div class="flex flex-col">
         <span class="text-gray-700 font-medium">Quản lý</span>
         <span class="text-gray-500 text-sm cursor-pointer hover:text-indigo-600">Đăng xuất</span>
@@ -29,53 +38,47 @@
   </div>
 </header>
 
-<!-- Navigation -->
 <nav class="bg-gradient-to-r from-purple-600 to-rose-500 py-4 px-6 shadow-md">
   <div class="max-w-7xl mx-auto flex justify-between items-center text-white">
     <a href="Trangchu.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors text-pink-100">
-      <i class="fas fa-home text-lg"></i>
-      <span class="text-lg font-semibold">Trang chủ</span>
+      <i class="fas fa-home text-lg"></i><span class="text-lg font-semibold">Trang chủ</span>
     </a>
-    <a href="QLbanhang.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
-      <i class="fas fa-shopping-cart text-lg"></i>
-      <span class="text-lg font-semibold">Bán hàng</span>
+    <a href="PageQLBH.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
+      <i class="fas fa-shopping-cart text-lg"></i><span class="text-lg font-semibold">Bán hàng</span>
     </a>
-    <a href="Staff.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
-      <i class="fas fa-users text-lg"></i>
-      <span class="text-lg font-semibold">Nhân viên</span>
+    <a href="PageQLNV.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
+      <i class="fas fa-users text-lg"></i><span class="text-lg font-semibold">Nhân viên</span>
     </a>
     <a href="PageQLMH.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
-      <i class="fas fa-box text-lg"></i>
-      <span class="text-lg font-semibold">Mặt hàng</span>
+      <i class="fas fa-box text-lg"></i><span class="text-lg font-semibold">Mặt hàng</span>
     </a>
     <a href="PageQLCTKM.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
-      <i class="fas fa-tags text-lg"></i>
-      <span class="text-lg font-semibold">CT Khuyến mại</span>
+      <i class="fas fa-tags text-lg"></i><span class="text-lg font-semibold">CT Khuyến mại</span>
     </a>
-    <a href="Revenue.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
-      <i class="fas fa-chart-line text-lg"></i>
-      <span class="text-lg font-semibold">Doanh thu</span>
+    <a href="PageQLDT.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
+      <i class="fas fa-chart-line text-lg"></i><span class="text-lg font-semibold">Doanh thu</span>
     </a>
   </div>
 </nav>
 
-<!-- Main Content -->
-<div class="p-6">
+<div class="p-6 animate-fade-in">
   <h1 class="text-3xl font-bold text-black mb-6">Tạo hóa đơn</h1>
   <div class="flex gap-1">
-    <!-- Products Section -->
     <div class="w-1/2 border border-gray-300 rounded-l-lg p-4 bg-white">
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-xl font-bold text-black">Mặt hàng</h2>
-        <div class="relative w-64">
-          <input type="text" id="searchInput" placeholder="Tìm hàng" class="w-full p-2 border border-gray-300 rounded-md pr-10">
-          <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+        <div class="flex items-center space-x-4">
+          <div class="relative">
+            <input type="text" id="searchInput" placeholder="Tìm kiếm theo tên" class="h-10 w-96 px-4 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600">
+            <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+          </div>
+          <button onclick="handleSearch()" class="h-10 bg-purple-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-purple-700 transition-colors flex items-center space-x-2">
+            <i class="fas fa-search"></i>
+          </button>
         </div>
       </div>
       <div id="productsContainer" class="scrollable"></div>
     </div>
-
-    <!-- Invoice Section -->
     <div class="w-1/2 border border-gray-300 border-l-0 rounded-r-lg p-4 bg-white relative">
       <h2 class="text-xl font-bold text-black mb-4">Hóa đơn</h2>
       <div class="bg-white border border-gray-200 rounded-lg p-4">
@@ -98,21 +101,22 @@
       </div>
       <div class="absolute bottom-0 right-4 flex gap-10 text-white p-2">
         <div class="flex justify-end gap-2 mt-4">
-          <button id="cancelOrderBtn" class="bg-red-600 w-[150px] h-8 text-sm rounded flex items-center justify-center gap-5">
+          <button id="cancelOrderBtn" class="bg-red-600 w-[150px] h-8 text-sm rounded flex items-center justify-center gap-5 hover:bg-red-700 transition-colors">
             <i class="fas fa-times"></i> Hủy đơn
           </button>
-          <button id="paymentBtn" class="bg-white border border-black text-black w-[150px] h-8 text-sm rounded flex items-center justify-center gap-5">
+          <button id="paymentBtn" class="bg-black w-[150px] h-8 text-sm rounded flex items-center justify-center gap-5 text-white hover:bg-purple-700 transition-colors">
             <i class="fas fa-check"></i> Thanh toán
           </button>
         </div>
       </div>
     </div>
   </div>
+
+
 </div>
 
-<!-- Add Product Modal -->
-<div id="addProductModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-  <div class="bg-white rounded-lg p-6 w-96 max-w-md mx-4">
+<div id="addProductModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden animate-slide-up">
+  <div class="bg-gray-50 rounded-lg p-6 w-96 max-w-md mx-4 shadow-2xl">
     <h3 class="text-xl font-bold text-center mb-4">Điền số lượng</h3>
     <div class="flex justify-between gap-2 mt-4">
       <div class="flex justify-center mb-6 pl-8">
@@ -123,46 +127,44 @@
         </div>
       </div>
       <div class="flex items-center justify-center mb-6 pr-8">
-        <input type="number" id="modalQuantity" value="1" class="w-20 h-10 text-center border border-gray-300 rounded px-1" min="1">
+        <input type="number" id="modalQuantity" value="1" class="w-20 h-10 text-center border border-gray-300 rounded px-1 bg-gray-50 focus:ring-2 focus:ring-purple-600" min="1">
       </div>
     </div>
     <div class="flex gap-3">
-      <button id="cancelModalBtn" class="bg-red-600 w-[150px] h-8 text-sm rounded flex items-center justify-center gap-5 text-white">
+      <button id="cancelModalBtn" class="bg-red-600 w-[150px] h-8 text-sm rounded flex items-center justify-center gap-5 text-white hover:bg-red-700 transition-colors">
         <i class="fas fa-times"></i> Hủy
       </button>
-      <button id="confirmModalBtn" class="bg-white border border-black text-black w-[150px] h-8 text-sm rounded flex items-center justify-center gap-5">
+      <button id="confirmModalBtn" class="bg-purple-600 w-[150px] h-8 text-sm rounded flex items-center justify-center gap-5 text-white hover:bg-purple-700 transition-colors">
         <i class="fas fa-check"></i> Xác nhận
       </button>
     </div>
   </div>
 </div>
 
-<!-- Confirm Remove Modal -->
-<div id="confirmRemoveModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-  <div class="bg-white rounded-lg p-6 w-96 max-w-md mx-4 text-center">
+<div id="confirmRemoveModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden animate-slide-up">
+  <div class="bg-gray-50 rounded-lg p-6 w-96 max-w-md mx-4 shadow-2xl text-center">
     <i class="fas fa-exclamation-circle text-white bg-black border-white border-2 rounded-full p-1 text-xl mb-4"></i>
     <h3 id="confirmRemoveText" class="text-lg font-bold mb-4"></h3>
     <div class="flex justify-center gap-4">
-      <button id="confirmRemoveBtn" class="bg-black w-[100px] h-8 text-sm rounded flex items-center justify-center gap-2 text-white">
+      <button id="confirmRemoveBtn" class="bg-purple-600 w-[100px] h-8 text-sm rounded flex items-center justify-center gap-2 text-white hover:bg-purple-700 transition-colors">
         <i class="fas fa-check"></i> Có
       </button>
-      <button id="cancelRemoveBtn" class="bg-white border border-black text-black w-[100px] h-8 text-sm rounded flex items-center justify-center gap-2">
+      <button id="cancelRemoveBtn" class="bg-gray-200 w-[100px] h-8 text-sm rounded flex items-center justify-center gap-2 text-black hover:bg-gray-300 transition-colors">
         <i class="fas fa-times"></i> Không
       </button>
     </div>
   </div>
 </div>
 
-<!-- Cancel Order Modal -->
-<div id="cancelOrderModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-  <div class="bg-white rounded-lg p-6 w-96 max-w-md mx-4 text-center">
+<div id="cancelOrderModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden animate-slide-up">
+  <div class="bg-gray-50 rounded-lg p-6 w-96 max-w-md mx-4 shadow-2xl text-center">
     <i class="fas fa-exclamation-circle text-white bg-black border-white border-2 rounded-full p-1 text-xl mb-4"></i>
     <h3 class="text-lg font-bold mb-4">Bạn có chắc chắn muốn hủy đơn?</h3>
     <div class="flex justify-center gap-4">
-      <button id="confirmCancelOrderBtn" class="bg-black w-[100px] h-8 text-sm rounded flex items-center justify-center gap-2 text-white">
+      <button id="confirmCancelOrderBtn" class="bg-purple-600 w-[100px] h-8 text-sm rounded flex items-center justify-center gap-2 text-white hover:bg-purple-700 transition-colors">
         <i class="fas fa-check"></i> Có
       </button>
-      <button id="cancelCancelOrderBtn" class="bg-white border border-black text-black w-[100px] h-8 text-sm rounded flex items-center justify-center gap-2">
+      <button id="cancelCancelOrderBtn" class="bg-gray-200 w-[100px] h-8 text-sm rounded flex items-center justify-center gap-2 text-black hover:bg-gray-300 transition-colors">
         <i class="fas fa-times"></i> Không
       </button>
     </div>
@@ -171,25 +173,19 @@
 
 <script>
   let searchTerm = "";
-  let orderItems = JSON.parse(localStorage.getItem('currentOrder')) || [
-    { product: { id: "4", name: "Trà sữa matcha", price: 20000, image: "", category: "Đồ uống" }, quantity: 2 },
-    { product: { id: "1", name: "Trà sữa trân châu", price: 20000, image: "", category: "Đồ uống" }, quantity: 1 }
-  ];
-  let products = JSON.parse(localStorage.getItem('products')) || [
-    { id: "1", name: "Trà sữa trân châu", price: 20000, image: "", category: "Đồ uống" },
-    { id: "2", name: "Trà sữa trân châu 2", price: 25000, image: "", category: "Đồ uống" },
-    { id: "3", name: "Khoai tây chiên", price: 25000, image: "", category: "Đồ ăn vặt" },
-    { id: "4", name: "Trà sữa matcha", price: 20000, image: "", category: "Đồ uống" }
-  ];
+  let orderItems = JSON.parse(localStorage.getItem('currentOrder')) || [];
+  let products = JSON.parse(localStorage.getItem('items')) || [];
   let selectedProduct = null;
   let selectedItemToRemove = null;
 
-  // Lưu sản phẩm vào Local Storage khi khởi tạo
-  if (!localStorage.getItem('products')) {
-    localStorage.setItem('products', JSON.stringify(products));
-  }
+  products = products.map(item => ({
+    id: item.id,
+    name: item.name,
+    price: parseInt(item.price),
+    image: item.image || '',
+    category: ['Trà sữa', 'Cà phê'].includes(item.type) ? 'Đồ uống' : 'Đồ ăn vặt'
+  }));
 
-  // Hàm chuyển số thành chữ
   function numberToWords(num) {
     const units = ["", "một", "hai", "ba", "bốn", "năm", "sáu", "bảy", "tám", "chín"];
     const tens = ["", "mười", "hai mươi", "ba mươi", "bốn mươi", "năm mươi", "sáu mươi", "bảy mươi", "tám mươi", "chín mươi"];
@@ -222,13 +218,12 @@
     return result.trim() + " đồng";
   }
 
-  // Tải dữ liệu và render
   function init() {
     renderProducts();
     renderInvoice();
+    initPagination();
   }
 
-  // Render danh sách sản phẩm
   function renderProducts() {
     const filteredProducts = products.filter(product => product.name.toLowerCase().includes(searchTerm.toLowerCase()));
     const groupedProducts = filteredProducts.reduce((acc, product) => {
@@ -242,24 +237,23 @@
       const categoryDiv = document.createElement('div');
       categoryDiv.className = 'mb-6';
       categoryDiv.innerHTML = `
-                    <div class="border-t border-gray-300 pt-2 mb-4">
-                        <h3 class="text-lg font-bold text-black">${category}</h3>
-                    </div>
-                    <div class="grid grid-cols-3 gap-4">
-                        ${categoryProducts.map(product => `
-                            <div class="bg-white border border-gray-200 rounded-lg p-3 text-center cursor-pointer hover:shadow-md transition-shadow" onclick="openProductModal('${product.id}')">
-                                <img src="${product.image || '/placeholder.svg'}" alt="${product.name}" class="w-full h-32 object-cover rounded mb-2">
-                                <p class="text-black text-sm font-medium mb-1">${product.name}</p>
-                                <p class="text-black text-sm">Giá: ${product.price.toLocaleString()} đ</p>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
+                <div class="border-t border-gray-300 pt-2 mb-4">
+                    <h3 class="text-lg font-bold text-black">${category}</h3>
+                </div>
+                <div class="grid grid-cols-3 gap-4">
+                    ${categoryProducts.map(product => `
+                        <div class="bg-white border border-gray-200 rounded-lg p-3 text-center cursor-pointer hover:shadow-md transition-shadow" onclick="openProductModal('${product.id}')">
+                            <img src="${product.image || 'https://placehold.co/176x128'}" alt="${product.name}" class="w-full h-32 object-cover rounded mb-2">
+                            <p class="text-black text-sm font-medium mb-1">${product.name}</p>
+                            <p class="text-black text-sm">Giá: ${product.price.toLocaleString()} đ</p>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
       container.appendChild(categoryDiv);
     });
   }
 
-  // Render hóa đơn
   function renderInvoice() {
     const tbody = document.getElementById('invoiceItems');
     tbody.innerHTML = '';
@@ -267,18 +261,18 @@
       const tr = document.createElement('tr');
       tr.className = 'border-b border-gray-100';
       tr.innerHTML = `
-                    <td class="py-2 text-sm">${item.product.name}</td>
-                    <td class="py-2 text-sm">
-                        <input type="number" value="${item.quantity}" readonly class="w-12 text-center border border-gray-300 rounded px-1 bg-gray-50 cursor-not-allowed" min="0">
-                    </td>
-                    <td class="py-2 text-sm">${item.product.price.toLocaleString()} đ</td>
-                    <td class="py-2 text-sm">${(item.product.price * item.quantity).toLocaleString()} đ</td>
-                    <td class="py-2">
-                        <button onclick="openConfirmModal('${item.product.id}')" class="text-red-500 hover:text-red-700">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                `;
+                <td class="py-2 text-sm">${item.product.name}</td>
+                <td class="py-2 text-sm">
+                    <input type="number" value="${item.quantity}" readonly class="w-12 text-center border border-gray-300 rounded px-1 bg-gray-50 cursor-not-allowed" min="0">
+                </td>
+                <td class="py-2 text-sm">${item.product.price.toLocaleString()} đ</td>
+                <td class="py-2 text-sm">${(item.product.price * item.quantity).toLocaleString()} đ</td>
+                <td class="py-2">
+                    <button onclick="openConfirmModal('${item.product.id}')" class="text-red-500 hover:text-red-700">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            `;
       tbody.appendChild(tr);
     });
     const totalAmount = orderItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
@@ -287,18 +281,16 @@
     localStorage.setItem('currentOrder', JSON.stringify(orderItems));
   }
 
-  // Mở modal thêm sản phẩm
   function openProductModal(productId) {
     selectedProduct = products.find(p => p.id === productId);
     if (!selectedProduct) return;
-    document.getElementById('modalProductImage').src = selectedProduct.image || '/placeholder.svg';
+    document.getElementById('modalProductImage').src = selectedProduct.image || 'https://placehold.co/176x128';
     document.getElementById('modalProductName').textContent = selectedProduct.name;
     document.getElementById('modalProductPrice').textContent = `Giá: ${selectedProduct.price.toLocaleString()} đ`;
     document.getElementById('modalQuantity').value = 1;
     document.getElementById('addProductModal').classList.remove('hidden');
   }
 
-  // Thêm sản phẩm vào hóa đơn
   function addToOrder(product, quantity) {
     const existingItem = orderItems.find(item => item.product.id === product.id);
     if (existingItem) {
@@ -309,7 +301,6 @@
     renderInvoice();
   }
 
-  // Xử lý xác nhận modal thêm sản phẩm
   document.getElementById('confirmModalBtn').addEventListener('click', () => {
     const quantity = parseInt(document.getElementById('modalQuantity').value) || 1;
     if (quantity > 0) {
@@ -319,13 +310,11 @@
     }
   });
 
-  // Hủy modal thêm sản phẩm
   document.getElementById('cancelModalBtn').addEventListener('click', () => {
     document.getElementById('addProductModal').classList.add('hidden');
     selectedProduct = null;
   });
 
-  // Mở modal xác nhận xóa
   function openConfirmModal(productId) {
     selectedItemToRemove = orderItems.find(item => item.product.id === productId);
     if (!selectedItemToRemove) return;
@@ -333,7 +322,6 @@
     document.getElementById('confirmRemoveModal').classList.remove('hidden');
   }
 
-  // Xác nhận xóa sản phẩm
   document.getElementById('confirmRemoveBtn').addEventListener('click', () => {
     orderItems = orderItems.filter(item => item.product.id !== selectedItemToRemove.product.id);
     renderInvoice();
@@ -341,30 +329,25 @@
     selectedItemToRemove = null;
   });
 
-  // Hủy modal xóa
   document.getElementById('cancelRemoveBtn').addEventListener('click', () => {
     document.getElementById('confirmRemoveModal').classList.add('hidden');
     selectedItemToRemove = null;
   });
 
-  // Mở modal hủy đơn
   document.getElementById('cancelOrderBtn').addEventListener('click', () => {
     document.getElementById('cancelOrderModal').classList.remove('hidden');
   });
 
-  // Xác nhận hủy đơn
   document.getElementById('confirmCancelOrderBtn').addEventListener('click', () => {
     orderItems = [];
     localStorage.setItem('currentOrder', JSON.stringify(orderItems));
-    window.location.href = 'QLbanhang.html';
+    window.location.href = 'PageQLBH.html';
   });
 
-  // Hủy modal hủy đơn
   document.getElementById('cancelCancelOrderBtn').addEventListener('click', () => {
     document.getElementById('cancelOrderModal').classList.add('hidden');
   });
 
-  // Xử lý thanh toán
   document.getElementById('paymentBtn').addEventListener('click', () => {
     const currentDate = new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
     const invoice = {
@@ -374,16 +357,31 @@
       total: orderItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
     };
     localStorage.setItem('pendingInvoice', JSON.stringify(invoice));
-    window.location.href = 'xacnhanthanhtoan.html';
+    window.location.href = 'chitiethoadon.html';
   });
 
-  // Tìm kiếm sản phẩm
   document.getElementById('searchInput').addEventListener('input', (e) => {
     searchTerm = e.target.value;
     renderProducts();
   });
 
-  // Khởi tạo
+  function initPagination() {
+    const prevPage = document.getElementById('prevPage');
+    const nextPage = document.getElementById('nextPage');
+    const pageButtons = document.querySelectorAll('#pageButtons button');
+    const currentPage = 7; // taohoadon.html is page 7
+
+    prevPage.disabled = currentPage === 1;
+    nextPage.disabled = currentPage === pageButtons.length;
+    pageButtons.forEach((button, index) => {
+      if (index + 1 === currentPage) {
+        button.disabled = true;
+        button.classList.add('bg-purple-600', 'text-white');
+        button.classList.remove('bg-gray-100', 'hover:bg-gray-200');
+      }
+    });
+  }
+
   init();
 </script>
 </body>

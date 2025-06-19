@@ -6,13 +6,12 @@
     <title>FiveH Promotions Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
         @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
-        .animate-fade-in { animation: fade-in 0.3s ease-out forwards; }
-        @keyframes slide-up { from { transform: translateY(20px); opacity: 0.5; } to { transform: translateY(0); opacity: 1; } }
-        .animate-slide-up { animation: slide-up 0.35s ease-out forwards; }
+        @keyframes slide-up { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .animate-fade-in { animation: fade-in 0.5s ease-out; }
+        .animate-slide-up { animation: slide-up 0.3s ease-out; }
         .peer-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
         input[type="radio"]:checked + .radio-dot { background-color: #7C3AED; border-color: #7C3AED; }
         input[type="radio"]:focus + .radio-dot { outline: 2px solid #C084FC; outline-offset: 2px; }
@@ -42,67 +41,85 @@
 <!-- Navigation -->
 <nav class="bg-gradient-to-r from-purple-600 to-rose-500 py-4 px-6 shadow-md">
     <div class="max-w-7xl mx-auto flex justify-between items-center text-white">
-        <a href="Trangchu.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors text-pink-100">
-            <i class="fas fa-home text-lg"></i><span class="text-lg font-semibold">Trang chủ</span>
+        <a href="TrangChu.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
+            <i class="fas fa-home text-lg"></i>
+            <span class="text-lg font-semibold">Trang chủ</span>
         </a>
-        <a href="QLbanhang.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
-            <i class="fas fa-shopping-cart text-lg"></i><span class="text-lg font-semibold">Bán hàng</span>
+        <a href="PageQLBH.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
+            <i class="fas fa-shopping-cart text-lg"></i>
+            <span class="text-lg font-semibold">Bán hàng</span>
         </a>
         <a href="PageQLNV.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
-            <i class="fas fa-users text-lg"></i><span class="text-lg font-semibold">Nhân viên</span>
+            <i class="fas fa-users text-lg"></i>
+            <span class="text-lg font-semibold">Nhân viên</span>
         </a>
         <a href="PageQLMH.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
-            <i class="fas fa-box text-lg"></i><span class="text-lg font-semibold">Mặt hàng</span>
+            <i class="fas fa-box text-lg"></i>
+            <span class="text-lg font-semibold">Mặt hàng</span>
         </a>
-        <a href="PageQLCTKM.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
-            <i class="fas fa-tags text-lg"></i><span class="text-lg font-semibold">CT Khuyến mại</span>
+        <a href="PageQLCTKM.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors text-pink-100">
+            <i class="fas fa-tags text-lg"></i>
+            <span class="text-lg font-semibold">CT Khuyến mại</span>
         </a>
         <a href="PageQLDT.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
-            <i class="fas fa-chart-line text-lg"></i><span class="text-lg font-semibold">Doanh thu</span>
+            <i class="fas fa-chart-line text-lg"></i>
+            <span class="text-lg font-semibold">Doanh thu</span>
         </a>
     </div>
 </nav>
 
 <!-- Main Content -->
-<main class="max-w-7xl mx-auto mt-8 px-6">
+<main class="max-w-7xl mx-auto mt-8 px-6 animate-fade-in">
     <h2 class="text-2xl font-bold text-gray-800 mb-6">QUẢN LÝ CHƯƠNG TRÌNH KHUYẾN MẠI</h2>
     <div class="flex items-center justify-between mb-6">
         <div class="flex items-center space-x-4">
             <div class="relative">
-                <input type="text" id="searchInput" placeholder="Tìm kiếm theo tên, theo mã" class="w-96 px-4 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600">
+                <input type="text" id="searchInput" placeholder="Tìm kiếm theo tên, theo mã" class="h-10 w-96 px-4 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600">
                 <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
             </div>
-            <button onclick="handleSearch()" class="bg-purple-600 text-white px-4 py-2 rounded-md shadow-lg hover:bg-purple-700 hover:shadow-xl transform hover:-translate-y-px transition-all flex items-center space-x-2">
+            <button onclick="handleSearch()" class="h-10 bg-purple-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-purple-700 transition-colors flex items-center space-x-2">
                 <i class="fas fa-search"></i>
             </button>
         </div>
         <div class="flex space-x-4">
-            <button onclick="openModal('filter')" class="bg-purple-600 text-white px-4 py-2 rounded-md shadow-lg hover:bg-purple-700 hover:shadow-xl transform hover:-translate-y-px transition-all flex items-center space-x-2">
-                <i class="fas fa-filter"></i><span>Lọc</span>
+            <button onclick="openModal('filter')" class="bg-purple-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-purple-700 transition-colors flex items-center space-x-2">
+                <i class="fas fa-filter"></i>
+                <span>Lọc</span>
             </button>
-            <button onclick="openModal('add')" class="bg-purple-600 text-white px-4 py-2 rounded-md shadow-lg hover:bg-purple-700 hover:shadow-xl transform hover:-translate-y-px transition-all flex items-center space-x-2">
-                <i class="fas fa-plus"></i><span>Thêm mới</span>
+            <button onclick="openModal('add')" class="bg-purple-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-purple-700 transition-colors flex items-center space-x-2">
+                <i class="fas fa-plus"></i>
+                <span>Thêm mới</span>
             </button>
         </div>
     </div>
-    <div class="bg-white rounded-lg shadow-md border border-violet-200">
-        <table class="w-full table-fixed" id="promotionsTable">
-            <thead>
-            <tr class="bg-violet-200 h-16">
-                <th class="w-1/12 px-4 py-2 text-left text-xl font-semibold text-gray-800">Mã CT</th>
-                <th class="w-2/12 px-4 py-2 text-left text-xl font-semibold text-gray-800">Tên CT</th>
-                <th class="w-2/12 px-4 py-2 text-left text-xl font-semibold text-gray-800">Ngày bắt đầu</th>
-                <th class="w-2/12 px-4 py-2 text-left text-xl font-semibold text-gray-800">Ngày kết thúc</th>
-                <th class="w-3/12 px-4 py-2 text-left text-xl font-semibold text-gray-800">Hình thức</th>
-                <th class="w-2/12 px-4 py-2 text-left text-xl font-semibold text-gray-800">Mức giảm giá/Quà tặng</th>
-                <th class="w-2/12 px-4 py-2 text-left text-xl font-semibold text-gray-800">Trạng thái</th>
-                <th class="w-2/12 px-4 py-2 text-left text-xl font-semibold text-gray-800">Hành động</th>
-            </tr>
-            </thead>
-            <tbody id="promotionsTableBody"></tbody>
-        </table>
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                <tr class="bg-purple-200 h-12">
+                    <th class="px-4 py-2 text-left text-lg font-semibold text-gray-800">Mã CT</th>
+                    <th class="px-4 py-2 text-left text-lg font-semibold text-gray-800">Tên CT</th>
+                    <th class="px-4 py-2 text-left text-lg font-semibold text-gray-800">Ngày bắt đầu</th>
+                    <th class="px-4 py-2 text-left text-lg font-semibold text-gray-800">Ngày kết thúc</th>
+                    <th class="px-4 py-2 text-left text-lg font-semibold text-gray-800">Hình thức</th>
+                    <th class="px-4 py-2 text-left text-lg font-semibold text-gray-800">Mức giảm giá</th>
+                    <th class="px-4 py-2 text-left text-lg font-semibold text-gray-800">Trạng thái</th>
+                    <th class="px-4 py-2 text-left text-lg font-semibold text-gray-800">Hành động</th>
+                </tr>
+                </thead>
+                <tbody id="promotionsTableBody"></tbody>
+            </table>
+        </div>
     </div>
-    <div id="pagination" class="flex items-center justify-between mt-6"></div>
+    <div class="flex items-center justify-end mt-4 text-sm text-gray-700 p-4 rounded">
+        <button id="prevPage" class="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200 disabled:opacity-50 flex items-center gap-1 transition-colors" disabled>
+            <i class="fas fa-chevron-left"></i> Trước
+        </button>
+        <div id="pageButtons" class="flex space-x-2"></div>
+        <button id="nextPage" class="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200 disabled:opacity-50 flex items-center gap-1 transition-colors">
+            Sau <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
 </main>
 
 <!-- Modals -->
@@ -195,90 +212,116 @@
         }
         filteredPromotions = [...promotions];
         renderTable();
-        renderPagination();
+        updatePagination();
     });
 
     // Modal templates
     const modalTemplates = {
         success: `
-                <div class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4 animate-fade-in">
-                    <div class="bg-white rounded-lg shadow-xl p-8 max-w-sm w-full text-center animate-slide-up">
-                        <div class="mx-auto mb-4 w-16 h-16 flex items-center justify-center rounded-full border-2 border-gray-500">
-                            <i class="fas fa-check fa-2x text-green-600"></i>
-                        </div>
-                        <h2 class="text-2xl font-bold text-gray-800 mb-2">Thêm thành công</h2>
-                        <p class="text-gray-600 mb-6">Bạn đã thêm thành công chương trình khuyến mại mới.</p>
-                        <button onclick="closeModal()" class="h-11 px-6 bg-gray-100 border border-gray-200 text-gray-800 font-semibold rounded-lg shadow-md hover:bg-gray-200 transition-colors shadow-sm">Thoát</button>
+            <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in">
+                <div class="bg-gray-50 rounded-lg shadow-2xl border border-black p-8 max-w-sm w-full text-center animate-slide-up">
+                    <div class="w-12 h-12 rounded-full border-4 border-green-700 flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-plus text-green-700 text-xl"></i>
                     </div>
+                    <h2 class="text-2xl font-bold text-black mb-2">Thêm thành công</h2>
+                    <p class="text-base text-black mb-6">Bạn đã thêm thành công chương trình khuyến mại mới.</p>
+                    <button onclick="closeModal()" class="w-32 px-4 py-2 bg-gray-200 rounded-md shadow-md hover:bg-gray-300 transition-colors">
+                        <span class="text-black font-semibold">Thoát</span>
+                    </button>
                 </div>
-            `,
+            </div>
+        `,
+        editSuccess: `
+            <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in">
+                <div class="bg-gray-50 rounded-lg shadow-2xl border border-black p-8 max-w-sm w-full text-center animate-slide-up">
+                    <div class="w-12 h-12 rounded-full border-4 border-green-700 flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-check text-green-700 text-xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-black mb-2">Sửa thành công</h2>
+                    <p class="text-base text-black mb-6">Thông tin chương trình khuyến mại đã được cập nhật.</p>
+                    <button onclick="closeModal()" class="w-32 px-4 py-2 bg-gray-200 rounded-md shadow-md hover:bg-gray-300 transition-colors">
+                        <span class="text-black font-semibold">Thoát</span>
+                    </button>
+                </div>
+            </div>
+        `,
         deleteConfirm: (name) => `
-                <div class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4 animate-fade-in">
-                    <div class="bg-white rounded-lg shadow-xl p-8 max-w-sm w-full text-center animate-slide-up">
-                        <div class="mx-auto mb-4 w-16 h-16 flex items-center justify-center rounded-full border-2 border-yellow-500 bg-yellow-100">
-                            <i class="fas fa-exclamation-triangle fa-2x text-yellow-600"></i>
-                        </div>
-                        <h2 class="text-xl font-bold text-gray-800 mb-2">Bạn có chắc chắn muốn xóa?</h2>
-                        <p class="text-gray-600 mb-4">Sau khi xóa, "<span class="font-semibold">${name}</span>" sẽ không thể khôi phục lại.</p>
-                        <div class="flex justify-center space-x-4">
-                            <button onclick="handleConfirmDelete()" class="flex-1 h-11 px-6 bg-gray-900 text-white font-semibold rounded-lg shadow-md hover:bg-gray-800 transition-colors">Có</button>
-                            <button onclick="closeDeleteConfirmModal()" class="flex-1 h-11 px-6 bg-white border border-gray-300 text-gray-800 font-semibold rounded-lg shadow-md hover:bg-gray-100 transition-colors">Không</button>
-                        </div>
+            <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in">
+                <div class="bg-gray-50 rounded-lg shadow-2xl border border-black p-8 max-w-sm w-full text-center animate-slide-up">
+                    <div class="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-exclamation-triangle text-yellow-600 text-xl"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-black mb-2">Bạn có chắc chắn muốn xóa không?</h2>
+                    <p class="text-base text-black mb-4">Sau khi xóa, "<span class="font-semibold">${name}</span>" sẽ không thể khôi phục lại.</p>
+                    <div class="flex justify-center space-x-4">
+                        <button onclick="handleConfirmDelete()" class="flex-1 px-4 py-2 bg-purple-600 hover:bg-black text-white rounded-md shadow-md transition-colors font-semibold">
+                            Có
+                        </button>
+                        <button onclick="closeDeleteConfirmModal()" class="flex-1 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-black rounded-md shadow-md transition-colors font-semibold">
+                            Không
+                        </button>
                     </div>
                 </div>
-            `,
+            </div>
+        `,
         deleteSuccess: `
-                <div class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4 animate-fade-in">
-                    <div class="bg-white rounded-lg shadow-xl p-8 max-w-sm w-full text-center animate-slide-up">
-                        <div class="mx-auto mb-4 w-16 h-16 flex items-center justify-center rounded-full border-2 border-green-500 bg-green-100">
-                            <i class="fas fa-check fa-2x text-green-600"></i>
-                        </div>
-                        <h2 class="text-2xl font-bold text-gray-800 mb-2">Xóa thành công</h2>
-                        <p class="text-gray-600 mb-6">Chương trình khuyến mại đã được xóa bỏ.</p>
-                        <button onclick="closeModal()" class="h-11 px-6 bg-gray-100 border border-gray-200 text-gray-800 font-semibold rounded-lg shadow-md hover:bg-gray-200 transition-colors shadow-sm">Thoát</button>
+            <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in">
+                <div class="bg-gray-50 rounded-lg shadow-2xl border border-black p-8 max-w-sm w-full text-center animate-slide-up">
+                    <div class="w-12 h-12 rounded-full border-4 border-purple-600 flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-trash-alt text-purple-600 text-xl"></i>
                     </div>
+                    <h2 class="text-2xl font-bold text-black mb-2">Xóa thành công</h2>
+                    <p class="text-base text-black mb-6">Chương trình khuyến mại đã được xóa bỏ.</p>
+                    <button onclick="closeModal()" class="w-32 px-4 py-2 bg-gray-200 rounded-md shadow-md hover:bg-gray-300 transition-colors">
+                        <span class="text-black font-semibold">Thoát</span>
+                    </button>
                 </div>
-            `,
+            </div>
+        `,
         editConfirm: `
-                <div class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4 animate-fade-in">
-                    <div class="bg-white rounded-lg shadow-xl p-8 max-w-sm w-full text-center animate-slide-up">
-                        <div class="mx-auto mb-4 w-16 h-16 flex items-center justify-center rounded-full border-2 border-blue-500 bg-blue-100">
-                            <i class="fas fa-question fa-2x text-blue-600"></i>
-                        </div>
-                        <h2 class="text-xl font-bold text-gray-800 mb-2">Xác nhận sửa</h2>
-                        <p class="text-gray-600 mb-4">Thông tin của chương trình khuyến mại sẽ được cập nhật. Bạn có chắc chắn không?</p>
-                        <div class="flex justify-center space-x-4">
-                            <button onclick="handleConfirmEdit()" class="flex-1 h-11 px-6 bg-gray-900 text-white font-semibold rounded-lg shadow-md hover:bg-gray-800 transition-colors">Có, Cập nhật</button>
-                            <button onclick="closeModal()" class="flex-1 h-11 px-6 bg-white border border-gray-300 text-gray-800 font-semibold rounded-lg shadow-md hover:bg-gray-100 transition-colors">Không</button>
-                        </div>
+            <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in">
+                <div class="bg-gray-50 rounded-lg shadow-2xl border border-black p-8 max-w-sm w-full text-center animate-slide-up">
+                    <div class="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-exclamation-triangle text-yellow-600 text-xl"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-black mb-2">Bạn có chắc chắn muốn sửa không?</h2>
+                    <p class="text-base text-black mb-4">Thông tin của chương trình khuyến mại sẽ được cập nhật vĩnh viễn.</p>
+                    <div class="flex justify-center space-x-4">
+                        <button onclick="handleConfirmEdit()" class="flex-1 px-4 py-2 bg-black hover:bg-gray-700 text-white rounded-md shadow-md transition-colors font-semibold">
+                            Có
+                        </button>
+                        <button onclick="closeModal()" class="flex-1 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-black rounded-md shadow-md transition-colors font-semibold">
+                            Không
+                        </button>
                     </div>
                 </div>
-            `,
+            </div>
+        `,
         add: (isEdit, data = {}, conditions = []) => `
-            <div class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4 animate-fade-in">
-                <div class="w-full max-w-5xl max-h-[95vh] bg-gray-50 rounded-lg shadow-2xl flex flex-col animate-slide-up">
-                    <header class="flex items-center justify-between p-5 border-b border-gray-200 rounded-t-lg">
-                        <h2 class="text-xl font-bold text-gray-800">${isEdit ? 'Sửa chương trình khuyến mại' : 'Thêm chương trình khuyến mại'}</h2>
-                        <button onclick="closeModal()" class="w-10 h-10 rounded-full text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition-colors flex items-center justify-center">
-                            <i class="fas fa-times fa-lg"></i>
+            <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in">
+                <div class="w-full max-w-5xl max-h-[90vh] bg-gray-50 rounded-lg shadow-2xl flex flex-col animate-slide-up overflow-y-auto">
+                    <header class="flex items-center justify-between p-5 border-b-4 border-black rounded-t-lg">
+                        <h2 class="text-xl font-bold text-black">${isEdit ? 'Sửa chương trình khuyến mại' : 'Thêm chương trình khuyến mại'}</h2>
+                        <button onclick="closeModal()" class="w-6 h-6 flex items-center justify-center hover:bg-gray-200 rounded">
+                            <i class="fas fa-times text-black"></i>
                         </button>
                     </header>
-                    <div class="p-8 space-y-8 overflow-y-auto">
+                    <div class="p-8 space-y-8">
                         <fieldset class="space-y-6">
                             <legend class="text-lg font-semibold text-purple-700">Thông tin chung</legend>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label for="id" class="block text-sm font-medium text-gray-700 mb-1">Mã chương trình</label>
-                                    <input type="text" id="id" value="${data.id || ''}" placeholder="Nhập mã chương trình" class="w-full h-10 px-4 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500" ${isEdit ? 'readonly' : ''}>
+                                    <label for="id" class="block text-base font-medium text-black mb-1">Mã chương trình</label>
+                                    <input type="text" id="id" value="${data.id || ''}" placeholder="Nhập mã chương trình" class="w-full h-10 px-4 bg-gray-50 rounded-md shadow-md border border-neutral-400 focus:ring-2 focus:ring-purple-600" ${isEdit ? 'readonly' : ''}>
                                     <p id="error-id" class="text-red-600 text-sm mt-1 hidden"></p>
                                 </div>
                                 <div>
-                                    <label for="promoName" class="block text-sm font-medium text-gray-700 mb-1">Tên chương trình</label>
-                                    <input type="text" id="promoName" value="${data.promoName || ''}" placeholder="VD: Khai trương hồng phát" class="w-full h-10 px-4 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500">
+                                    <label for="promoName" class="block text-base font-medium text-black mb-1">Tên chương trình</label>
+                                    <input type="text" id="promoName" value="${data.promoName || ''}" placeholder="VD: Khai trương hồng phát" class="w-full h-10 px-4 bg-gray-50 rounded-md shadow-md border border-neutral-400 focus:ring-2 focus:ring-purple-600">
                                     <p id="error-promoName" class="text-red-600 text-sm mt-1 hidden"></p>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Trạng thái</label>
+                                    <label class="block text-base font-medium text-black mb-1">Trạng thái</label>
                                     <div class="flex items-center space-x-6 h-10">
                                         <label class="flex items-center space-x-3 cursor-pointer">
                                             <input type="radio" name="status" value="active" ${data.status === 'active' || !isEdit ? 'checked' : ''} class="peer-sr-only">
@@ -294,8 +337,8 @@
                                     <p id="error-status" class="text-red-600 text-sm mt-1 hidden"></p>
                                 </div>
                                 <div>
-                                    <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">Ghi chú</label>
-                                    <input type="text" id="notes" value="${data.notes || ''}" placeholder="Thông tin thêm về chương trình" class="w-full h-10 px-4 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500">
+                                    <label for="notes" class="block text-base font-medium text-black mb-1">Ghi chú</label>
+                                    <input type="text" id="notes" value="${data.notes || ''}" placeholder="Thông tin thêm về chương trình" class="w-full h-10 px-4 bg-gray-50 rounded-md shadow-md border border-neutral-400 focus:ring-2 focus:ring-purple-600">
                                 </div>
                             </div>
                         </fieldset>
@@ -303,24 +346,24 @@
                             <legend class="text-lg font-semibold text-purple-700">Hình thức & Mức giảm</legend>
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 <div>
-                                    <label for="promoBy" class="block text-sm font-medium text-gray-700 mb-1">Khuyến mại theo</label>
-                                    <select id="promoBy" class="w-full h-10 px-3 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500">
+                                    <label for="promoBy" class="block text-base font-medium text-black mb-1">Khuyến mại theo</label>
+                                    <select id="promoBy" class="w-full h-10 px-3 bg-gray-50 rounded-md shadow-md border border-neutral-400 focus:ring-2 focus:ring-purple-600">
                                         <option value="Hóa đơn" ${data.promoBy === 'Hóa đơn' ? 'selected' : ''}>Hóa đơn</option>
                                         <option value="Sản phẩm" ${data.promoBy === 'Sản phẩm' ? 'selected' : ''}>Sản phẩm</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label for="promoType" class="block text-sm font-medium text-gray-700 mb-1">Hình thức</label>
-                                    <select id="promoType" class="w-full h-10 px-3 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500" onchange="updateDiscountUnit()">
+                                    <label for="promoType" class="block text-base font-medium text-black mb-1">Hình thức</label>
+                                    <select id="promoType" class="w-full h-10 px-3 bg-gray-50 rounded-md shadow-md border border-neutral-400 focus:ring-2 focus:ring-purple-600" onchange="updateDiscountUnit()">
                                         <option value="Giảm giá theo %" ${data.promoType === 'Giảm giá theo %' ? 'selected' : ''}>Giảm giá theo %</option>
                                         <option value="Giảm giá trực tiếp (VND)" ${data.promoType === 'Giảm giá trực tiếp (VND)' ? 'selected' : ''}>Giảm giá trực tiếp (VND)</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label for="discountValue" class="block text-sm font-medium text-gray-700 mb-1">Mức giảm</label>
+                                    <label for="discountValue" class="block text-base font-medium text-black mb-1">Mức giảm</label>
                                     <div class="relative">
-                                        <input type="number" id="discountValue" value="${data.discountValue || ''}" placeholder="VD: 10" class="w-full h-10 pl-4 pr-10 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500">
-                                        <span id="discountUnit" class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500">${data.promoType === 'Giảm giá trực tiếp (VND)' ?'VND': '%'  }</span>
+                                        <input type="number" id="discountValue" value="${data.discountValue || ''}" placeholder="VD: 10" class="w-full h-10 pl-4 pr-10 bg-gray-50 rounded-md shadow-md border border-neutral-400 focus:ring-2 focus:ring-purple-600">
+                                        <span id="discountUnit" class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500">${data.promoType === 'Giảm giá trực tiếp (VND)' ? 'VND' : '%'}</span>
                                     </div>
                                     <p id="error-discountValue" class="text-red-600 text-sm mt-1 hidden"></p>
                                 </div>
@@ -331,30 +374,30 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6">
                                 <div class="space-y-6">
                                     <div>
-                                        <label for="startDate" class="block text-sm font-medium text-gray-700 mb-1">Ngày bắt đầu</label>
-                                        <input type="date" id="startDate" value="${data.startDate || '2025-06-15'}" class="w-full h-10 px-4 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500">
+                                        <label for="startDate" class="block text-base font-medium text-black mb-1">Ngày bắt đầu</label>
+                                        <input type="date" id="startDate" value="${data.startDate || '2025-06-15'}" class="w-full h-10 px-4 bg-gray-50 rounded-md shadow-md border border-neutral-400 focus:ring-2 focus:ring-purple-600">
                                     </div>
                                     <div>
-                                        <label for="endDate" class="block text-sm font-medium text-gray-700 mb-1">Ngày kết thúc</label>
-                                        <input type="date" id="endDate" value="${data.endDate || '2025-07-15'}" class="w-full h-10 px-4 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500">
+                                        <label for="endDate" class="block text-base font-medium text-black mb-1">Ngày kết thúc</label>
+                                        <input type="date" id="endDate" value="${data.endDate || '2025-07-15'}" class="w-full h-10 px-4 bg-gray-50 rounded-md shadow-md border border-neutral-400 focus:ring-2 focus:ring-purple-600">
                                     </div>
                                     <p id="error-date" class="text-red-600 text-sm mt-1 hidden"></p>
                                 </div>
                                 <div class="space-y-4">
-                                    <label class="block text-sm font-medium text-gray-700">Phạm vi áp dụng</label>
+                                    <label class="block text-base font-medium text-black">Phạm vi áp dụng</label>
                                     <div class="space-y-4">
                                         <label class="flex items-center space-x-3 cursor-pointer">
                                             <input type="radio" name="scope" value="all" ${data.scope === 'all' || !isEdit ? 'checked' : ''} class="peer-sr-only" onchange="toggleBranchSelect()">
                                             <div class="radio-dot"><div class="radio-dot-inner"></div></div>
-                                            <span class="text-gray-800">Toàn bộ chi nhánh</span>
+                                            <span class="text-black">Toàn bộ chi nhánh</span>
                                         </label>
                                         <div class="flex items-center">
                                             <label class="flex items-center space-x-3 cursor-pointer">
                                                 <input type="radio" name="scope" value="specific" ${data.scope === 'specific' && isEdit ? 'checked' : ''} class="peer-sr-only" onchange="toggleBranchSelect()">
                                                 <div class="radio-dot"><div class="radio-dot-inner"></div></div>
-                                                <span class="text-gray-800">Chi nhánh cụ thể</span>
+                                                <span class="text-black">Chi nhánh cụ thể</span>
                                             </label>
-                                            <select id="branch" class="ml-5 flex-grow h-10 px-3 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500 transition-colors ${data.scope !== 'specific' ? 'bg-gray-200 cursor-not-allowed' : ''}" ${data.scope !== 'specific' ? 'disabled' : ''}>
+                                            <select id="branch" class="ml-5 flex-grow h-10 px-3 bg-gray-50 rounded-md shadow-md border border-neutral-400 focus:ring-2 focus:ring-purple-600 transition-colors ${data.scope !== 'specific' ? 'bg-gray-200 cursor-not-allowed' : ''}" ${data.scope !== 'specific' ? 'disabled' : ''}>
                                                 <option value="Chi nhánh A" ${data.branch === 'Chi nhánh A' ? 'selected' : ''}>Chi nhánh A</option>
                                                 <option value="Chi nhánh B" ${data.branch === 'Chi nhánh B' ? 'selected' : ''}>Chi nhánh B</option>
                                                 <option value="Chi nhánh C" ${data.branch === 'Chi nhánh C' ? 'selected' : ''}>Chi nhánh C</option>
@@ -371,11 +414,11 @@
                                 ${conditions.map((c, i) => `
                                     <div class="flex items-center space-x-4 p-4 bg-purple-50 rounded-lg animate-fade-in" data-id="${c.id}">
                                         <span class="font-bold text-gray-600">#${i + 1}</span>
-                                        <select class="w-1/3 h-10 px-3 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500 transition" onchange="updateCondition(${c.id}, 'type', this.value)">
+                                        <select class="w-1/3 h-10 px-3 bg-gray-50 rounded-md shadow-md border border-neutral-400 focus:ring-2 focus:ring-purple-600 transition" onchange="updateCondition(${c.id}, 'type', this.value)">
                                             <option value="Giá trị tối thiểu" ${c.type === 'Giá trị tối thiểu' ? 'selected' : ''}>Giá trị tối thiểu</option>
                                             <option value="Số lượng sản phẩm tối thiểu" ${c.type === 'Số lượng sản phẩm tối thiểu' ? 'selected' : ''}>Số lượng sản phẩm tối thiểu</option>
                                         </select>
-                                        <input type="text" placeholder="Nhập giá trị (VD: 500000 hoặc VIP)" value="${c.value}" class="flex-grow h-10 px-4 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500 transition" oninput="updateCondition(${c.id}, 'value', this.value)">
+                                        <input type="text" placeholder="Nhập giá trị (VD: 500000)" value="${c.value}" class="flex-grow h-10 px-4 bg-gray-50 rounded-md shadow-md border border-neutral-400 focus:ring-2 focus:ring-purple-600 transition" oninput="updateCondition(${c.id}, 'value', this.value)">
                                         <button onclick="removeCondition(${c.id})" class="w-10 h-10 flex-shrink-0 text-red-500 hover:bg-red-100 rounded-full flex items-center justify-center transition-colors" title="Xóa điều kiện">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
@@ -389,22 +432,23 @@
                         </fieldset>
                     </div>
                     <footer class="flex justify-end items-center p-5 space-x-4 border-t border-gray-200 bg-gray-100 rounded-b-lg mt-auto">
-                        <button onclick="closeModal()" class="h-11 px-6 bg-white border border-gray-300 text-gray-800 font-semibold rounded-lg hover:bg-gray-100 transition-colors shadow-sm">Thoát</button>
-                        <button onclick="handleSave()" class="h-11 px-8 text-white font-semibold rounded-lg bg-gradient-to-r from-purple-600 to-rose-500 hover:from-purple-700 hover:to-rose-600 shadow-md transition-all transform hover:scale-105 flex items-center gap-2">
-                            <i class="fas fa-save"></i><span>Lưu chương trình</span>
+                        <button onclick="handleSave()" class="px-6 py-2 bg-green-600 hover:bg-purple-700 text-white rounded-md shadow-md transition-colors inline-flex items-center gap-2">
+                            <i class="fas fa-save"></i><span>Lưu</span>
                         </button>
+                        <button onclick="closeModal()" class="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-black rounded-md shadow-md transition-colors font-semibold">Thoát</button>
+
                     </footer>
                 </div>
             </div>
         `,
         filter: `
-            <div class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4 animate-fade-in">
-                <div class="bg-white rounded-lg shadow-xl p-6 w-96 animate-slide-up">
-                    <h2 class="text-xl font-bold text-gray-800 mb-6 text-center">Lọc chương trình khuyến mãi</h2>
+            <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in">
+                <div class="bg-gray-50 rounded-lg shadow-2xl border border-black p-6 w-96 animate-slide-up">
+                    <h2 class="text-xl font-bold text-black mb-6 text-center">Lọc chương trình khuyến mãi</h2>
                     <div class="space-y-6">
                         <div>
-                            <label for="filter-branch" class="block text-sm font-medium text-gray-700 mb-1">Chi nhánh:</label>
-                            <select id="filter-branch" class="w-full h-10 px-3 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500">
+                            <label for="filter-branch" class="block text-base font-medium text-black mb-1">Chi nhánh:</label>
+                            <select id="filter-branch" class="w-full h-10 px-3 bg-gray-50 rounded-md shadow-md border border-neutral-400 focus:ring-2 focus:ring-purple-600">
                                 <option value="Tất cả">Tất cả</option>
                                 <option value="Chi nhánh A">Chi nhánh A</option>
                                 <option value="Chi nhánh B">Chi nhánh B</option>
@@ -412,49 +456,49 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Trạng thái:</label>
+                            <label class="block text-base font-medium text-black mb-1">Trạng thái:</label>
                             <div class="space-y-2">
                                 <label class="flex items-center space-x-3 cursor-pointer">
                                     <input type="radio" name="filter-status" value="Tất cả" checked class="peer-sr-only">
                                     <div class="radio-dot"><div class="radio-dot-inner"></div></div>
-                                    <span class="text-gray-800">Tất cả</span>
+                                    <span class="text-black">Tất cả</span>
                                 </label>
                                 <label class="flex items-center space-x-3 cursor-pointer">
                                     <input type="radio" name="filter-status" value="Kích hoạt" class="peer-sr-only">
                                     <div class="radio-dot"><div class="radio-dot-inner"></div></div>
-                                    <span class="text-gray-800">Kích hoạt</span>
+                                    <span class="text-black">Kích hoạt</span>
                                 </label>
                                 <label class="flex items-center space-x-3 cursor-pointer">
                                     <input type="radio" name="filter-status" value="Chưa kích hoạt" class="peer-sr-only">
                                     <div class="radio-dot"><div class="radio-dot-inner"></div></div>
-                                    <span class="text-gray-800">Chưa kích hoạt</span>
+                                    <span class="text-black">Chưa kích hoạt</span>
                                 </label>
                             </div>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Hiệu lực:</label>
+                            <label class="block text-base font-medium text-black mb-1">Hiệu lực:</label>
                             <div class="space-y-2">
                                 <label class="flex items-center space-x-3 cursor-pointer">
                                     <input type="radio" name="filter-validity" value="Tất cả" checked class="peer-sr-only">
                                     <div class="radio-dot"><div class="radio-dot-inner"></div></div>
-                                    <span class="text-gray-800">Tất cả</span>
+                                    <span class="text-black">Tất cả</span>
                                 </label>
                                 <label class="flex items-center space-x-3 cursor-pointer">
                                     <input type="radio" name="filter-validity" value="Còn hiệu lực" class="peer-sr-only">
                                     <div class="radio-dot"><div class="radio-dot-inner"></div></div>
-                                    <span class="text-gray-800">Còn hiệu lực</span>
+                                    <span class="text-black">Còn hiệu lực</span>
                                 </label>
                                 <label class="flex items-center space-x-3 cursor-pointer">
                                     <input type="radio" name="filter-validity" value="Hết hiệu lực" class="peer-sr-only">
                                     <div class="radio-dot"><div class="radio-dot-inner"></div></div>
-                                    <span class="text-gray-800">Hết hiệu lực</span>
+                                    <span class="text-black">Hết hiệu lực</span>
                                 </label>
                             </div>
                         </div>
                     </div>
                     <div class="flex justify-end space-x-4 mt-8">
-                        <button onclick="closeModal()" class="h-11 px-6 bg-white border border-gray-300 text-gray-800 font-semibold rounded-lg hover:bg-gray-100 transition-colors">Thoát</button>
-                        <button onclick="handleFilter()" class="h-11 px-6 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors">Lọc</button>
+                        <button onclick="closeModal()" class="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-black rounded-md shadow-md transition-colors font-semibold">Thoát</button>
+                        <button onclick="handleFilter()" class="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md shadow-md transition-colors font-semibold">Lọc</button>
                     </div>
                 </div>
             </div>
@@ -463,102 +507,99 @@
             const currentDate = new Date();
             const startDate = new Date(promotion.startDate);
             const endDate = new Date(promotion.endDate);
-            const formattedStartDate = startDate.toLocaleDateString('vi-VN'); // "dd/mm/yyyy"
+            const formattedStartDate = startDate.toLocaleDateString('vi-VN');
             const formattedEndDate = endDate.toLocaleDateString('vi-VN');
-            const isActive = promotion.status === "Kích hoạt";
-            const isValid = endDate > currentDate;
-            const validity = isActive ? (isValid ? "Còn hiệu lực" : "Hết hiệu lực") : "Chưa kích hoạt";
             return `
-                    <div class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4 animate-fade-in">
-                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl animate-slide-up">
-                            <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-4">
-                                <h2 class="text-xl font-bold text-gray-800">Thông tin chương trình khuyến mại</h2>
-                                <button onclick="closeModal()" class="w-10 h-10 rounded-full text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition-colors flex items-center justify-center">
-                                    <i class="fas fa-times fa-lg"></i>
-                                </button>
-                            </div>
-                            <div class="space-y-4">
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div><span class="font-medium">Mã CT:</span> <span>${promotion.id}</span></div>
-                                    <div><span class="font-medium">Tên CT:</span> <span>${promotion.name}</span></div>
-                                </div>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div><span class="font-medium">Hình thức:</span> <span>${promotion.type}</span></div>
-                                    <div><span class="font-medium">Trạng thái:</span> <span>${promotion.status}</span></div>
-                                </div>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div><span class="font-medium">Hiệu lực:</span> <span>${formattedStartDate} đến ${formattedEndDate}</span></div>
-                                    <div><span class="font-medium">Ghi chú:</span> <span>${promotion.notes || 'Không có'}</span></div>
-                                </div>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div><span class="font-medium">Chi nhánh áp dụng:</span> <span>${promotion.scope}</span></div>
-                                    <div><span class="font-medium">Điều kiện áp dụng:</span> <span>${promotion.conditions.length > 0 ? promotion.conditions.map(c => `${c.type}: ${c.value}`).join(', ') : 'Không có'}</span></div>
-                                </div>
-                            </div>
-                            <div class="flex justify-end mt-6">
-                                <button onclick="closeModal()" class="h-10 px-6 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 transition-colors">Thoát</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-        },
-        search: (results) => `
-                <div class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4 animate-fade-in">
-                    <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-3xl animate-slide-up">
-                        <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-4">
-                            <h2 class="text-xl font-bold text-gray-800">Kết quả tìm kiếm</h2>
-                            <button onclick="closeModal()" class="w-10 h-10 rounded-full text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition-colors flex items-center justify-center">
-                                <i class="fas fa-times fa-lg"></i>
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in">
+                    <div class="bg-gray-50 rounded-lg shadow-2xl border border-black p-6 w-full max-w-2xl animate-slide-up">
+                        <div class="flex justify-between items-center border-b-4 border-black pb-4 mb-4">
+                            <h2 class="text-xl font-bold text-black">Thông tin chương trình khuyến mại</h2>
+                            <button onclick="closeModal()" class="w-6 h-6 flex items-center justify-center hover:bg-gray-200 rounded">
+                                <i class="fas fa-times text-black"></i>
                             </button>
                         </div>
-                        <p class="text-gray-600 mb-4">Nhấn vào để xem thông tin chi tiết</p>
-                        <div class="overflow-y-auto max-h-[60vh]">
-                            ${results.length > 0 ? `
-                                <table class="w-full table-fixed">
-                                    <thead>
-                                        <tr class="bg-purple-100 text-left">
-                                            <th class="w-1/6 px-6 py-2 font-semibold text-gray-800">Mã CT</th>
-                                            <th class="w-2/6 px-6 py-2 font-semibold text-gray-800">Tên CT</th>
-                                            <th class="w-1/6 px-6 py-2 font-semibold text-gray-800">Ngày bắt đầu</th>
-                                            <th class="w-1/6 px-6 py-2 font-semibold text-gray-800">Ngày kết thúc</th>
-                                            <th class="w-1/6 px-6 py-2 font-semibold text-gray-800">Hình thức</th>
-                                            <th class="w-1/6 px-6 py-2 font-semibold text-gray-800">Mức giảm giá/Quà tặng</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        ${results.map(p => `
-                                            <tr class="hover:bg-gray-100 cursor-pointer" onclick='openModal("details", ${JSON.stringify(p)})'>
-                                                <td class="px-6 py-2 text-gray-700">${p.id}</td>
-                                                <td class="px-6 py-2 text-gray-700">${p.name}</td>
-                                                <td class="px-6 py-2 text-gray-700">${new Date(p.startDate).toLocaleDateString('vi-VN')}</td>
-                                                <td class="px-6 py-2 text-gray-700">${new Date(p.endDate).toLocaleDateString('vi-VN')}</td>
-                                                <td class="px-6 py-2 text-gray-700">${p.type}</td>
-                                                <td class="px-6 py-2 text-gray-700">${p.discount}</td>
-                                            </tr>
-                                        `).join('')}
-                                    </tbody>
-                                </table>
-                            ` : `
-                                <p class="text-center text-gray-500">Không có kết quả nào.</p>
-                            `}
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div><span class="font-medium">Mã CT:</span> <span>${promotion.id}</span></div>
+                                <div><span class="font-medium">Tên CT:</span> <span>${promotion.name}</span></div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div><span class="font-medium">Hình thức:</span> <span>${promotion.type}</span></div>
+                                <div><span class="font-medium">Trạng thái:</span> <span>${promotion.status}</span></div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div><span class="font-medium">Hiệu lực:</span> <span>${formattedStartDate} đến ${formattedEndDate}</span></div>
+                                <div><span class="font-medium">Ghi chú:</span> <span>${promotion.notes || 'Không có'}</span></div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div><span class="font-medium">Chi nhánh áp dụng:</span> <span>${promotion.scope}</span></div>
+                                <div><span class="font-medium">Điều kiện áp dụng:</span> <span>${promotion.conditions.length > 0 ? promotion.conditions.map(c => `${c.type}: ${c.value}`).join(', ') : 'Không có'}</span></div>
+                            </div>
                         </div>
                         <div class="flex justify-end mt-6">
-                            <button onclick="closeModal()" class="h-10 px-6 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 transition-colors">Thoát</button>
+                            <button onclick="closeModal()" class="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-black rounded-md shadow-md transition-colors font-semibold">Thoát</button>
                         </div>
                     </div>
                 </div>
-            `
+            `;
+        },
+        search: (results) => `
+            <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in">
+                <div class="bg-gray-50 rounded-lg shadow-2xl border border-black p-6 w-full max-w-3xl animate-slide-up">
+                    <div class="flex justify-between items-center border-b-4 border-black pb-4 mb-4">
+                        <h2 class="text-xl font-bold text-black">Kết quả tìm kiếm</h2>
+                        <button onclick="closeModal()" class="w-6 h-6 flex items-center justify-center hover:bg-gray-200 rounded">
+                            <i class="fas fa-times text-black"></i>
+                        </button>
+                    </div>
+                    <p class="text-black mb-4">Nhấn vào để xem thông tin chi tiết</p>
+                    <div class="overflow-y-auto max-h-[60vh]">
+                        ${results.length > 0 ? `
+                            <table class="w-full table-fixed">
+                                <thead>
+                                    <tr class="bg-purple-200 text-left">
+                                        <th class="px-4 py-2 font-semibold text-gray-800">Mã CT</th>
+                                        <th class="px-4 py-2 font-semibold text-gray-800">Tên CT</th>
+                                        <th class="px-4 py-2 font-semibold text-gray-800">Ngày bắt đầu</th>
+                                        <th class="px-4 py-2 font-semibold text-gray-800">Ngày kết thúc</th>
+                                        <th class="px-4 py-2 font-semibold text-gray-800">Hình thức</th>
+                                        <th class="px-4 py-2 font-semibold text-gray-800">Mức giảm giá</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${results.map(p => `
+                                        <tr class="hover:bg-gray-100 cursor-pointer" onclick='openModal("details", ${JSON.stringify(p)})'>
+                                            <td class="px-4 py-2 text-gray-700">${p.id}</td>
+                                            <td class="px-4 py-2 text-gray-700">${p.name}</td>
+                                            <td class="px-4 py-2 text-gray-700">${new Date(p.startDate).toLocaleDateString('vi-VN')}</td>
+                                            <td class="px-4 py-2 text-gray-700">${new Date(p.endDate).toLocaleDateString('vi-VN')}</td>
+                                            <td class="px-4 py-2 text-gray-700">${p.type}</td>
+                                            <td class="px-4 py-2 text-gray-700">${p.discount}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        ` : `
+                            <p class="text-center text-gray-700">Không có kết quả nào.</p>
+                        `}
+                    </div>
+                    <div class="flex justify-end mt-6">
+                        <button onclick="closeModal()" class="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-black rounded-md shadow-md transition-colors font-semibold">Thoát</button>
+                    </div>
+                </div>
+            </div>
+        `
     };
 
     // Modal management
     function openModal(type, data = null) {
         activeModal = type;
-        conditions = []; // Reset conditions for new modal
+        conditions = [];
         if (type === 'add') {
-            promotionToEdit = null; // Ensure we're in add mode
+            promotionToEdit = null;
             document.getElementById('modalContainer').innerHTML = modalTemplates.add(false, {});
         } else if (type === 'edit') {
-            promotionToEdit = data; // Set the promotion to edit
+            promotionToEdit = data;
             let formData = {
                 id: data.id,
                 promoName: data.name,
@@ -572,7 +613,7 @@
                 scope: data.scope === 'Toàn bộ chi nhánh' ? 'all' : 'specific',
                 branch: data.scope !== 'Toàn bộ chi nhánh' ? data.scope : 'Chi nhánh A'
             };
-            conditions = [...(data.conditions || [])]; // Load existing conditions
+            conditions = [...(data.conditions || [])];
             document.getElementById('modalContainer').innerHTML = modalTemplates.add(true, formData, conditions);
         } else if (type === 'deleteConfirm') {
             promotionToDelete = data;
@@ -606,79 +647,70 @@
 
     // Table rendering
     function renderTable() {
-        const indexOfLastRecord = currentPage * recordsPerPage;
-        const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-        const currentRecords = filteredPromotions.slice(indexOfFirstRecord, indexOfLastRecord);
         const tbody = document.getElementById('promotionsTableBody');
-        tbody.innerHTML = currentRecords.map((p, i) => `
-                <tr class="h-20 ${i % 2 === 0 ? 'bg-white' : 'bg-violet-50'} hover:bg-violet-100 transition-colors">
-                    <td class="px-6 py-2 text-base text-gray-600">${p.id}</td>
-                    <td class="px-6 py-2 text-base text-gray-600">${p.name}</td>
-                    <td class="px-6 py-2 text-base text-gray-600">${new Date(p.startDate).toLocaleDateString('vi-VN')}</td>
-                    <td class="px-6 py-2 text-base text-gray-600">${new Date(p.endDate).toLocaleDateString('vi-VN')}</td>
-                    <td class="px-6 py-2 text-base text-gray-600">${p.type}</td>
-                    <td class="px-6 py-2 text-base text-gray-600">${p.discount}</td>
-                    <td class="px-6 py-2 text-base text-gray-600">${p.status}</td>
-                    <td class="px-6 py-2">
-                        <div class="flex space-x-4">
-                            <button onclick='openModal("details", ${JSON.stringify(p)})' class="text-gray-600 hover:text-gray-800"><i class="fas fa-eye"></i></button>
-                            <button onclick='openModal("edit", ${JSON.stringify(p)})' class="text-gray-600 hover:text-gray-800"><i class="fas fa-edit"></i></button>
-                            <button onclick='openModal("deleteConfirm", ${JSON.stringify(p)})' class="text-gray-600 hover:text-red-600"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </td>
-                </tr>
-            `).join('');
+        tbody.innerHTML = '';
+        const start = (currentPage - 1) * recordsPerPage;
+        const end = start + recordsPerPage;
+        const paginatedPromotions = filteredPromotions.slice(start, end);
+
+        if (paginatedPromotions.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="8" class="px-4 py-8 text-center text-gray-700">Không có dữ liệu</td></tr>';
+            return;
+        }
+
+        paginatedPromotions.forEach((p, index) => {
+            const row = document.createElement('tr');
+            row.className = `h-16 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-gray-100 transition-colors`;
+            row.innerHTML = `
+                <td class="px-4 py-2 text-sm text-gray-700">${p.id}</td>
+                <td class="px-4 py-2 text-sm text-gray-700 font-medium">${p.name}</td>
+                <td class="px-4 py-2 text-sm text-gray-700">${new Date(p.startDate).toLocaleDateString('vi-VN')}</td>
+                <td class="px-4 py-2 text-sm text-gray-700">${new Date(p.endDate).toLocaleDateString('vi-VN')}</td>
+                <td class="px-4 py-2 text-sm text-gray-700">${p.type}</td>
+                <td class="px-4 py-2 text-sm text-gray-700">${p.discount}</td>
+                <td class="px-4 py-2 text-sm text-gray-700">
+                    <span class="px-2 py-1 rounded-full text-xs font-medium">${p.status}</span>
+                </td>
+                <td class="px-4 py-2">
+                    <div class="flex space-x-2">
+                        <button onclick='openModal("details", ${JSON.stringify(p)})' class="text-black hover:text-gray-800 p-1 hover:bg-gray-50 rounded transition-colors" title="Xem chi tiết">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button onclick='openModal("edit", ${JSON.stringify(p)})' class="text-black hover:text-gray-800 p-1 hover:bg-gray-50 rounded transition-colors" title="Chỉnh sửa">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick='openModal("deleteConfirm", ${JSON.stringify(p)})' class="text-black hover:text-gray-800 p-1 hover:bg-gray-50 rounded transition-colors" title="Xóa">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
     }
 
     // Pagination rendering
-    function renderPagination() {
-        const pageNumbers = [];
-        for (let i = 1; i <= Math.ceil(filteredPromotions.length / recordsPerPage); i++) {
-            pageNumbers.push(i);
+    function updatePagination() {
+        const totalPages = Math.ceil(filteredPromotions.length / recordsPerPage);
+        document.getElementById('prevPage').disabled = currentPage === 1;
+        document.getElementById('nextPage').disabled = currentPage >= totalPages;
+
+        const pageButtons = document.getElementById('pageButtons');
+        pageButtons.innerHTML = '';
+
+        for (let i = 1; i <= totalPages; i++) {
+            const button = document.createElement('button');
+            button.className = `px-3 py-1 rounded transition-colors ${i === currentPage ? 'bg-purple-600 text-white' : 'bg-gray-100 hover:bg-gray-200'}`;
+            button.textContent = i;
+            button.onclick = () => changePage(i);
+            pageButtons.appendChild(button);
         }
-        const pagination = document.getElementById('pagination');
-        pagination.innerHTML = `
-            <div class="flex items-center justify-between mt-6">
-                <button onclick="prevPage()" ${currentPage === 1 || filteredPromotions.length <= recordsPerPage ? 'disabled' : ''} class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                    <i class="fas fa-chevron-left"></i>
-                    <span>Previous</span>
-                </button>
-                <div class="flex space-x-2">
-                    ${pageNumbers.map(n => `
-                        <button onclick="paginate(${n})" class="w-10 h-10 rounded-lg ${currentPage === n ? 'bg-purple-600 text-white shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'} transition-colors ${filteredPromotions.length <= recordsPerPage ? 'pointer-events-none opacity-50' : ''}">${n}</button>
-                    `).join('')}
-                </div>
-                <button onclick="nextPage()" ${currentPage === pageNumbers.length || filteredPromotions.length <= recordsPerPage ? 'disabled' : ''} class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                    <span>Next</span>
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
-        `;
     }
 
-    function paginate(pageNumber) {
-        if (filteredPromotions.length <= recordsPerPage) return;
-        currentPage = pageNumber;
+    function changePage(page) {
+        currentPage = page;
         renderTable();
-        renderPagination();
-    }
-
-    function nextPage() {
-        if (filteredPromotions.length <= recordsPerPage) return;
-        if (currentPage < Math.ceil(filteredPromotions.length / recordsPerPage)) {
-            currentPage++;
-            renderTable();
-            renderPagination();
-        }
-    }
-
-    function prevPage() {
-        if (filteredPromotions.length <= recordsPerPage) return;
-        if (currentPage > 1) {
-            currentPage--;
-            renderTable();
-            renderPagination();
-        }
+        updatePagination();
     }
 
     // Form handling
@@ -717,18 +749,18 @@
     function renderConditions() {
         const container = document.getElementById('conditionsContainer');
         container.innerHTML = conditions.map((c, i) => `
-                <div class="flex items-center space-x-4 p-4 bg-purple-50 rounded-lg animate-fade-in" data-id="${c.id}">
-                    <span class="font-bold text-gray-600">${i + 1}</span>
-                    <select class="w-1/3 h-10 px-3 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500 transition" onchange="updateCondition(${c.id}, 'type', this.value)">
-                        <option value="Giá trị tối thiểu" ${c.type === 'Giá trị tối thiểu' ? 'selected' : ''}>Giá trị tối thiểu</option>
-                        <option value="Số lượng sản phẩm tối thiểu" ${c.type === 'Số lượng sản phẩm tối thiểu' ? 'selected' : ''}>Số lượng sản phẩm tối thiểu</option>
-                    </select>
-                    <input type="text" placeholder="Nhập giá trị (VD: 500000 hoặc 5)" value="${c.value}" class="flex-grow h-10 px-4 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500 transition" oninput="updateCondition(${c.id}, 'value', this.value)">
-                    <button onclick="removeCondition(${c.id})" class="w-10 h-10 flex-shrink-0 text-red-500 hover:bg-red-100 rounded-full flex items-center justify-center transition-colors" title="Xóa điều kiện">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                </div>
-            `).join('');
+            <div class="flex items-center space-x-4 p-4 bg-purple-50 rounded-lg animate-fade-in" data-id="${c.id}">
+                <span class="font-bold text-gray-600">#${i + 1}</span>
+                <select class="w-1/3 h-10 px-3 bg-gray-50 rounded-md shadow-md border border-neutral-400 focus:ring-2 focus:ring-purple-600 transition" onchange="updateCondition(${c.id}, 'type', this.value)">
+                    <option value="Giá trị tối thiểu" ${c.type === 'Giá trị tối thiểu' ? 'selected' : ''}>Giá trị tối thiểu</option>
+                    <option value="Số lượng sản phẩm tối thiểu" ${c.type === 'Số lượng sản phẩm tối thiểu' ? 'selected' : ''}>Số lượng sản phẩm tối thiểu</option>
+                </select>
+                <input type="text" placeholder="Nhập giá trị (VD: 500000)" value="${c.value}" class="flex-grow h-10 px-4 bg-gray-50 rounded-md shadow-md border border-neutral-400 focus:ring-2 focus:ring-purple-600 transition" oninput="updateCondition(${c.id}, 'value', this.value)">
+                <button onclick="removeCondition(${c.id})" class="w-10 h-10 flex-shrink-0 text-red-500 hover:bg-red-100 rounded-full flex items-center justify-center transition-colors" title="Xóa điều kiện">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </div>
+        `).join('');
     }
 
     function handleSave() {
@@ -796,7 +828,7 @@
             status: formData.status === 'active' ? 'Kích hoạt' : 'Chưa kích hoạt',
             scope: formData.scope === 'all' ? 'Toàn bộ chi nhánh' : formData.branch,
             notes: formData.notes || 'Không có',
-            conditions: conditions.filter(c => c.value.trim() !== '') // Only save non-empty conditions
+            conditions: conditions.filter(c => c.value.trim() !== '')
         };
 
         if (promotionToEdit) {
@@ -813,11 +845,11 @@
             promotions.push(newPromotion);
             localStorage.setItem('promotions', JSON.stringify(promotions));
             filteredPromotions = [...promotions];
-            conditions = []; // Reset conditions after adding
+            conditions = [];
             closeModal();
             openModal('success');
             renderTable();
-            renderPagination();
+            updatePagination();
         } catch (error) {
             console.error('Lỗi khi thêm mới:', error);
         }
@@ -829,8 +861,9 @@
             localStorage.setItem('promotions', JSON.stringify(promotions));
             filteredPromotions = [...promotions];
             closeModal();
+            openModal('editSuccess');
             renderTable();
-            renderPagination();
+            updatePagination();
         } catch (error) {
             console.error('Lỗi khi cập nhật:', error);
         }
@@ -841,7 +874,6 @@
             promotions = promotions.filter(p => p.id !== id);
             localStorage.setItem('promotions', JSON.stringify(promotions));
             filteredPromotions = [...promotions];
-            // Reset to page 1 if current page exceeds new total pages
             const totalPages = Math.ceil(filteredPromotions.length / recordsPerPage);
             if (currentPage > totalPages) {
                 currentPage = 1;
@@ -849,7 +881,7 @@
             closeDeleteConfirmModal();
             openModal('deleteSuccess');
             renderTable();
-            renderPagination();
+            updatePagination();
         } catch (error) {
             console.error('Lỗi khi xóa:', error);
         }
@@ -905,18 +937,16 @@
         filteredPromotions = filtered;
         currentPage = 1;
         renderTable();
-        renderPagination();
+        updatePagination();
         closeModal();
     }
 
-        window.addEventListener('DOMContentLoaded', function () {
-        updateDiscountUnit(); // gọi ngay sau khi trang/form load
-        });
+    document.getElementById('prevPage').onclick = () => changePage(currentPage - 1);
+    document.getElementById('nextPage').onclick = () => changePage(currentPage + 1);
 
-
-
-
-
+    window.addEventListener('DOMContentLoaded', () => {
+        updateDiscountUnit();
+    });
 </script>
 </body>
 </html>
