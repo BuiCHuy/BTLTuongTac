@@ -1,0 +1,51 @@
+[
+  {
+    "id": "1",
+    "name": "Trà sữa trân châu",
+    "price": 25000,
+    "image": "image/mon-tra-sua-tran-chau.webp",
+    "category": "Đồ uống"
+  },
+  {
+    "id": "2",
+    "name": "Trà sữa matcha latte",
+    "price": 25000,
+    "image": "image/matcha-latte.webp",
+    "category": "Đồ uống"
+  },
+  {
+    "id": "3",
+    "name": "Trà sữa sô cô la",
+    "price": 25000,
+    "image": "image/tra-sua-chocolate.webp",
+    "category": "Đồ uống"
+  },
+  {
+    "id": "4",
+    "name": "Trà sữa cinamarol",
+    "price": 25000,
+    "image": "image/cinamol.webp",
+    "category": "Đồ uống"
+  },
+  {
+    "id": "5",
+    "name": "Khoai tây chiên",
+    "price": 25000,
+    "image": "image/khoai-tay-chien.jpg",
+    "category": "Đồ ăn vặt"
+  },
+  {
+    "id": "6",
+    "name": "Đùi gà chiên",
+    "price": 25000,
+    "image": "image/dui-ga.jpg",
+    "category": "Đồ ăn vặt"
+  },
+  {
+    "id": "7",
+    "name": "Bánh dâu tây",
+    "price": 25000,
+    "image": "image/banh-dau.jpg",
+    "category": "Đồ ăn vặt"
+  }
+]
