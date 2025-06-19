@@ -1,801 +1,552 @@
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FiveH - Quản lý Doanh thu</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Custom styles */
-        .gradient-nav {
-            background: linear-gradient(90deg, #8b5cf6 0%, #ec4899 100%);
-        }
-
-        .table-header {
-            background-color: #e5e7eb;
-            font-weight: 600;
-        }
-
-        .table-row:nth-child(even) {
-            background-color: #f9fafb;
-        }
-
-        .table-row:nth-child(odd) {
-            background-color: #ffffff;
-        }
-
-        .modal-overlay {
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-
-        .error-text {
-            color: #ef4444;
-            font-size: 12px;
-            margin-top: 4px;
-        }
-
-        .pagination-btn {
-            padding: 8px 12px;
-            margin: 0 2px;
-            border: 1px solid #d1d5db;
-            background-color: white;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .pagination-btn:hover {
-            background-color: #f3f4f6;
-        }
-
-        .pagination-btn.active {
-            background-color: #374151;
-            color: white;
-        }
-
-        .chart-container {
-            margin-top: 20px;
-            min-height: 300px;
-        }
+        @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slide-up { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .animate-fade-in { animation: fade-in 0.5s ease-out; }
+        .animate-slide-up { animation: slide-up 0.3s ease-out; }
+        .peer-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
+        input[type="radio"]:checked + .radio-dot { background-color: #7C3AED; border-color: #7C3AED; }
+        input[type="radio"]:focus + .radio-dot { outline: 2px solid #C084FC; outline-offset: 2px; }
+        .radio-dot { width: 1.25rem; height: 1.25rem; border-radius: 9999px; border: 2px solid #D1D5DB; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .radio-dot-inner { width: 0.375rem; height: 0.375rem; background-color: white; border-radius: 9999px; }
+        .modal-content { max-height: 90vh; overflow-y: auto; }
+        .filter-modal, .stats-modal { border: 1px solid #000; background: #F5F5F5; padding: 20px; border-radius: 5px; }
+        .filter-modal h3, .stats-modal h3 { font-size: 1.25rem; font-weight: bold; margin-bottom: 10px; }
+        .filter-modal .close-btn, .stats-modal .close-btn { position: absolute; top: 10px; right: 10px; width: 20px; height: 20px; background: none; border: none; cursor: pointer; }
+        .filter-modal label, .stats-modal label { display: block; margin-bottom: 5px; }
+        .filter-modal select, .filter-modal input[type="date"], .stats-modal select, .stats-modal input[type="date"] { width: 100%; padding: 5px; margin-bottom: 5px; border: 1px solid #ccc; border-radius: 3px; }
+        .filter-modal .error, .stats-modal .error { color: red; font-size: 0.75rem; margin-top: 2px; display: none; }
+        .filter-modal button, .stats-modal button { padding: 5px 10px; border: none; border-radius: 3px; cursor: pointer; }
+        .filter-modal button.green, .stats-modal button.green { background: #4CAF50; color: white; }
+        .filter-modal button.gray, .stats-modal button.gray { background: #D3D3D3; color: black; }
+        .stats-modal .chart-container { margin-top: 10px; }
+        .stats-modal .totals { margin-bottom: 10px; font-weight: bold; }
     </style>
 </head>
-
-<body class="w-full min-h-screen bg-gray-100 font-sans">
-    <!-- Header -->
-    <header class="flex items-center justify-between px-6 py-4 bg-white shadow-sm">
-        <h1 class="text-3xl font-bold text-indigo-600">FiveH</h1>
-        <div class="flex items-center space-x-6">
-            <div class="flex items-center space-x-2 cursor-pointer hover:text-indigo-600 transition-colors">
-                <i class="fas fa-cog text-gray-600 text-lg"></i>
-                <span class="text-gray-700 font-medium">Cài đặt</span>
-            </div>
-            <div class="flex items-center space-x-3">
-                <img src="https://placehold.co/40x40" alt="Profile"
-                    class="w-10 h-10 rounded-full border border-gray-300">
-                <div class="flex flex-col">
-                    <span class="text-gray-700 font-medium">Quản lý</span>
-                    <span class="text-gray-500 text-sm cursor-pointer hover:text-indigo-600">Đăng xuất</span>
-                </div>
-            </div>
+<body class="bg-gray-100 min-h-screen font-sans">
+<!-- Header -->
+<header class="flex items-center justify-between px-6 py-4 bg-white shadow-sm">
+    <h1 class="text-3xl font-bold text-indigo-600">FiveH</h1>
+    <div class="flex items-center space-x-6">
+        <div class="flex items-center space-x-2 cursor-pointer hover:text-indigo-600 transition-colors">
+            <i class="fas fa-cog text-gray-600 text-lg"></i>
+            <span class="text-gray-700 font-medium">Cài đặt</span>
         </div>
-    </header>
-
-    <!-- Navigation Bar -->
-    <nav class="bg-gradient-to-r from-purple-600 to-rose-500 py-4 px-6 shadow-md">
-        <div class="max-w-7xl mx-auto flex justify-between items-center text-white">
-            <a href="TrangChu.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors text-pink-100">
-                <i class="fas fa-home text-lg"></i>
-                <span class="text-lg font-semibold">Trang chủ</span>
-            </a>
-            <a href="PageQLBH.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
-                <i class="fas fa-shopping-cart text-lg"></i>
-                <span class="text-lg font-semibold">Bán hàng</span>
-            </a>
-            <a href="PageQLNV.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
-                <i class="fas fa-users text-lg"></i>
-                <span class="text-lg font-semibold">Nhân viên</span>
-            </a>
-            <a href="PageQLMH.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
-                <i class="fas fa-box text-lg"></i>
-                <span class="text-lg font-semibold">Mặt hàng</span>
-            </a>
-            <a href="PageQLCTKM.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
-                <i class="fas fa-tags text-lg"></i>
-                <span class="text-lg font-semibold">CT Khuyến mại</span>
-            </a>
-            <a href="PageQLDT.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
-                <i class="fas fa-chart-line text-lg"></i>
-                <span class="text-lg font-semibold">Doanh thu</span>
-            </a>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="max-w-7xl mx-auto mt-8 px-6">
-        <!-- Page Title and Action Buttons -->
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-gray-800">Quản lý doanh thu</h2>
-            <div class="flex space-x-3">
-                <button onclick="openStatisticsModal()"
-                    class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
-                    Thống kê doanh thu
-                </button>
-                <button onclick="openFilterModal()"
-                    class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center">
-                    <i class="fas fa-filter mr-2"></i>
-                    Lọc
-                </button>
-            </div>
-        </div>
-
-        <!-- Sales History Table -->
-        <div class="bg-white rounded-lg shadow-md overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-800">Lịch sử bán hàng</h3>
-            </div>
-
-            <div class="overflow-x-auto">
-                <table class="w-full">
-                    <thead class="table-header">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Ngày bán</th>
-                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Chi nhánh</th>
-                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Tiền vốn</th>
-                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Tiền thu được</th>
-                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Tiền lãi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="salesTableBody">
-                        <tr class="table-row border-b border-gray-200">
-                            <td class="px-6 py-4 text-sm text-gray-700">11/01/2025</td>
-                            <td class="px-6 py-4 text-sm text-gray-700">175 Tây Sơn - Đống Đa - Hà Nội</td>
-                            <td class="px-6 py-4 text-sm text-gray-700">1.000.000 đ</td>
-                            <td class="px-6 py-4 text-sm text-gray-700">2.000.000 đ</td>
-                            <td class="px-6 py-4 text-sm text-gray-700">1.000.000 đ</td>
-                        </tr>
-                        <tr class="table-row border-b border-gray-200">
-                            <td class="px-6 py-4 text-sm text-gray-700">13/01/2025</td>
-                            <td class="px-6 py-4 text-sm text-gray-700">175 Tây Sơn - Đống Đa - Hà Nội</td>
-                            <td class="px-6 py-4 text-sm text-gray-700">10.000.000 đ</td>
-                            <td class="px-6 py-4 text-sm text-gray-700">20.000.000 đ</td>
-                            <td class="px-6 py-4 text-sm text-gray-700">10.000.000 đ</td>
-                        </tr>
-                        <tr class="table-row border-b border-gray-200">
-                            <td class="px-6 py-4 text-sm text-gray-700">11/06/2025</td>
-                            <td class="px-6 py-4 text-sm text-gray-700">175 Tây Sơn - Đống Đa - Hà Nội</td>
-                            <td class="px-6 py-4 text-sm text-gray-700">1.000.000 đ</td>
-                            <td class="px-6 py-4 text-sm text-gray-700">2.000.000 đ</td>
-                            <td class="px-6 py-4 text-sm text-gray-700">1.000.000 đ</td>
-                        </tr>
-                        <tr class="table-row border-b border-gray-200">
-                            <td class="px-6 py-4 text-sm text-gray-700">11/06/2025</td>
-                            <td class="px-6 py-4 text-sm text-gray-700">175 Tây Sơn - Đống Đa - Hà Nội</td>
-                            <td class="px-6 py-4 text-sm text-gray-700">1.000.000 đ</td>
-                            <td class="px-6 py-4 text-sm text-gray-700">2.000.000 đ</td>
-                            <td class="px-6 py-4 text-sm text-gray-700">1.000.000 đ</td>
-                        </tr>
-                        <tr class="table-row border-b border-gray-200">
-                            <td class="px-6 py-4 text-sm text-gray-700">11/06/2025</td>
-                            <td class="px-6 py-4 text-sm text-gray-700">175 Tây Sơn - Đống Đa - Hà Nội</td>
-                            <td class="px-6 py-4 text-sm text-gray-700">1.000.000 đ</td>
-                            <td class="px-6 py-4 text-sm text-gray-700">2.000.000 đ</td>
-                            <td class="px-6 py-4 text-sm text-gray-700">1.000.000 đ</td>
-                        </tr>
-                        <tr class="table-row">
-                            <td class="px-6 py-4 text-sm text-gray-700">11/06/2025</td>
-                            <td class="px-6 py-4 text-sm text-gray-700">175 Tây Sơn - Đống Đa - Hà Nội</td>
-                            <td class="px-6 py-4 text-sm text-gray-700">1.000.000 đ</td>
-                            <td class="px-6 py-4 text-sm text-gray-700">2.000.000 đ</td>
-                            <td class="px-6 py-4 text-sm text-gray-700">1.000.000 đ</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Pagination -->
-            <div class="flex items-center justify-center py-4 border-t border-gray-200">
-                <div class="flex items-center space-x-1">
-                    <button class="pagination-btn" onclick="previousPage()">
-                        <i class="fas fa-chevron-left mr-1"></i>
-                        Previous
-                    </button>
-                    <button class="pagination-btn active" onclick="goToPage(1)">1</button>
-                    <button class="pagination-btn" onclick="goToPage(2)">2</button>
-                    <button class="pagination-btn" onclick="goToPage(3)">3</button>
-                    <span class="px-3 py-2 text-gray-500">...</span>
-                    <button class="pagination-btn" onclick="goToPage(67)">67</button>
-                    <button class="pagination-btn" onclick="goToPage(68)">68</button>
-                    <button class="pagination-btn" onclick="nextPage()">
-                        Next
-                        <i class="fas fa-chevron-right ml-1"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Statistics Modal -->
-    <div id="statisticsModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
-        <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4">
-            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-                <h3 class="text-xl font-semibold text-gray-800">Thống kê doanh thu</h3>
-                <button onclick="closeStatisticsModal()"
-                    class="text-gray-400 hover:text-gray-600 text-2xl font-bold">×</button>
-            </div>
-            <div class="px-6 py-4 space-y-4">
-                <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-700">Thống kê theo:</label>
-                    <div class="flex space-x-6">
-                        <label class="flex items-center cursor-pointer">
-                            <input type="radio" name="statBy" value="time" class="mr-2" checked>
-                            <span class="text-sm text-gray-700">Thời gian</span>
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="radio" name="statBy" value="employee" class="mr-2">
-                            <span class="text-sm text-gray-700">Nhân viên</span>
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="radio" name="statBy" value="product" class="mr-2">
-                            <span class="text-sm text-gray-700">Mặt hàng</span>
-                        </label>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="space-y-2">
-                        <label class="block text-sm font-medium text-gray-700">Loại thời gian:</label>
-                        <select
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            <option>Ngày</option>
-                            <option>Tuần</option>
-                            <option>Tháng</option>
-                        </select>
-                    </div>
-                    <div class="space-y-2">
-                        <label class="block text-sm font-medium text-gray-700">Chi nhánh:</label>
-                        <select
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            <option>Chi nhánh 1</option>
-                            <option>Chi nhánh 2</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="space-y-2">
-                        <label class="block text-sm font-medium text-gray-700">Từ ngày:</label>
-                        <input type="date"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    </div>
-                    <div class="space-y-2">
-                        <label class="block text-sm font-medium text-gray-700">Đến ngày:</label>
-                        <input type="date"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    </div>
-                </div>
-            </div>
-            <div class="flex justify-end space-x-3 px-6 py-4 border-t border-gray-200">
-                <button onclick="closeStatisticsModal()"
-                    class="px-4 py-2 text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-md font-medium transition-colors">Thoát</button>
-                <button onclick="createStatistics()"
-                    class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md font-medium transition-colors">Tạo
-                    thống kê</button>
+        <div class="flex items-center space-x-3">
+            <img src="https://placehold.co/40x40" alt="Profile" class="w-10 h-10 rounded-full border border-gray-300">
+            <div class="flex flex-col">
+                <span class="text-gray-700 font-medium">Quản lý</span>
+                <span class="text-gray-500 text-sm cursor-pointer hover:text-indigo-600">Đăng xuất</span>
             </div>
         </div>
     </div>
+</header>
 
-    <!-- Filter Modal -->
-    <div id="filterModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
-        <div class="bg-white rounded-lg shadow-xl max-w-lg w-full mx-4">
-            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-                <h3 class="text-xl font-semibold text-gray-800">Bộ lọc doanh thu</h3>
-                <button onclick="closeFilterModal()"
-                    class="text-gray-400 hover:text-gray-600 text-2xl font-bold">×</button>
-            </div>
-            <div class="px-6 py-4 space-y-4">
-                <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-700">Chi nhánh:</label>
-                    <select id="branchFilter"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <option value="">Tất cả chi nhánh</option>
-                        <option value="175 Tây Sơn - Đống Đa - Hà Nội">175 Tây Sơn - Đống Đa - Hà Nội</option>
-                        <option value="123 Nguyễn Trãi - Thanh Xuân - Hà Nội">123 Nguyễn Trãi - Thanh Xuân - Hà Nội
-                        </option>
-                        <option value="456 Láng Hạ - Ba Đình - Hà Nội">456 Láng Hạ - Ba Đình - Hà Nội</option>
-                    </select>
-                    <div class="error-text">Không được để trống</div>
-                </div>
-                <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-700">Nhân viên:</label>
-                    <input type="text" id="employeeFilter" placeholder="Nhập tên nhân viên"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    <div class="error-text">Không được để trống</div>
-                </div>
-                <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-700">Loại sản phẩm:</label>
-                    <select id="productFilter"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <option value="">Tất cả sản phẩm</option>
-                        <option value="Trà">Trà</option>
-                        <option value="Cà phê">Cà phê</option>
-                        <option value="Nước ép">Nước ép</option>
-                        <option value="Bánh ngọt">Bánh ngọt</option>
-                    </select>
-                    <div class="error-text">Không được để trống</div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="space-y-2">
-                        <label class="block text-sm font-medium text-gray-700">Từ ngày:</label>
-                        <input type="date" id="fromDate"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <div class="error-text">Không được để trống</div>
-                    </div>
-                    <div class="space-y-2">
-                        <label class="block text-sm font-medium text-gray-700">Đến ngày:</label>
-                        <input type="date" id="toDate"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <div class="error-text">Không được để trống</div>
-                    </div>
-                </div>
-            </div>
-            <div class="flex justify-end space-x-3 px-6 py-4 border-t border-gray-200">
-                <button onclick="closeFilterModal()"
-                    class="px-4 py-2 text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-md font-medium transition-colors">Thoát</button>
-                <button onclick="applyFilter()"
-                    class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md font-medium transition-colors">Lọc</button>
-            </div>
+<!-- Navigation -->
+<nav class="bg-gradient-to-r from-purple-600 to-rose-500 py-4 px-6 shadow-md">
+    <div class="max-w-7xl mx-auto flex justify-between items-center text-white">
+        <a href="Trangchu.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
+            <i class="fas fa-home text-lg"></i><span class="text-lg font-semibold">Trang chủ</span>
+        </a>
+        <a href="PageQLBH.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
+            <i class="fas fa-shopping-cart text-lg"></i><span class="text-lg font-semibold">Bán hàng</span>
+        </a>
+        <a href="PageQLNV.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
+            <i class="fas fa-users text-lg"></i><span class="text-lg font-semibold">Nhân viên</span>
+        </a>
+        <a href="PageQLMH.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
+            <i class="fas fa-box text-lg"></i><span class="text-lg font-semibold">Mặt hàng</span>
+        </a>
+        <a href="PageQLCTKM.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
+            <i class="fas fa-tags text-lg"></i><span class="text-lg font-semibold">CT Khuyến mại</span>
+        </a>
+        <a href="PageQLDT.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors text-pink-100">
+            <i class="fas fa-chart-line text-lg"></i><span class="text-lg font-semibold">Doanh thu</span>
+        </a>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<main class="max-w-7xl mx-auto mt-8 px-6 animate-fade-in">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">QUẢN LÝ DOANH THU</h2>
+        <div class="flex space-x-4">
+            <button onclick="openFilterModal()" class="h-10 bg-purple-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-purple-700 transition-colors flex items-center space-x-2">
+                <i class="fas fa-filter"></i>
+                <span>Lọc</span>
+            </button>
+            <button onclick="openStatisticsModal()" class="h-10 bg-purple-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-purple-700 transition-colors flex items-center space-x-2">
+                <i class="fas fa-chart-bar"></i>
+                <span>Thống kê doanh thu</span>
+            </button>
         </div>
     </div>
-    <!-- Statistics Result Modal -->
-    <div id="statisticsResultModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
-        <div class="bg-gray-100 rounded-lg shadow-xl max-w-3xl w-full mx-4">
-            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-                <h3 class="text-2xl font-bold text-gray-800">Xem doanh thu</h3>
-                <button onclick="closeStatisticsResultModal()"
-                    class="text-gray-400 hover:text-gray-600 text-2xl font-bold">×</button>
-            </div>
-            <div class="px-6 pt-4 pb-2">
-                <div class="flex justify-between items-center border-b-2 border-purple-400 pb-2 mb-4">
-                    <span class="text-lg font-medium">Doanh thu: <span id="statResultRevenue"
-                            class="font-bold text-xl">10.000.000VND</span></span>
-                    <span class="text-lg font-medium">Vốn: <span id="statResultCapital"
-                            class="font-bold text-xl">1.000.000VND</span></span>
-                    <span class="text-lg font-medium">Lợi nhuận: <span id="statResultProfit"
-                            class="font-bold text-xl">9.000.000VND</span></span>
-                </div>
-                <div class="bg-white rounded-lg p-6">
-                    <canvas id="statResultChart" height="180"></canvas>
-                </div>
-            </div>
-            <div class="flex justify-end px-6 pb-6">
-                <button onclick="closeStatisticsResultModal()"
-                    class="px-8 py-2 bg-gray-100 hover:bg-gray-200 rounded-md font-medium text-gray-700 border border-gray-200">Thoát</button>
-            </div>
+
+    <!-- Sales History Table -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-800">LỊCH SỬ GIAO DỊCH</h3>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-purple-200 h-12">
+                <tr>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-800">Mã hóa đơn</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-800">Ngày bán</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-800">Chi nhánh</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-800">Nhân viên</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-800">Sản phẩm</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-800">Vốn</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-800">Doanh thu</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-800">Lợi nhuận</th>
+                </tr>
+                </thead>
+                <tbody id="salesTableBody"></tbody>
+            </table>
+        </div>
+        <!-- Pagination -->
+        <div class="flex items-center justify-end mt-4 text-sm text-gray-700 p-4 rounded">
+            <button id="prevPage" class="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200 disabled:opacity-50 flex items-center gap-1 transition-colors" disabled>
+                <i class="fas fa-chevron-left"></i> Trước
+            </button>
+            <div id="pageButtons" class="flex space-x-2"></div>
+            <button id="nextPage" class="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200 disabled:opacity-50 flex items-center gap-1 transition-colors">
+                Sau <i class="fas fa-chevron-right"></i>
+            </button>
         </div>
     </div>
-    <script>
-        // Fake data for different scenarios
-        const allSalesData = [
-            {
-                date: "11/01/2025",
-                branch: "175 Tây Sơn - Đống Đa - Hà Nội",
-                capital: "1.000.000 đ",
-                revenue: "2.000.000 đ",
-                profit: "1.000.000 đ",
-                employee: "Nguyễn Văn A",
-                product: "Trà"
-            },
-            {
-                date: "13/01/2025",
-                branch: "175 Tây Sơn - Đống Đa - Hà Nội",
-                capital: "10.000.000 đ",
-                revenue: "20.000.000 đ",
-                profit: "10.000.000 đ",
-                employee: "Trần Thị B",
-                product: "Cà phê"
-            },
-            {
-                date: "15/01/2025",
-                branch: "123 Nguyễn Trãi - Thanh Xuân - Hà Nội",
-                capital: "5.000.000 đ",
-                revenue: "8.000.000 đ",
-                profit: "3.000.000 đ",
-                employee: "Lê Văn C",
-                product: "Nước ép"
-            },
-            {
-                date: "20/01/2025",
-                branch: "456 Láng Hạ - Ba Đình - Hà Nội",
-                capital: "3.000.000 đ",
-                revenue: "5.500.000 đ",
-                profit: "2.500.000 đ",
-                employee: "Phạm Thị D",
-                product: "Bánh ngọt"
-            },
-            {
-                date: "22/01/2025",
-                branch: "175 Tây Sơn - Đống Đa - Hà Nội",
-                capital: "2.000.000 đ",
-                revenue: "3.500.000 đ",
-                profit: "1.500.000 đ",
-                employee: "Hoàng Văn E",
-                product: "Trà"
-            },
-            {
-                date: "25/01/2025",
-                branch: "123 Nguyễn Trãi - Thanh Xuân - Hà Nội",
-                capital: "7.000.000 đ",
-                revenue: "12.000.000 đ",
-                profit: "5.000.000 đ",
-                employee: "Vũ Thị F",
-                product: "Cà phê"
-            }
-        ];
+</main>
 
-        let currentData = [...allSalesData];
+<!-- Modals -->
+<div id="modalContainer"></div>
 
-        // Modal functions
-        function openStatisticsModal() {
-            document.getElementById('statisticsModal').classList.remove('hidden');
-            document.getElementById('statisticsModal').classList.add('flex');
-        }
+<script>
+    let invoices = JSON.parse(localStorage.getItem('invoices')) || [];
+    let currentData = [...invoices];
+    let currentPage = 1;
+    const itemsPerPage = 5;
+    window.statResultChart = null; // Initialize as null
 
-        function closeStatisticsModal() {
-            document.getElementById('statisticsModal').classList.add('hidden');
-            document.getElementById('statisticsModal').classList.remove('flex');
-        }
+    // Initialize local storage if empty
+    if (!localStorage.getItem('invoices')) {
+        localStorage.setItem('invoices', JSON.stringify(invoices));
+    }
 
-        function openFilterModal() {
-            document.getElementById('filterModal').classList.remove('hidden');
-            document.getElementById('filterModal').classList.add('flex');
-        }
+    // Get current date
+    const today = new Date().toISOString().split('T')[0];
 
-        function closeFilterModal() {
-            document.getElementById('filterModal').classList.add('hidden');
-            document.getElementById('filterModal').classList.remove('flex');
-        }
+    // Modal templates
+    const modalTemplates = {
+        filter: `
+            <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in">
+                <div class="filter-modal relative w-full max-w-md animate-slide-up">
+                    <h3>Bộ lọc doanh thu</h3>
+                    <button class="close-btn" onclick="closeModal()"><i class="fas fa-times"></i></button>
+                    <div class="space-y-4">
+                        <div>
+                            <label>Loại sản phẩm:</label>
+                            <select id="productFilter" class="w-full h-10 px-3 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-600">
+                                <option value="">Tất cả</option>
+                                ${[...new Set(invoices.map(item => item.product))].map(product => `<option value="${product}">${product}</option>`).join('')}
+                            </select>
+                            <p id="productFilterError" class="error">Trường này không được để trống</p>
+                        </div>
+                        <div>
+                            <label>Từ ngày:</label>
+                            <input type="date" id="fromDate" class="w-full h-10 px-3 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-600" value="${today}">
+                            <p id="fromDateError" class="error">Trường này không được để trống</p>
+                        </div>
+                        <div>
+                            <label>Đến ngày:</label>
+                            <input type="date" id="toDate" class="w-full h-10 px-3 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-600" value="${today}">
+                            <p id="toDateError" class="error">Trường này không được để trống</p>
+                        </div>
+                        <div class="flex justify-end space-x-2 mt-4">
+                            <button class="gray" onclick="closeModal()">Thoát</button>
+                            <button class="green" onclick="applyFilter()">Lọc</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `,
+        statistics: `
+            <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in">
+                <div class="stats-modal relative w-full max-w-lg animate-slide-up">
+                    <h3>Thống kê doanh thu</h3>
+                    <button class="close-btn" onclick="closeModal()"><i class="fas fa-times"></i></button>
+                    <div class="space-y-4">
+                        <div>
+                            <label>Thống kê theo:</label>
+                            <div class="flex space-x-2">
+                                <label class="flex items-center space-x-1">
+                                    <input type="radio" name="statBy" value="time" class="peer-sr-only" checked>
+                                    <div class="radio-dot"><div class="radio-dot-inner"></div></div>
+                                    <span>Thời gian</span>
+                                </label>
+                                <label class="flex items-center space-x-1">
+                                    <input type="radio" name="statBy" value="product" class="peer-sr-only">
+                                    <div class="radio-dot"><div class="radio-dot-inner"></div></div>
+                                    <span>Mặt hàng</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <label>Chi nhánh:</label>
+                            <select id="statBranch" class="w-full h-10 px-3 bg-white rounded-md border border-gray-300">
+                                <option value="">Tất cả chi nhánh</option>
+                                ${[...new Set(invoices.map(item => item.branch))].map(branch => `<option value="${branch}">${branch}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div id="timeOptions" class="space-y-2">
+                            <label>Loại thời gian:</label>
+                            <select id="statTimeType" class="w-full h-10 px-3 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-600">
+                                <option value="day">Ngày</option>
+                                <option value="week">Tuần</option>
+                                <option value="month">Tháng</option>
+                            </select>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label>Từ ngày:</label>
+                                <input type="date" id="statFromDate" class="w-full h-10 px-3 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-600">
+                                <p id="statFromDateError" class="error">Trường này không được để trống</p>
+                            </div>
+                            <div>
+                                <label>Đến ngày:</label>
+                                <input type="date" id="statToDate" class="w-full h-10 px-3 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-600">
+                                <p id="statToDateError" class="error">Trường này không được để trống</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-end space-x-2 mt-4">
+                            <button class="gray" onclick="closeModal()">Thoát</button>
+                            <button class="green" onclick="createStatistics()">Tạo thống kê</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `,
+        statisticsResult: `
+            <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in">
+                <div class="stats-modal relative w-full max-w-xl animate-slide-up border border-gray-300 rounded-lg shadow-lg">
+                    <h3 class="text-lg font-bold p-4 text-center border-b border-gray-300">Xem doanh thu</h3>
+                    <button class="close-btn absolute top-2 right-2 text-gray-600 hover:text-gray-800 focus:outline-none" onclick="closeModal()"><i class="fas fa-times"></i></button>
+                    <div class="stat-card p-6 space-y-6">
+                        <div class="totals flex justify-between text-base font-semibold">
+                            <span>Doanh thu: <span id="statResultRevenue" class="font-bold"></span></span>
+                            <span>Vốn: <span id="statResultCapital" class="font-bold"></span></span>
+                            <span>Lợi nhuận: <span id="statResultProfit" class="font-bold"></span></span>
+                        </div>
+                        <div class="chart-container p-4 border border-gray-200 rounded-md shadow-inner">
+                            <canvas id="statResultChart" height="200"></canvas>
+                        </div>
+                        <div class="flex justify-end">
+                            <button class="gray px-4 py-2 rounded shadow hover:bg-gray-300 transition-colors" onclick="closeModal()">Thoát</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `
+    };
 
-        function openStatisticsResultModal() {
-            document.getElementById('statisticsResultModal').classList.remove('hidden');
-            document.getElementById('statisticsResultModal').classList.add('flex');
-        }
+    // Modal management
+    function openFilterModal() {
+        openModal('filter');
+    }
 
-        function closeStatisticsResultModal() {
-            document.getElementById('statisticsResultModal').classList.add('hidden');
-            document.getElementById('statisticsResultModal').classList.remove('flex');
-        }
+    function openStatisticsModal() {
+        openModal('statistics');
+        const statBy = document.querySelector('input[name="statBy"]:checked').value;
+        document.getElementById('timeOptions').style.display = statBy === 'time' ? 'block' : 'none';
+    }
 
-        // Tính toán và hiển thị thống kê
-        function createStatistics() {
-            // Dữ liệu fake đúng như ảnh
-            const fakeLabels = ["01/01/2025", "10/01/2025", "20/01/2025", "30/01/2025"];
-            const fakeData = [5, 5, 3, 1];
-            // Hiển thị số liệu đúng như ảnh
-            document.getElementById('statResultRevenue').textContent = '10.000.000VND';
-            document.getElementById('statResultCapital').textContent = '1.000.000VND';
-            document.getElementById('statResultProfit').textContent = '9.000.000VND';
-            // Vẽ biểu đồ
-            setTimeout(() => { // Đảm bảo canvas đã render
-                const ctx = document.getElementById('statResultChart').getContext('2d');
-                if (window.statResultChart) window.statResultChart.destroy();
-                window.statResultChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: fakeLabels,
-                        datasets: [{
-                            label: 'Doanh thu',
-                            data: fakeData,
-                            backgroundColor: '#5B8CFA',
-                            borderRadius: 4,
-                            barPercentage: 0.5,
-                            categoryPercentage: 0.5
-                        }]
-                    },
-                    options: {
-                        plugins: { legend: { display: false } },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                max: 10,
-                                ticks: {
-                                    stepSize: 1,
-                                    callback: function (value) { return value; }
-                                }
-                            }
-                        }
-                    }
+    function openModal(type) {
+        document.getElementById('modalContainer').innerHTML = modalTemplates[type];
+        document.getElementById('modalContainer').classList.add('flex');
+        if (type === 'statistics') {
+            document.querySelectorAll('input[name="statBy"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const timeOptions = document.getElementById('timeOptions');
+                    timeOptions.style.display = this.value === 'time' ? 'block' : 'none';
                 });
-            }, 100);
-            closeStatisticsModal();
-            openStatisticsResultModal();
-        }
-
-        function applyFilter() {
-            const branch = document.getElementById('branchFilter').value;
-            const employee = document.getElementById('employeeFilter').value;
-            const product = document.getElementById('productFilter').value;
-            const fromDate = document.getElementById('fromDate').value;
-            const toDate = document.getElementById('toDate').value;
-
-            let filteredData = [...allSalesData];
-
-            // Filter by branch
-            if (branch) {
-                filteredData = filteredData.filter(item => item.branch === branch);
-            }
-
-            // Filter by employee
-            if (employee) {
-                filteredData = filteredData.filter(item =>
-                    item.employee.toLowerCase().includes(employee.toLowerCase())
-                );
-            }
-
-            // Filter by product
-            if (product) {
-                filteredData = filteredData.filter(item => item.product === product);
-            }
-
-            // Filter by date range
-            if (fromDate && toDate) {
-                filteredData = filteredData.filter(item => {
-                    const itemDate = new Date(item.date.split('/').reverse().join('-'));
-                    const from = new Date(fromDate);
-                    const to = new Date(toDate);
-                    return itemDate >= from && itemDate <= to;
-                });
-            }
-
-            currentData = filteredData;
-            updateTable();
-            closeFilterModal();
-        }
-
-        function updateTable() {
-            const tbody = document.getElementById('salesTableBody');
-            tbody.innerHTML = '';
-
-            if (currentData.length === 0) {
-                tbody.innerHTML = `
-          <tr>
-            <td colspan="5" class="px-6 py-8 text-center text-gray-500">
-              Không tìm thấy dữ liệu phù hợp với bộ lọc
-            </td>
-          </tr>
-        `;
-                return;
-            }
-
-            currentData.forEach((item, index) => {
-                const row = document.createElement('tr');
-                row.className = `table-row ${index < currentData.length - 1 ? 'border-b border-gray-200' : ''}`;
-                row.innerHTML = `
-          <td class="px-6 py-4 text-sm text-gray-700">${item.date}</td>
-          <td class="px-6 py-4 text-sm text-gray-700">${item.branch}</td>
-          <td class="px-6 py-4 text-sm text-gray-700">${item.capital}</td>
-          <td class="px-6 py-4 text-sm text-gray-700">${item.revenue}</td>
-          <td class="px-6 py-4 text-sm text-gray-700">${item.profit}</td>
-        `;
-                tbody.appendChild(row);
             });
         }
+    }
 
-        // Pagination functions
-        function previousPage() {
-            console.log('Previous page');
+    function closeModal() {
+        document.getElementById('modalContainer').innerHTML = '';
+        document.getElementById('modalContainer').classList.remove('flex');
+        if (window.statResultChart && typeof window.statResultChart.destroy === 'function') {
+            window.statResultChart.destroy();
+            window.statResultChart = null;
         }
-
-        function nextPage() {
-            console.log('Next page');
-        }
-
-        function goToPage(page) {
-            // Remove active class from all buttons
-            document.querySelectorAll('.pagination-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            // Add active class to clicked button
-            event.target.classList.add('active');
-            console.log('Go to page:', page);
-        }
-
-        // Close modals when clicking outside
-        document.getElementById('statisticsModal').addEventListener('click', function (e) {
-            if (e.target === this) {
-                closeStatisticsModal();
-            }
-        });
-
-        document.getElementById('filterModal').addEventListener('click', function (e) {
-            if (e.target === this) {
-                closeFilterModal();
-            }
-        });
-
-        document.getElementById('statisticsResultModal').addEventListener('click', function (e) {
-            if (e.target === this) {
-                closeStatisticsResultModal();
-            }
-        });
-
-        // Khởi tạo với dữ liệu mặc định
         updateTable();
-        // Modal functions
-        function openStatisticsModal() {
-            document.getElementById('statisticsModal').classList.remove('hidden');
-            document.getElementById('statisticsModal').classList.add('flex');
+    }
+
+    // Validation functions
+    function validateFilterFields() {
+        const errors = {};
+        const fromDate = document.getElementById('fromDate').value;
+        const toDate = document.getElementById('toDate').value;
+        if (fromDate && toDate && new Date(fromDate) > new Date(toDate)) {
+            errors['toDate'] = 'Đến ngày phải sau Từ ngày';
         }
-
-        function closeStatisticsModal() {
-            document.getElementById('statisticsModal').classList.add('hidden');
-            document.getElementById('statisticsModal').classList.remove('flex');
-        }
-
-        function openFilterModal() {
-            document.getElementById('filterModal').classList.remove('hidden');
-            document.getElementById('filterModal').classList.add('flex');
-        }
-
-        function closeFilterModal() {
-            document.getElementById('filterModal').classList.add('hidden');
-            document.getElementById('filterModal').classList.remove('flex');
-        }
-
-        function createStatistics() {
-            // Dữ liệu fake đúng như ảnh
-            const fakeLabels = ["01/01/2025", "10/01/2025", "20/01/2025", "30/01/2025"];
-            const fakeData = [5, 5, 3, 1];
-            // Hiển thị số liệu đúng như ảnh
-            document.getElementById('statResultRevenue').textContent = '10.000.000VND';
-            document.getElementById('statResultCapital').textContent = '1.000.000VND';
-            document.getElementById('statResultProfit').textContent = '9.000.000VND';
-            // Vẽ biểu đồ
-            setTimeout(() => { // Đảm bảo canvas đã render
-                const ctx = document.getElementById('statResultChart').getContext('2d');
-                if (window.statResultChart) window.statResultChart.destroy();
-                window.statResultChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: fakeLabels,
-                        datasets: [{
-                            label: 'Doanh thu',
-                            data: fakeData,
-                            backgroundColor: '#5B8CFA',
-                            borderRadius: 4,
-                            barPercentage: 0.5,
-                            categoryPercentage: 0.5
-                        }]
-                    },
-                    options: {
-                        plugins: { legend: { display: false } },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                max: 10,
-                                ticks: {
-                                    stepSize: 1,
-                                    callback: function (value) { return value; }
-                                }
-                            }
-                        }
-                    }
-                });
-            }, 100);
-            closeStatisticsModal();
-            openStatisticsResultModal();
-        }
-
-        function applyFilter() {
-            const branch = document.getElementById('branchFilter').value;
-            const employee = document.getElementById('employeeFilter').value;
-            const product = document.getElementById('productFilter').value;
-            const fromDate = document.getElementById('fromDate').value;
-            const toDate = document.getElementById('toDate').value;
-
-            let filteredData = [...allSalesData];
-
-            // Filter by branch
-            if (branch) {
-                filteredData = filteredData.filter(item => item.branch === branch);
+        ['fromDate', 'toDate'].forEach(field => {
+            const errorEl = document.getElementById(`${field}Error`);
+            const inputEl = document.getElementById(field);
+            if (errorEl) {
+                errorEl.style.display = errors[field] ? 'block' : 'none';
             }
-
-            // Filter by employee
-            if (employee) {
-                filteredData = filteredData.filter(item =>
-                    item.employee.toLowerCase().includes(employee.toLowerCase())
-                );
-            }
-
-            // Filter by product
-            if (product) {
-                filteredData = filteredData.filter(item => item.product === product);
-            }
-
-            // Filter by date range
-            if (fromDate && toDate) {
-                filteredData = filteredData.filter(item => {
-                    const itemDate = new Date(item.date.split('/').reverse().join('-'));
-                    const from = new Date(fromDate);
-                    const to = new Date(toDate);
-                    return itemDate >= from && itemDate <= to;
-                });
-            }
-
-            currentData = filteredData;
-            updateTable();
-            closeFilterModal();
-        }
-
-        function updateTable() {
-            const tbody = document.getElementById('salesTableBody');
-            tbody.innerHTML = '';
-
-            if (currentData.length === 0) {
-                tbody.innerHTML = `
-          <tr>
-            <td colspan="5" class="px-6 py-8 text-center text-gray-500">
-              Không tìm thấy dữ liệu phù hợp với bộ lọc
-            </td>
-          </tr>
-        `;
-                return;
-            }
-
-            currentData.forEach((item, index) => {
-                const row = document.createElement('tr');
-                row.className = `table-row ${index < currentData.length - 1 ? 'border-b border-gray-200' : ''}`;
-                row.innerHTML = `
-          <td class="px-6 py-4 text-sm text-gray-700">${item.date}</td>
-          <td class="px-6 py-4 text-sm text-gray-700">${item.branch}</td>
-          <td class="px-6 py-4 text-sm text-gray-700">${item.capital}</td>
-          <td class="px-6 py-4 text-sm text-gray-700">${item.revenue}</td>
-          <td class="px-6 py-4 text-sm text-gray-700">${item.profit}</td>
-        `;
-                tbody.appendChild(row);
-            });
-        }
-
-        // Pagination functions
-        function previousPage() {
-            console.log('Previous page');
-        }
-
-        function nextPage() {
-            console.log('Next page');
-        }
-
-        function goToPage(page) {
-            // Remove active class from all buttons
-            document.querySelectorAll('.pagination-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            // Add active class to clicked button
-            event.target.classList.add('active');
-            console.log('Go to page:', page);
-        }
-
-        // Close modals when clicking outside
-        document.getElementById('statisticsModal').addEventListener('click', function (e) {
-            if (e.target === this) {
-                closeStatisticsModal();
+            if (inputEl) {
+                inputEl.classList.toggle('border-red-500', !!errors[field]);
+                inputEl.classList.toggle('border-gray-300', !errors[field]);
             }
         });
+        return Object.keys(errors).length === 0;
+    }
 
-        document.getElementById('filterModal').addEventListener('click', function (e) {
-            if (e.target === this) {
-                closeFilterModal();
+    function validateStatisticsFields() {
+        const errors = {};
+        const fromDate = document.getElementById('statFromDate').value;
+        const toDate = document.getElementById('statToDate').value;
+        if (!fromDate) errors['statFromDate'] = 'Trường này không được để trống';
+        if (!toDate) errors['statToDate'] = 'Trường này không được để trống';
+        if (fromDate && toDate && new Date(fromDate) > new Date(toDate)) {
+            errors['statToDate'] = 'Đến ngày phải sau Từ ngày';
+        }
+        ['statFromDate', 'statToDate'].forEach(field => {
+            const errorEl = document.getElementById(`${field}Error`);
+            const inputEl = document.getElementById(field);
+            if (errorEl) {
+                errorEl.style.display = errors[field] ? 'block' : 'none';
+            }
+            if (inputEl) {
+                inputEl.classList.toggle('border-red-500', !!errors[field]);
+                inputEl.classList.toggle('border-gray-300', !errors[field]);
             }
         });
+        return Object.keys(errors).length === 0;
+    }
 
-        document.getElementById('statisticsResultModal').addEventListener('click', function (e) {
-            if (e.target === this) {
-                closeStatisticsResultModal();
-            }
+    // Format currency
+    function formatCurrency(amount) {
+        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+    }
+
+    // Render table
+    function updateTable() {
+        const tbody = document.getElementById('salesTableBody');
+        tbody.innerHTML = '';
+        const start = (currentPage - 1) * itemsPerPage;
+        end = start + itemsPerPage;
+        const paginatedData = currentData.slice(start, end);
+
+        if (paginatedData.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="8" class="px-6 py-8 text-center text-gray-700">Không tìm thấy dữ liệu</td></tr>`;
+            return;
+        }
+
+        paginatedData.forEach((item, index) => {
+            const row = document.createElement('tr');
+            row.className = `h-16 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-gray-100 transition-colors`;
+            row.innerHTML = `
+                <td class="px-6 py-4 text-sm text-gray-700">${item.id}</td>
+                <td class="px-6 py-4 text-sm text-gray-700">${item.date}</td>
+                <td class="px-6 py-4 text-sm text-gray-700">${item.branch}</td>
+                <td class="px-6 py-4 text-sm text-gray-700">${item.employee}</td>
+                <td class="px-6 py-4 text-sm text-gray-700">${item.product}</td>
+                <td class="px-6 py-4 text-sm text-gray-700">${formatCurrency(item.capital)}</td>
+                <td class="px-6 py-4 text-sm text-gray-700">${formatCurrency(item.revenue)}</td>
+                <td class="px-6 py-4 text-sm text-gray-700">${formatCurrency(item.profit)}</td>
+            `;
+            tbody.appendChild(row);
         });
+        updatePagination();
+    }
 
-        // Khởi tạo với dữ liệu mặc định
+    // Pagination
+    function updatePagination() {
+        const totalPages = Math.ceil(currentData.length / itemsPerPage);
+        document.getElementById('prevPage').disabled = currentPage === 1;
+        document.getElementById('nextPage').disabled = currentPage >= totalPages;
+
+        const pageButtons = document.getElementById('pageButtons');
+        pageButtons.innerHTML = '';
+
+        for (let i = 1; i <= totalPages; i++) {
+            const button = document.createElement('button');
+            button.className = `px-3 py-1 rounded transition-colors ${i === currentPage ? 'bg-purple-600 text-white' : 'bg-gray-100 hover:bg-gray-200'}`;
+            button.textContent = i;
+            button.onclick = () => changePage(i);
+            pageButtons.appendChild(button);
+        }
+    }
+
+    function changePage(page) {
+        currentPage = page;
         updateTable();
-    </script>
+    }
+
+    // Filter function
+    function applyFilter() {
+        if (!validateFilterFields()) return;
+
+        const product = document.getElementById('productFilter').value;
+        let fromDate = document.getElementById('fromDate').value;
+        let toDate = document.getElementById('toDate').value;
+
+        // Default to today if either date is empty
+        if (!fromDate || !toDate) {
+            const today = new Date().toISOString().split('T')[0];
+            fromDate = fromDate || today;
+            toDate = toDate || today;
+        }
+
+        let filteredData = [...invoices];
+
+        if (product) {
+            filteredData = filteredData.filter(item => item.product === product);
+        }
+        if (fromDate && toDate) {
+            filteredData = filteredData.filter(item => {
+                const itemDate = new Date(item.date.split('/').reverse().join('-'));
+                const from = new Date(fromDate);
+                const to = new Date(toDate);
+                return itemDate >= from && itemDate <= to;
+            });
+        }
+
+        currentData = filteredData;
+        currentPage = 1;
+        closeModal();
+    }
+
+    // Statistics function
+    function createStatistics() {
+        if (!validateStatisticsFields()) return;
+
+        const statBy = document.querySelector('input[name="statBy"]:checked').value;
+        const branch = document.getElementById('statBranch').value;
+        const fromDate = document.getElementById('statFromDate').value;
+        const toDate = document.getElementById('statToDate').value;
+        const timeType = document.getElementById('statTimeType').value;
+
+        let filteredData = [...invoices];
+
+        if (fromDate && toDate) {
+            filteredData = filteredData.filter(item => {
+                const itemDate = new Date(item.date.split('/').reverse().join('-'));
+                const from = new Date(fromDate);
+                const to = new Date(toDate);
+                return itemDate >= from && itemDate <= to;
+            });
+        }
+
+        if (branch) {
+            filteredData = filteredData.filter(item => item.branch === branch);
+        }
+
+        // Aggregate data
+        let labels, revenueData, totalRevenue, totalCapital, totalProfit;
+
+        if (statBy === 'time') {
+            const dateMap = {};
+            filteredData.forEach(item => {
+                let key;
+                const date = new Date(item.date.split('/').reverse().join('-'));
+                if (timeType === 'day') {
+                    key = item.date;
+                } else if (timeType === 'week') {
+                    const weekStart = new Date(date);
+                    weekStart.setDate(date.getDate() - date.getDay());
+                    key = `${weekStart.getDate().toString().padStart(2, '0')}/${(weekStart.getMonth() + 1).toString().padStart(2, '0')}/${weekStart.getFullYear()}`;
+                } else {
+                    key = `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+                }
+                if (!dateMap[key]) {
+                    dateMap[key] = { revenue: 0, capital: 0, profit: 0, count: 0 };
+                }
+                dateMap[key].revenue += item.revenue;
+                dateMap[key].capital += item.capital;
+                dateMap[key].profit += item.profit;
+                dateMap[key].count += 1;
+            });
+            labels = Object.keys(dateMap).sort();
+            revenueData = labels.map(key => dateMap[key].revenue);
+            totalRevenue = filteredData.reduce((sum, item) => sum + item.revenue, 0);
+            totalCapital = filteredData.reduce((sum, item) => sum + item.capital, 0);
+            totalProfit = filteredData.reduce((sum, item) => sum + item.profit, 0);
+        } else { // statBy === 'product'
+            const productMap = {};
+            filteredData.forEach(item => {
+                if (!productMap[item.product]) {
+                    productMap[item.product] = { revenue: 0, count: 0 };
+                }
+                productMap[item.product].revenue += item.revenue;
+                productMap[item.product].count += 1;
+            });
+            labels = Object.keys(productMap);
+            revenueData = labels.map(product => productMap[product].revenue);
+            totalRevenue = filteredData.reduce((sum, item) => sum + item.revenue, 0);
+            totalCapital = filteredData.reduce((sum, item) => sum + item.capital, 0);
+            totalProfit = filteredData.reduce((sum, item) => sum + item.profit, 0);
+        }
+
+        // Render statistics
+        openModal('statisticsResult');
+        setTimeout(() => {
+            document.getElementById('statResultRevenue').textContent = formatCurrency(totalRevenue);
+            document.getElementById('statResultCapital').textContent = formatCurrency(totalCapital);
+            document.getElementById('statResultProfit').textContent = formatCurrency(totalProfit);
+
+            const ctx = document.getElementById('statResultChart').getContext('2d');
+            if (window.statResultChart && typeof window.statResultChart.destroy === 'function') {
+                window.statResultChart.destroy();
+            }
+            window.statResultChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Doanh thu',
+                        data: revenueData,
+                        backgroundColor: '#2196F3',
+                        borderRadius: 4,
+                        barPercentage: 0.5
+                    }]
+                },
+                options: {
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { callback: value => formatCurrency(value) }
+                        },
+                        x: { ticks: { font: { size: 10 } } }
+                    },
+                    maintainAspectRatio: false
+                }
+            });
+        }, 100);
+    }
+
+    // Event listeners
+    document.getElementById('prevPage').addEventListener('click', () => changePage(currentPage - 1));
+    document.getElementById('nextPage').addEventListener('click', () => changePage(currentPage + 1));
+    document.getElementById('modalContainer').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+
+    // Initialize
+    updateTable();
+</script>
 </body>
-
 </html>
