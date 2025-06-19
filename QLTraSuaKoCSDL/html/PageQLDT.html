@@ -105,9 +105,7 @@
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-800">Chi nhánh</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-800">Nhân viên</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-800">Sản phẩm</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-800">Vốn</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-800">Doanh thu</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-800">Lợi nhuận</th>
                 </tr>
                 </thead>
                 <tbody id="salesTableBody"></tbody>
@@ -156,7 +154,7 @@
                             <label>Loại sản phẩm:</label>
                             <select id="productFilter" class="w-full h-10 px-3 bg-white rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-600">
                                 <option value="">Tất cả</option>
-                                ${[...new Set(invoices.map(item => item.product))].map(product => `<option value="${product}">${product}</option>`).join('')}
+                                ${[...new Set(JSON.parse(localStorage.getItem('items')) || [])].map(item => `<option value="${item.name}">${item.name}</option>`).join('')}
                             </select>
                             <p id="productFilterError" class="error">Trường này không được để trống</p>
                         </div>
@@ -236,20 +234,18 @@
         `,
         statisticsResult: `
             <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in">
-                <div class="stats-modal relative w-full max-w-xl animate-slide-up border border-gray-300 rounded-lg shadow-lg">
-                    <h3 class="text-lg font-bold p-4 text-center border-b border-gray-300">Xem doanh thu</h3>
-                    <button class="close-btn absolute top-2 right-2 text-gray-600 hover:text-gray-800 focus:outline-none" onclick="closeModal()"><i class="fas fa-times"></i></button>
-                    <div class="stat-card p-6 space-y-6">
-                        <div class="totals flex justify-between text-base font-semibold">
-                            <span>Doanh thu: <span id="statResultRevenue" class="font-bold"></span></span>
-                            <span>Vốn: <span id="statResultCapital" class="font-bold"></span></span>
-                            <span>Lợi nhuận: <span id="statResultProfit" class="font-bold"></span></span>
+                <div class="stats-modal relative w-full max-w-xl animate-slide-up">
+                    <h3>Xem doanh thu</h3>
+                    <button class="close-btn" onclick="closeModal()"><i class="fas fa-times"></i></button>
+                    <div class="space-y-4">
+                        <div class="totals">
+                            Doanh thu: <span id="statResultRevenue" class="font-bold"></span>
                         </div>
-                        <div class="chart-container p-4 border border-gray-200 rounded-md shadow-inner">
-                            <canvas id="statResultChart" height="200"></canvas>
+                        <div class="chart-container">
+                            <canvas id="statResultChart" height="150"></canvas>
                         </div>
                         <div class="flex justify-end">
-                            <button class="gray px-4 py-2 rounded shadow hover:bg-gray-300 transition-colors" onclick="closeModal()">Thoát</button>
+                            <button class="gray" onclick="closeModal()">Thoát</button>
                         </div>
                     </div>
                 </div>
@@ -350,7 +346,7 @@
         const paginatedData = currentData.slice(start, end);
 
         if (paginatedData.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="8" class="px-6 py-8 text-center text-gray-700">Không tìm thấy dữ liệu</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-gray-700">Không tìm thấy dữ liệu</td></tr>`;
             return;
         }
 
@@ -363,9 +359,7 @@
                 <td class="px-6 py-4 text-sm text-gray-700">${item.branch}</td>
                 <td class="px-6 py-4 text-sm text-gray-700">${item.employee}</td>
                 <td class="px-6 py-4 text-sm text-gray-700">${item.product}</td>
-                <td class="px-6 py-4 text-sm text-gray-700">${formatCurrency(item.capital)}</td>
                 <td class="px-6 py-4 text-sm text-gray-700">${formatCurrency(item.revenue)}</td>
-                <td class="px-6 py-4 text-sm text-gray-700">${formatCurrency(item.profit)}</td>
             `;
             tbody.appendChild(row);
         });
@@ -455,7 +449,7 @@
         }
 
         // Aggregate data
-        let labels, revenueData, totalRevenue, totalCapital, totalProfit;
+        let labels, revenueData, totalRevenue;
 
         if (statBy === 'time') {
             const dateMap = {};
@@ -472,18 +466,14 @@
                     key = `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
                 }
                 if (!dateMap[key]) {
-                    dateMap[key] = { revenue: 0, capital: 0, profit: 0, count: 0 };
+                    dateMap[key] = { revenue: 0, count: 0 };
                 }
                 dateMap[key].revenue += item.revenue;
-                dateMap[key].capital += item.capital;
-                dateMap[key].profit += item.profit;
                 dateMap[key].count += 1;
             });
             labels = Object.keys(dateMap).sort();
             revenueData = labels.map(key => dateMap[key].revenue);
             totalRevenue = filteredData.reduce((sum, item) => sum + item.revenue, 0);
-            totalCapital = filteredData.reduce((sum, item) => sum + item.capital, 0);
-            totalProfit = filteredData.reduce((sum, item) => sum + item.profit, 0);
         } else { // statBy === 'product'
             const productMap = {};
             filteredData.forEach(item => {
@@ -496,16 +486,12 @@
             labels = Object.keys(productMap);
             revenueData = labels.map(product => productMap[product].revenue);
             totalRevenue = filteredData.reduce((sum, item) => sum + item.revenue, 0);
-            totalCapital = filteredData.reduce((sum, item) => sum + item.capital, 0);
-            totalProfit = filteredData.reduce((sum, item) => sum + item.profit, 0);
         }
 
         // Render statistics
         openModal('statisticsResult');
         setTimeout(() => {
             document.getElementById('statResultRevenue').textContent = formatCurrency(totalRevenue);
-            document.getElementById('statResultCapital').textContent = formatCurrency(totalCapital);
-            document.getElementById('statResultProfit').textContent = formatCurrency(totalProfit);
 
             const ctx = document.getElementById('statResultChart').getContext('2d');
             if (window.statResultChart && typeof window.statResultChart.destroy === 'function') {
