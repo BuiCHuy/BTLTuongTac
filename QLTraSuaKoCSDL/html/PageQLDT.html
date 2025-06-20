@@ -147,7 +147,7 @@
         filter: `
             <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in">
                 <div class="filter-modal relative w-full max-w-md animate-slide-up">
-                    <h3>Bộ lọc doanh thu</h3>
+                    <h3>Bộ lọc lịch sử giao dịch</h3>
                     <button class="close-btn" onclick="closeModal()"><i class="fas fa-times"></i></button>
                     <div class="space-y-4">
                         <div>
@@ -407,7 +407,14 @@
         let filteredData = [...invoices];
 
         if (product) {
-            filteredData = filteredData.filter(item => item.product === product);
+            filteredData = filteredData.filter(item => {
+                // Check if item.product is an array or a string
+                if (Array.isArray(item.product)) {
+                    return item.product.includes(product);
+                } else {
+                    return item.product === product;
+                }
+            });
         }
         if (fromDate && toDate) {
             filteredData = filteredData.filter(item => {
@@ -477,14 +484,24 @@
         } else { // statBy === 'product'
             const productMap = {};
             filteredData.forEach(item => {
-                if (!productMap[item.product]) {
-                    productMap[item.product] = { revenue: 0, count: 0 };
+                if (Array.isArray(item.product)) {
+                    item.product.forEach(prod => {
+                        if (!productMap[prod]) {
+                            productMap[prod] = { revenue: 0, count: 0 };
+                        }
+                        productMap[prod].revenue += item.revenue / item.product.length; // Distribute revenue evenly
+                        productMap[prod].count += 1;
+                    });
+                } else {
+                    if (!productMap[item.product]) {
+                        productMap[item.product] = { revenue: 0, count: 0 };
+                    }
+                    productMap[item.product].revenue += item.revenue;
+                    productMap[item.product].count += 1;
                 }
-                productMap[item.product].revenue += item.revenue;
-                productMap[item.product].count += 1;
             });
             labels = Object.keys(productMap);
-            revenueData = labels.map(product => productMap[product].revenue);
+            revenueData = labels.map(prod => productMap[prod].revenue);
             totalRevenue = filteredData.reduce((sum, item) => sum + item.revenue, 0);
         }
 

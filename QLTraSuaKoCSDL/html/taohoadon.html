@@ -105,7 +105,7 @@
             <i class="fas fa-times"></i> Hủy đơn
           </button>
           <button id="paymentBtn" class="bg-black w-[150px] h-8 text-sm rounded flex items-center justify-center gap-5 text-white hover:bg-gray-700 transition-colors">
-            <i class="fas fa-check"></i> Thanh toán
+            <i class="fa-solid fa-dollar-sign"></i> Thanh toán
           </button>
         </div>
       </div>
@@ -118,7 +118,7 @@
 <div id="addProductModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden animate-slide-up">
   <div class="bg-gray-50 rounded-lg p-6 w-96 max-w-md mx-4 shadow-2xl">
     <h3 class="text-xl font-bold text-center mb-4">Điền số lượng</h3>
-    <div class="flex justify-between gap-2 mt-4">
+    <div class="flex gap-2 mt-4">
       <div class="flex justify-center mb-6 pl-8">
         <div class="text-center">
           <img id="modalProductImage" src="" alt="" class="w-32 h-32 object-cover rounded mb-2 mx-auto">
@@ -126,15 +126,16 @@
           <p id="modalProductPrice" class="text-sm text-gray-600"></p>
         </div>
       </div>
-      <div class="flex items-center justify-center mb-6 pr-8">
+      <div class="flex flex-col items-center justify-center mb-6 pl-10">
         <input type="number" id="modalQuantity" value="1" class="w-20 h-10 text-center border border-gray-300 rounded px-1 bg-gray-50 focus:ring-2 focus:ring-purple-600" min="1">
+        <p class="text-sm text-center mb-4 pt-5 text-red-500" id="soAm"></p>
       </div>
     </div>
     <div class="flex gap-3">
       <button id="cancelModalBtn" class="bg-white border border-black text-black w-[150px] h-8 text-sm rounded flex items-center justify-center gap-5  hover:bg-gray-100 transition-colors">
         <i class="fas fa-times"></i> Hủy
       </button>
-      <button id="confirmModalBtn" class="bg-black w-[150px] h-8 text-sm rounded flex items-center justify-center gap-5 text-white hover:bg-purple-700 transition-colors">
+      <button id="confirmModalBtn" class="bg-black w-[150px] h-8 text-sm rounded flex items-center justify-center gap-5 text-white hover:bg-gray-700 transition-colors">
         <i class="fas fa-check"></i> Xác nhận
       </button>
     </div>
@@ -146,7 +147,7 @@
     <i class="fas fa-exclamation-circle text-white bg-black border-white border-2 rounded-full p-1 text-xl mb-4"></i>
     <h3 id="confirmRemoveText" class="text-lg font-bold mb-4"></h3>
     <div class="flex justify-center gap-4">
-      <button id="confirmRemoveBtn" class="bg-purple-600 w-[100px] h-8 text-sm rounded flex items-center justify-center gap-2 text-white hover:bg-purple-700 transition-colors">
+      <button id="confirmRemoveBtn" class="bg-black w-[100px] h-8 text-sm rounded flex items-center justify-center gap-2 text-white hover:bg-gray-700 transition-colors">
         <i class="fas fa-check"></i> Có
       </button>
       <button id="cancelRemoveBtn" class="bg-gray-200 w-[100px] h-8 text-sm rounded flex items-center justify-center gap-2 text-black hover:bg-gray-300 transition-colors">
@@ -158,10 +159,12 @@
 
 <div id="cancelOrderModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden animate-slide-up">
   <div class="bg-gray-50 rounded-lg p-6 w-96 max-w-md mx-4 shadow-2xl text-center">
-    <i class="fas fa-exclamation-circle text-white bg-black border-white border-2 rounded-full p-1 text-xl mb-4"></i>
+    <div class="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center mx-auto mb-4">
+      <i class="fas fa-exclamation-triangle text-yellow-600 text-xl"></i>
+    </div>
     <h3 class="text-lg font-bold mb-4">Bạn có chắc chắn muốn hủy đơn?</h3>
     <div class="flex justify-center gap-4">
-      <button id="confirmCancelOrderBtn" class="bg-purple-600 w-[100px] h-8 text-sm rounded flex items-center justify-center gap-2 text-white hover:bg-purple-700 transition-colors">
+      <button id="confirmCancelOrderBtn" class="bg-black w-[100px] h-8 text-sm rounded flex items-center justify-center gap-2 text-white hover:bg-gray-700 transition-colors">
         <i class="fas fa-check"></i> Có
       </button>
       <button id="cancelCancelOrderBtn" class="bg-gray-200 w-[100px] h-8 text-sm rounded flex items-center justify-center gap-2 text-black hover:bg-gray-300 transition-colors">
@@ -178,6 +181,8 @@
   let selectedProduct = null;
   let selectedItemToRemove = null;
 
+
+  document.getElementById("soAm").textContent = "";
   products = products.map(item => ({
     id: item.id,
     name: item.name,
@@ -303,6 +308,10 @@
 
   document.getElementById('confirmModalBtn').addEventListener('click', () => {
     const quantity = parseInt(document.getElementById('modalQuantity').value) || 1;
+    if(quantity < 0){
+      document.getElementById("soAm").textContent = "Không được nhập số âm";
+      return;
+    }
     if (quantity > 0) {
       addToOrder(selectedProduct, quantity);
       document.getElementById('addProductModal').classList.add('hidden');
@@ -349,6 +358,9 @@
   });
 
   document.getElementById('paymentBtn').addEventListener('click', () => {
+    if(orderItems.length === 0){
+      return;
+    }
     const currentDate = new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
     const invoice = {
       id: Date.now().toString(),
