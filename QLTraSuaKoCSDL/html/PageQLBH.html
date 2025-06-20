@@ -88,8 +88,8 @@
 <script>
     function renderMenu() {
         const items = JSON.parse(localStorage.getItem('items')) || [];
-        const drinks = items.filter(item => ['Trà sữa', 'Cà phê'].includes(item.type));
-        const snacks = items.filter(item => !['Trà sữa', 'Cà phê'].includes(item.type));
+        const drinks = items.filter(item => ['Trà sữa', 'Trà hoa quả'].includes(item.type));
+        const snacks = items.filter(item => !['Trà sữa', 'Trà hoa quả'].includes(item.type));
 
         const drinksContainer = document.getElementById('drinksContainer');
         const snacksContainer = document.getElementById('snacksContainer');

@@ -215,7 +215,7 @@
                 </div>
             </div>
             <div class="flex justify-center gap-4 pt-4">
-                <button onclick="saveItem()" class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md shadow-md transition-colors inline-flex items-center gap-2">
+                <button onclick="handleSaveItem()" class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md shadow-md transition-colors inline-flex items-center gap-2">
                     <i class="fas fa-save"></i>
                     <span class="font-semibold">Lưu</span>
                 </button>
@@ -294,7 +294,7 @@
     </div>
 </div>
 
-<div id="editConfirmModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 hidden animate-slide-up">
+<div id="editConfirmModal" class="fixed inset-0 z-60 flex items-center justify-center bg-black/50 p-4 hidden animate-slide-up">
     <div class="w-full max-w-md bg-gray-50 rounded-lg shadow-2xl border border-black">
         <div class="p-8">
             <div class="flex flex-col items-center justify-center gap-6 text-center">
@@ -302,7 +302,7 @@
                     <i class="fas fa-exclamation-triangle text-yellow-600 text-xl"></i>
                 </div>
                 <h2 class="text-xl font-bold text-black">Bạn có chắc chắn muốn sửa không?</h2>
-                <p id="editItemName" class="text-base text-black">Sau khi sửa, thông tin mặt hàng sẽ bị thay đổi vĩnh viễn</p>
+                <p id="editItemName" class="text-base text-black text-left">Sau khi sửa, thông tin mặt hàng sẽ bị thay đổi vĩnh viễn</p>
                 <div class="flex gap-4 w-full">
                     <button onclick="confirmEdit()" class="flex-1 px-4 py-2 bg-black hover:bg-gray-700 text-white rounded-md shadow-md transition-colors font-semibold">
                         Có
@@ -389,7 +389,7 @@
     }
 
     function updatePagination() {
-        const totalPages = Math.ceil(items.length / 5);
+        const totalPages = Math.ceil(items.length / itemsPerPage);
         document.getElementById('prevPage').disabled = currentPage === 1;
         document.getElementById('nextPage').disabled = currentPage >= totalPages;
 
@@ -402,7 +402,6 @@
             button.onclick = () => changePage(i);
             pageButtons.appendChild(button);
         }
-
     }
 
     function changePage(page) {
@@ -463,6 +462,20 @@
         }
     });
 
+    function handleSaveItem() {
+        if (editItemId) {
+            openEditConfirmModal();
+        } else {
+            saveItem();
+        }
+    }
+
+    function openEditConfirmModal() {
+        const name = document.getElementById('itemName').value;
+        document.getElementById('editItemName').textContent = `Bạn có muốn sửa mặt hàng "${name}"? Sau khi sửa, thông tin mặt hàng sẽ bị thay đổi vĩnh viễn`;
+        document.getElementById('editConfirmModal').classList.remove('hidden');
+    }
+
     function saveItem() {
         const type = document.getElementById('itemType').value;
         const name = document.getElementById('itemName').value;
@@ -508,22 +521,10 @@
             image: image !== 'https://placehold.co/80x80' ? image : ''
         };
 
-        if (editItemId) {
-            const originalItem = items.find(item => item.id === editItemId);
-            const isUnchanged = JSON.stringify(newItem) === JSON.stringify({
-                ...originalItem,
-                createdDate: originalItem.createdDate,
-                price: originalItem.price
-            });
-            if (isUnchanged) {
-                closeItemModal();
-                return;
-            }
-            pendingEditItem = newItem;
-            document.getElementById('editItemName').textContent = `Bạn có muốn sửa mặt hàng "${name}"? Sau khi sửa, thông tin mặt hàng sẽ bị thay đổi vĩnh viễn`;
-            document.getElementById('editConfirmModal').classList.remove('hidden');
-        } else {
-            try {
+        try {
+            if (editItemId) {
+                pendingEditItem = newItem;
+            } else {
                 items.push(newItem);
                 localStorage.setItem('items', JSON.stringify(items));
                 closeItemModal();
@@ -531,9 +532,9 @@
                 renderTable();
                 updateSummaryCards();
                 updatePagination();
-            } catch (err) {
-                showError('Lỗi khi lưu dữ liệu: ' + err.message);
             }
+        } catch (err) {
+            showError('Lỗi khi lưu dữ liệu: ' + err.message);
         }
     }
 

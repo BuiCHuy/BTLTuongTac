@@ -147,7 +147,6 @@
     let activeModal = null;
     let pendingEmployeeData = null;
 
-    // Lưu nhân viên vào Local Storage khi khởi tạo
     if (!localStorage.getItem('employees')) {
         localStorage.setItem('employees', JSON.stringify(employees));
     }
@@ -155,7 +154,7 @@
     // Modal templates
     const modalTemplates = {
         add: (isEdit, data = {}) => `
-            <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in">
+            <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in modal-instance">
                 <div class="w-full max-w-5xl max-h-[90vh] bg-gray-50 rounded-lg shadow-2xl flex flex-col animate-slide-up overflow-y-auto modal-content">
                     <header class="flex items-center justify-between p-5 border-b-4 border-black rounded-t-lg">
                         <h2 class="text-xl font-bold text-black">${isEdit ? 'Sửa nhân viên' : 'Thêm nhân viên mới'}</h2>
@@ -261,7 +260,7 @@
             </div>
         `,
         search: (results) => `
-            <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in">
+            <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in modal-instance">
                 <div class="bg-gray-50 rounded-lg shadow-2xl border border-black p-6 w-full max-w-3xl animate-slide-up">
                     <div class="flex justify-between items-center border-b-4 border-black pb-4 mb-4">
                         <h2 class="text-xl font-bold text-black">Kết quả tìm kiếm</h2>
@@ -285,7 +284,7 @@
                                 </thead>
                                 <tbody>
                                     ${results.map(e => `
-                                        <tr class="hover:bg-gray-100 cursor-pointer" onclick='openModal("edit", ${JSON.stringify(e)})'>
+                                        <tr class="hover:bg-gray-100 cursor-pointer" onclick='openModal("details", ${JSON.stringify(e)})'>
                                             <td class="px-4 py-2 text-gray-700">${e.id}</td>
                                             <td class="px-4 py-2 text-gray-700">${e.name}</td>
                                             <td class="px-4 py-2 text-gray-700">${e.shift}</td>
@@ -307,13 +306,13 @@
             </div>
         `,
         deleteConfirm: (name) => `
-            <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in">
-                <div class="bg-gray-50 rounded-lg shadow-2xl border border-black p-8 max-w-sm w-full text-center animate-slide-up">
+            <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in modal-instance">
+                <div class="bg-gray-50 rounded-lg shadow-2xl border border-black p-8 max-w-md w-full text-center animate-slide-up">
                     <div class="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-exclamation-triangle text-yellow-600 text-xl"></i>
                     </div>
                     <h2 class="text-xl font-bold text-black mb-2">Bạn có chắc chắn muốn xóa không?</h2>
-                    <p class="text-base text-black mb-4">Sau khi xóa, "<span class="font-semibold">${name}</span>" sẽ không thể khôi phục lại.</p>
+                    <p class="text-base text-black text-left mb-4">Sau khi xóa, "<span class="font-semibold">${name}</span>" sẽ không thể khôi phục lại.</p>
                     <div class="flex justify-center space-x-4">
                         <button onclick="handleConfirmDelete()" class="flex-1 px-4 py-2 bg-black hover:bg-black text-white rounded-md shadow-md transition-colors font-semibold">Có</button>
                         <button onclick="closeModal()" class="flex-1 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-black rounded-md shadow-md transition-colors font-semibold">Không</button>
@@ -322,7 +321,7 @@
             </div>
         `,
         deleteSuccess: `
-            <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in">
+            <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in modal-instance">
                 <div class="bg-gray-50 rounded-lg shadow-2xl border border-black p-8 max-w-sm w-full text-center animate-slide-up">
                     <div class="w-12 h-12 rounded-full border-4 border-purple-600 flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-check text-green-700 text-xl"></i>
@@ -336,13 +335,13 @@
             </div>
         `,
         editConfirm: `
-            <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in">
-                <div class="bg-gray-50 rounded-lg shadow-2xl border border-black p-8 max-w-sm w-full text-center animate-slide-up">
+            <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in modal-instance">
+                <div class="bg-gray-50 rounded-lg shadow-2xl border border-black p-8 max-w-md w-full text-center animate-slide-up">
                     <div class="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-exclamation-triangle text-yellow-600 text-xl"></i>
                     </div>
                     <h2 class="text-xl font-bold text-black mb-2">Bạn có chắc chắn muốn sửa không?</h2>
-                    <p class="text-base text-black mb-4">Thông tin nhân viên sẽ được cập nhật vĩnh viễn.</p>
+                    <p class="text-base text-black text-left mb-4">Thông tin nhân viên sẽ được cập nhật vĩnh viễn.</p>
                     <div class="flex justify-center space-x-4">
                         <button onclick="handleConfirmEdit()" class="flex-1 px-4 py-2 bg-black hover:bg-gray-700 text-white rounded-md shadow-md transition-colors font-semibold">Có</button>
                         <button onclick="closeModal()" class="flex-1 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-black rounded-md shadow-md transition-colors font-semibold">Không</button>
@@ -350,13 +349,13 @@
                 </div>
             </div>
         `,
-        saveSuccess: `
-            <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in">
+        saveSuccess: (isEdit) => `
+            <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in modal-instance">
                 <div class="bg-gray-50 rounded-lg shadow-2xl border border-black p-8 max-w-sm w-full text-center animate-slide-up">
                     <div class="w-12 h-12 rounded-full border-4 border-green-700 flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-check text-green-700 text-xl"></i>
                     </div>
-                    <h2 class="text-2xl font-bold text-black mb-2">${isEditMode ? 'Sửa thành công' : 'Thêm thành công'}</h2>
+                    <h2 class="text-2xl font-bold text-black mb-2">${isEdit ? 'Sửa thành công' : 'Thêm thành công'}</h2>
                     <p class="text-base text-black mb-6">Thông tin nhân viên đã được cập nhật.</p>
                     <button onclick="closeModal()" class="w-32 px-4 py-2 bg-gray-200 rounded-md shadow-md hover:bg-gray-300 transition-colors">
                         <span class="text-black font-semibold">Thoát</span>
@@ -365,12 +364,12 @@
             </div>
         `,
         editSuccess: `
-            <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in">
+            <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in modal-instance">
                 <div class="bg-gray-50 rounded-lg shadow-2xl border border-black p-8 max-w-sm w-full text-center animate-slide-up">
                     <div class="w-12 h-12 rounded-full border-4 border-green-700 flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-check text-green-700 text-xl"></i>
                     </div>
-                    <h2 class="text-2xl font-bold text-black mb-2">Sửa thành công </h2>
+                    <h2 class="text-2xl font-bold text-black mb-2">Sửa thành công</h2>
                     <p class="text-base text-black mb-6">Thông tin nhân viên đã được cập nhật.</p>
                     <button onclick="closeModal()" class="w-32 px-4 py-2 bg-gray-200 rounded-md shadow-md hover:bg-gray-300 transition-colors">
                         <span class="text-black font-semibold">Thoát</span>
@@ -379,7 +378,7 @@
             </div>
         `,
         details: (employee) => `
-            <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in">
+            <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in modal-instance">
                 <div class="bg-gray-50 rounded-lg shadow-2xl border border-black p-6 w-full max-w-2xl animate-slide-up">
                     <div class="flex justify-between items-center border-b-4 border-black pb-4 mb-4">
                         <h2 class="text-xl font-bold text-black">Thông tin nhân viên</h2>
@@ -423,7 +422,6 @@
         `
     };
 
-    // Validation functions
     const validateEmployeeId = (value) => {
         if (!value.trim()) return 'Mã nhân viên không được để trống';
         if (!isEditMode && employees.some(e => e.id === value)) return 'Mã nhân viên đã tồn tại';
@@ -472,31 +470,49 @@
         return Object.keys(errors).length === 0;
     };
 
-    // Modal management
-    function openModal(type, data = null) {
+    function clearAllModalsAndState() {
+        document.getElementById('modalContainer').innerHTML = '';
+        activeModal = null;
+        selectedEmployee = null;
+        isEditMode = false;
+        pendingEmployeeData = null;
+    }
+
+    function openModal(type, data = null, overlay = false) {
+        if (!overlay) {
+            clearAllModalsAndState();
+        }
+
         activeModal = type;
+        const modalContainer = document.getElementById('modalContainer');
+        let modalHtml = '';
+
         if (type === 'add') {
             isEditMode = false;
-            selectedEmployee = null;
-            document.getElementById('modalContainer').innerHTML = modalTemplates.add(false);
+            modalHtml = modalTemplates.add(false);
         } else if (type === 'edit') {
             isEditMode = true;
             selectedEmployee = data;
-            document.getElementById('modalContainer').innerHTML = modalTemplates.add(true, data);
+            modalHtml = modalTemplates.add(true, data);
         } else if (type === 'search') {
-            document.getElementById('modalContainer').innerHTML = modalTemplates.search(data || []);
+            modalHtml = modalTemplates.search(data || []);
         } else if (type === 'deleteConfirm') {
             selectedEmployee = data;
-            document.getElementById('modalContainer').innerHTML = modalTemplates.deleteConfirm(data.name);
+            modalHtml = modalTemplates.deleteConfirm(data.name);
         } else if (type === 'details') {
-            document.getElementById('modalContainer').innerHTML = modalTemplates.details(data);
+            modalHtml = modalTemplates.details(data);
         } else if (type === 'editConfirm') {
-            pendingEmployeeData = data;
-            document.getElementById('modalContainer').innerHTML = modalTemplates.editConfirm;
-        } else {
-            document.getElementById('modalContainer').innerHTML = modalTemplates[type];
+            modalHtml = modalTemplates.editConfirm;
+        } else if (type === 'saveSuccess') {
+            modalHtml = modalTemplates.saveSuccess(false);
+        } else if (type === 'editSuccess') {
+            modalHtml = modalTemplates.editSuccess;
+        } else if (type === 'deleteSuccess') {
+            modalHtml = modalTemplates.deleteSuccess;
         }
-        // Re-attach image upload event listener
+
+        modalContainer.insertAdjacentHTML('beforeend', modalHtml);
+
         const imageUpload = document.getElementById('imageUpload');
         if (imageUpload) {
             imageUpload.addEventListener('change', handleImageUpload);
@@ -504,15 +520,17 @@
     }
 
     function closeModal() {
-        activeModal = null;
-        selectedEmployee = null;
-        isEditMode = false;
-        pendingEmployeeData = null;
-        document.getElementById('modalContainer').innerHTML = '';
-        renderEmployees();
+        const modalContainer = document.getElementById('modalContainer');
+        const lastModal = modalContainer.querySelector('.modal-instance:last-child');
+        if (lastModal) {
+            lastModal.remove();
+        }
+        if (modalContainer.children.length === 0) {
+            clearAllModalsAndState();
+            renderEmployees();
+        }
     }
 
-    // Render employee table
     function renderEmployees() {
         const tbody = document.getElementById('employeeTableBody');
         tbody.innerHTML = '';
@@ -556,7 +574,6 @@
         updatePagination();
     }
 
-    // Pagination rendering
     function updatePagination() {
         const totalPages = Math.ceil(employees.length / itemsPerPage);
         document.getElementById('prevPage').disabled = currentPage === 1;
@@ -579,7 +596,6 @@
         renderEmployees();
     }
 
-    // Handle image upload
     function handleImageUpload(e) {
         const file = e.target.files[0];
         if (file) {
@@ -591,7 +607,6 @@
         }
     }
 
-    // Save employee
     function handleSave() {
         if (!validateAllFields()) return;
 
@@ -611,27 +626,27 @@
         };
 
         if (isEditMode) {
-            openModal('editConfirm', employeeData);
+            pendingEmployeeData = employeeData;
+            openModal('editConfirm', null, true); // Mở confirm modal như một lớp phủ
         } else {
             employees.push(employeeData);
             localStorage.setItem('employees', JSON.stringify(employees));
-            closeModal();
+            clearAllModalsAndState();
             openModal('saveSuccess');
+            renderEmployees();
         }
     }
 
-    // Confirm edit
     function handleConfirmEdit() {
         if (pendingEmployeeData) {
             employees = employees.map(e => e.id === pendingEmployeeData.id ? pendingEmployeeData : e);
             localStorage.setItem('employees', JSON.stringify(employees));
-            pendingEmployeeData = null;
-            closeModal();
+            clearAllModalsAndState();
             openModal('editSuccess');
+            renderEmployees();
         }
     }
 
-    // Search employees
     function searchEmployees() {
         const searchTerm = document.getElementById('searchInput').value.trim();
         const results = searchTerm ? employees.filter(e =>
@@ -641,7 +656,6 @@
         openModal('search', results);
     }
 
-    // Confirm delete
     function handleConfirmDelete() {
         if (selectedEmployee && selectedEmployee.id) {
             employees = employees.filter(e => e.id !== selectedEmployee.id);
@@ -652,19 +666,18 @@
             } else if (totalPages === 0) {
                 currentPage = 1;
             }
-            closeModal();
+            clearAllModalsAndState();
             openModal('deleteSuccess');
+            renderEmployees();
         }
     }
 
-    // Event listeners
     document.getElementById('addNewBtn').addEventListener('click', () => openModal('add'));
     document.getElementById('searchBtn').addEventListener('click', searchEmployees);
     document.getElementById('searchInput').addEventListener('keypress', (e) => e.key === 'Enter' && searchEmployees());
     document.getElementById('prevPage').addEventListener('click', () => changePage(currentPage - 1));
     document.getElementById('nextPage').addEventListener('click', () => changePage(currentPage + 1));
 
-    // Initialize
     renderEmployees();
 </script>
 </body>
