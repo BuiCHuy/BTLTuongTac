@@ -463,10 +463,65 @@
     });
 
     function handleSaveItem() {
+        const type = document.getElementById('itemType').value;
+        const name = document.getElementById('itemName').value;
+        const note = document.getElementById('itemNote').value;
+        const createdDate = document.getElementById('itemCreatedDate').value;
+        const price = document.getElementById('itemPrice').value;
+        const image = document.getElementById('itemImagePreview').src;
+
+        let hasError = false;
+        if (!type) {
+            document.getElementById('typeError').textContent = 'Loại không được để trống';
+            document.getElementById('typeError').classList.remove('hidden');
+            hasError = true;
+        }
+        if (!name) {
+            document.getElementById('nameError').textContent = 'Tên không được để trống';
+            document.getElementById('nameError').classList.remove('hidden');
+            hasError = true;
+        }
+        if (!createdDate) {
+            document.getElementById('createdDateError').textContent = 'Ngày tạo không được để trống';
+            document.getElementById('createdDateError').classList.remove('hidden');
+            hasError = true;
+        }
+        if (!price) {
+            document.getElementById('priceError').textContent = 'Giá bán không được để trống';
+            document.getElementById('priceError').classList.remove('hidden');
+            hasError = true;
+        }
+        if (hasError) return;
+
+        const dateObj = new Date(createdDate);
+        const formattedDate = `${dateObj.getDate().toString().padStart(2, '0')}/${(dateObj.getMonth() + 1).toString().padStart(2, '0')}/${dateObj.getFullYear()}`;
+        const formattedPrice = `${price} VNĐ`;
+
+        const newItem = {
+            id: editItemId || Date.now().toString(),
+            type,
+            name,
+            note,
+            createdDate: formattedDate,
+            price: formattedPrice,
+            image: image !== 'https://placehold.co/80x80' ? image : ''
+        };
+
+        pendingEditItem = newItem;
         if (editItemId) {
             openEditConfirmModal();
         } else {
-            saveItem();
+            try {
+                items.push(newItem);
+                localStorage.setItem('items', JSON.stringify(items));
+                closeItemModal();
+                document.getElementById('addSuccessModal').classList.remove('hidden');
+                renderTable();
+                updateSummaryCards();
+                updatePagination();
+            } catch (err) {
+                showError('Lỗi khi lưu dữ liệu: ' + err.message);
+            }
         }
     }
 
@@ -474,6 +529,7 @@
         const name = document.getElementById('itemName').value;
         document.getElementById('editItemName').textContent = `Bạn có muốn sửa mặt hàng "${name}"? Sau khi sửa, thông tin mặt hàng sẽ bị thay đổi vĩnh viễn`;
         document.getElementById('editConfirmModal').classList.remove('hidden');
+        document.getElementById('editConfirmModal').style.zIndex = '70';
     }
 
     function saveItem() {
@@ -572,7 +628,7 @@
 
     function closeEditConfirmModal() {
         document.getElementById('editConfirmModal').classList.add('hidden');
-        pendingEditItem = null;
+        document.getElementById('editConfirmModal').style.zIndex = '60';
     }
 
     function openDeleteConfirmModal(id) {
