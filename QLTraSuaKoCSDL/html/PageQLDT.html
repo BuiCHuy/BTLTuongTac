@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,142 +10,338 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slide-up { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .animate-fade-in { animation: fade-in 0.5s ease-out; }
-        .animate-slide-up { animation: slide-up 0.3s ease-out; }
-        .peer-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
-        input[type="radio"]:checked + .radio-dot { background-color: #7C3AED; border-color: #7C3AED; }
-        input[type="radio"]:focus + .radio-dot { outline: 2px solid #C084FC; outline-offset: 2px; }
-        .radio-dot { width: 1.25rem; height: 1.25rem; border-radius: 9999px; border: 2px solid #D1D5DB; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
-        .radio-dot-inner { width: 0.375rem; height: 0.375rem; background-color: white; border-radius: 9999px; }
-        .modal-content { max-height: 90vh; overflow-y: auto; }
-        .filter-modal, .stats-modal { border: 1px solid #000; background: #F5F5F5; padding: 20px; border-radius: 5px; }
-        .filter-modal h3, .stats-modal h3 { font-size: 1.25rem; font-weight: bold; margin-bottom: 10px; }
-        .filter-modal .close-btn, .stats-modal .close-btn { position: absolute; top: 10px; right: 10px; width: 20px; height: 20px; background: none; border: none; cursor: pointer; }
-        .filter-modal label, .stats-modal label { display: block; margin-bottom: 5px; }
-        .filter-modal select, .filter-modal input[type="date"], .stats-modal select, .stats-modal input[type="date"] { width: 100%; padding: 5px; margin-bottom: 5px; border: 1px solid #ccc; border-radius: 3px; }
-        .filter-modal .error, .stats-modal .error { color: red; font-size: 0.75rem; margin-top: 2px; display: none; }
-        .filter-modal button, .stats-modal button { padding: 5px 10px; border: none; border-radius: 3px; cursor: pointer; }
-        .filter-modal button.green, .stats-modal button.green { background: #4CAF50; color: white; }
-        .filter-modal button.gray, .stats-modal button.gray { background: #D3D3D3; color: black; }
-        .stats-modal .chart-container { margin-top: 10px; }
-        .stats-modal .totals { margin-bottom: 10px; font-weight: bold; }
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slide-up {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .animate-fade-in {
+            animation: fade-in 0.5s ease-out;
+        }
+
+        .animate-slide-up {
+            animation: slide-up 0.3s ease-out;
+        }
+
+        .peer-sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+
+        input[type="radio"]:checked+.radio-dot {
+            background-color: #7C3AED;
+            border-color: #7C3AED;
+        }
+
+        input[type="radio"]:focus+.radio-dot {
+            outline: 2px solid #C084FC;
+            outline-offset: 2px;
+        }
+
+        .radio-dot {
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 9999px;
+            border: 2px solid #D1D5DB;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .radio-dot-inner {
+            width: 0.375rem;
+            height: 0.375rem;
+            background-color: white;
+            border-radius: 9999px;
+        }
+
+        .modal-content {
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .filter-modal,
+        .stats-modal {
+            border: 1px solid #000;
+            background: #F5F5F5;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .filter-modal h3,
+        .stats-modal h3 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .filter-modal .close-btn,
+        .stats-modal .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 20px;
+            height: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .filter-modal label,
+        .stats-modal label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .filter-modal select,
+        .filter-modal input[type="date"],
+        .stats-modal select,
+        .stats-modal input[type="date"] {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        .filter-modal .error,
+        .stats-modal .error {
+            color: red;
+            font-size: 0.75rem;
+            margin-top: 2px;
+            display: none;
+        }
+
+        .filter-modal button,
+        .stats-modal button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .filter-modal button.green,
+        .stats-modal button.green {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .filter-modal button.gray,
+        .stats-modal button.gray {
+            background: #D3D3D3;
+            color: black;
+        }
+
+        .stats-modal .chart-container {
+            margin-top: 10px;
+        }
+
+        .stats-modal .totals {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
     </style>
 </head>
+
 <body class="bg-gray-100 min-h-screen font-sans">
-<!-- Header -->
-<header class="flex items-center justify-between px-6 py-4 bg-white shadow-sm">
-    <h1 class="text-3xl font-bold text-indigo-600">FiveH</h1>
-    <div class="flex items-center space-x-6">
-        <div class="flex items-center space-x-2 cursor-pointer hover:text-indigo-600 transition-colors">
-            <i class="fas fa-cog text-gray-600 text-lg"></i>
-            <span class="text-gray-700 font-medium">Cài đặt</span>
-        </div>
-        <div class="flex items-center space-x-3">
-            <img src="https://placehold.co/40x40" alt="Profile" class="w-10 h-10 rounded-full border border-gray-300">
-            <div class="flex flex-col">
-                <span class="text-gray-700 font-medium">Quản lý</span>
-                <span class="text-gray-500 text-sm cursor-pointer hover:text-indigo-600">Đăng xuất</span>
+    <!-- Header -->
+    <header class="flex items-center justify-between px-6 py-4 bg-white shadow-sm">
+        <h1 class="text-3xl font-bold text-indigo-600">FiveH</h1>
+        <div class="flex items-center space-x-6">
+            <div class="flex items-center space-x-2 cursor-pointer hover:text-indigo-600 transition-colors">
+                <i class="fas fa-cog text-gray-600 text-lg"></i>
+                <span class="text-gray-700 font-medium">Cài đặt</span>
+            </div>
+            <div class="flex items-center space-x-3">
+                <img src="https://placehold.co/40x40" alt="Profile"
+                    class="w-10 h-10 rounded-full border border-gray-300">
+                <div class="flex flex-col">
+                    <span class="text-gray-700 font-medium">Quản lý</span>
+                    <span class="text-gray-500 text-sm cursor-pointer hover:text-indigo-600">Đăng xuất</span>
+                </div>
             </div>
         </div>
-    </div>
-</header>
+    </header>
 
-<!-- Navigation -->
-<nav class="bg-gradient-to-r from-purple-600 to-rose-500 py-4 px-6 shadow-md">
-    <div class="max-w-7xl mx-auto flex justify-between items-center text-white">
-        <a href="Trangchu.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
-            <i class="fas fa-home text-lg"></i><span class="text-lg font-semibold">Trang chủ</span>
-        </a>
-        <a href="PageQLBH.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
-            <i class="fas fa-shopping-cart text-lg"></i><span class="text-lg font-semibold">Bán hàng</span>
-        </a>
-        <a href="PageQLNV.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
-            <i class="fas fa-users text-lg"></i><span class="text-lg font-semibold">Nhân viên</span>
-        </a>
-        <a href="PageQLMH.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
-            <i class="fas fa-box text-lg"></i><span class="text-lg font-semibold">Mặt hàng</span>
-        </a>
-        <a href="PageQLCTKM.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
-            <i class="fas fa-tags text-lg"></i><span class="text-lg font-semibold">CT Khuyến mại</span>
-        </a>
-        <a href="PageQLDT.html" class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors text-pink-100">
-            <i class="fas fa-chart-line text-lg"></i><span class="text-lg font-semibold">Doanh thu</span>
-        </a>
-    </div>
-</nav>
-
-<!-- Main Content -->
-<main class="max-w-7xl mx-auto mt-8 px-6 animate-fade-in">
-    <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold text-gray-800">QUẢN LÝ DOANH THU</h2>
-        <div class="flex space-x-4">
-            <button onclick="openFilterModal()" class="h-10 bg-purple-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-purple-700 transition-colors flex items-center space-x-2">
-                <i class="fas fa-filter"></i>
-                <span>Lọc</span>
-            </button>
-            <button onclick="openStatisticsModal()" class="h-10 bg-purple-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-purple-700 transition-colors flex items-center space-x-2">
-                <i class="fas fa-chart-bar"></i>
-                <span>Thống kê doanh thu</span>
-            </button>
+    <!-- Navigation -->
+    <nav class="bg-gradient-to-r from-purple-600 to-rose-500 py-4 px-6 shadow-md">
+        <div class="max-w-7xl mx-auto flex justify-between items-center text-white">
+            <a href="Trangchu.html"
+                class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
+                <i class="fas fa-home text-lg"></i><span class="text-lg font-semibold">Trang chủ</span>
+            </a>
+            <a href="PageQLBH.html"
+                class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
+                <i class="fas fa-shopping-cart text-lg"></i><span class="text-lg font-semibold">Bán hàng</span>
+            </a>
+            <a href="PageQLNV.html"
+                class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
+                <i class="fas fa-users text-lg"></i><span class="text-lg font-semibold">Nhân viên</span>
+            </a>
+            <a href="PageQLMH.html"
+                class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
+                <i class="fas fa-box text-lg"></i><span class="text-lg font-semibold">Mặt hàng</span>
+            </a>
+            <a href="PageQLCTKM.html"
+                class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors">
+                <i class="fas fa-tags text-lg"></i><span class="text-lg font-semibold">CT Khuyến mại</span>
+            </a>
+            <a href="PageQLDT.html"
+                class="flex items-center space-x-2 cursor-pointer hover:text-gray-200 transition-colors text-pink-100">
+                <i class="fas fa-chart-line text-lg"></i><span class="text-lg font-semibold">Doanh thu</span>
+            </a>
         </div>
-    </div>
+    </nav>
 
-    <!-- Sales History Table -->
-    <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-200">
-            <h3 class="text-lg font-semibold text-gray-800">LỊCH SỬ GIAO DỊCH</h3>
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto mt-8 px-6 animate-fade-in">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">QUẢN LÝ DOANH THU</h2>
+            <div class="flex space-x-4">
+                <button onclick="openFilterModal()"
+                    class="h-10 bg-purple-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-purple-700 transition-colors flex items-center space-x-2">
+                    <i class="fas fa-filter"></i>
+                    <span>Lọc</span>
+                </button>
+                <button onclick="openStatisticsModal()"
+                    class="h-10 bg-purple-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-purple-700 transition-colors flex items-center space-x-2">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Thống kê doanh thu</span>
+                </button>
+            </div>
         </div>
-        <div class="overflow-x-auto">
-            <table class="w-full">
-                <thead class="bg-purple-200 h-12">
-                <tr>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-800">Mã hóa đơn</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-800">Ngày bán</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-800">Chi nhánh</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-800">Nhân viên</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-800">Sản phẩm</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-800">Doanh thu</th>
-                </tr>
-                </thead>
-                <tbody id="salesTableBody"></tbody>
-            </table>
+
+        <!-- Sales History Table -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-800">LỊCH SỬ GIAO DỊCH</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-purple-200 h-12">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-800">Ngày bán</th>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-800">Chi nhánh</th>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-800">Tiền vốn</th>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-800">Tiền thu được</th>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-800">Tiền lãi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="salesTableBody"></tbody>
+                </table>
+            </div>
+            <!-- Pagination -->
+            <div class="flex items-center justify-end mt-4 text-sm text-gray-700 p-4 rounded">
+                <button id="prevPage"
+                    class="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200 disabled:opacity-50 flex items-center gap-1 transition-colors"
+                    disabled>
+                    <i class="fas fa-chevron-left"></i> Trước
+                </button>
+                <div id="pageButtons" class="flex space-x-2"></div>
+                <button id="nextPage"
+                    class="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200 disabled:opacity-50 flex items-center gap-1 transition-colors">
+                    Sau <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
         </div>
-        <!-- Pagination -->
-        <div class="flex items-center justify-end mt-4 text-sm text-gray-700 p-4 rounded">
-            <button id="prevPage" class="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200 disabled:opacity-50 flex items-center gap-1 transition-colors" disabled>
-                <i class="fas fa-chevron-left"></i> Trước
-            </button>
-            <div id="pageButtons" class="flex space-x-2"></div>
-            <button id="nextPage" class="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200 disabled:opacity-50 flex items-center gap-1 transition-colors">
-                Sau <i class="fas fa-chevron-right"></i>
-            </button>
-        </div>
-    </div>
-</main>
+    </main>
 
-<!-- Modals -->
-<div id="modalContainer"></div>
+    <!-- Modals -->
+    <div id="modalContainer"></div>
 
-<script>
-    let invoices = JSON.parse(localStorage.getItem('invoices')) || [];
-    let currentData = [...invoices];
-    let currentPage = 1;
-    const itemsPerPage = 5;
-    window.statResultChart = null; // Initialize as null
+    <script>
+        // Dữ liệu mẫu doanh thu mới
+        const sampleData = [
+            {
+                ngayBan: '11/01/2025',
+                chiNhanh: '175 Tây Sơn - Đống Đa - Hà Nội',
+                tienVon: '1 000 000 đ',
+                tienThuDuoc: '2 000 000 đ',
+                tienLai: '1 000 000 đ'
+            },
+            {
+                ngayBan: '13/01/2025',
+                chiNhanh: '175 Tây Sơn - Đống Đa - Hà Nội',
+                tienVon: '10 000 000 đ',
+                tienThuDuoc: '20 000 000 đ',
+                tienLai: '10 000 000 đ'
+            },
+            {
+                ngayBan: '11/06/2025',
+                chiNhanh: '175 Tây Sơn - Đống Đa - Hà Nội',
+                tienVon: '1 000 000 đ',
+                tienThuDuoc: '2 000 000 đ',
+                tienLai: '1 000 000 đ'
+            },
+            {
+                ngayBan: '11/06/2025',
+                chiNhanh: '175 Tây Sơn - Đống Đa - Hà Nội',
+                tienVon: '1 000 000 đ',
+                tienThuDuoc: '2 000 000 đ',
+                tienLai: '1 000 000 đ'
+            },
+            {
+                ngayBan: '11/06/2025',
+                chiNhanh: '175 Tây Sơn - Đống Đa - Hà Nội',
+                tienVon: '1 000 000 đ',
+                tienThuDuoc: '2 000 000 đ',
+                tienLai: '1 000 000 đ'
+            }
+        ];
 
-    // Initialize local storage if empty
-    if (!localStorage.getItem('invoices')) {
-        localStorage.setItem('invoices', JSON.stringify(invoices));
-    }
+        // Chuyển sampleData sang dạng chuẩn cho các hàm lọc/thống kê
+        function parseSampleData() {
+            return sampleData.map(row => ({
+                date: row.ngayBan,
+                branch: row.chiNhanh,
+                cost: parseInt(row.tienVon.replace(/\D/g, '')),
+                revenue: parseInt(row.tienThuDuoc.replace(/\D/g, '')),
+                profit: parseInt(row.tienLai.replace(/\D/g, '')),
+                product: '' // Không có sản phẩm cụ thể trong mẫu này
+            }));
+        }
 
-    // Get current date
-    const today = new Date().toISOString().split('T')[0];
+        let invoices = parseSampleData();
+        let currentData = [...invoices];
+        let currentPage = 1;
+        const itemsPerPage = 5;
+        window.statResultChart = null;
 
-    // Modal templates
-    const modalTemplates = {
-        filter: `
+        // Initialize local storage if empty
+        if (!localStorage.getItem('invoices')) {
+            localStorage.setItem('invoices', JSON.stringify(invoices));
+        }
+
+        // Get current date
+        const today = new Date().toISOString().split('T')[0];
+
+        // Modal templates
+        const modalTemplates = {
+            filter: `
             <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in">
                 <div class="filter-modal relative w-full max-w-md animate-slide-up">
                     <h3>Bộ lọc lịch sử giao dịch</h3>
@@ -176,7 +373,7 @@
                 </div>
             </div>
         `,
-        statistics: `
+            statistics: `
             <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in">
                 <div class="stats-modal relative w-full max-w-lg animate-slide-up">
                     <h3>Thống kê doanh thu</h3>
@@ -232,7 +429,7 @@
                 </div>
             </div>
         `,
-        statisticsResult: `
+            statisticsResult: `
             <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 animate-fade-in">
                 <div class="stats-modal relative w-full max-w-xl animate-slide-up">
                     <h3>Xem doanh thu</h3>
@@ -251,305 +448,253 @@
                 </div>
             </div>
         `
-    };
+        };
 
-    // Modal management
-    function openFilterModal() {
-        openModal('filter');
-    }
-
-    function openStatisticsModal() {
-        openModal('statistics');
-        const statBy = document.querySelector('input[name="statBy"]:checked').value;
-        document.getElementById('timeOptions').style.display = statBy === 'time' ? 'block' : 'none';
-    }
-
-    function openModal(type) {
-        document.getElementById('modalContainer').innerHTML = modalTemplates[type];
-        document.getElementById('modalContainer').classList.add('flex');
-        if (type === 'statistics') {
-            document.querySelectorAll('input[name="statBy"]').forEach(radio => {
-                radio.addEventListener('change', function() {
-                    const timeOptions = document.getElementById('timeOptions');
-                    timeOptions.style.display = this.value === 'time' ? 'block' : 'none';
-                });
-            });
-        }
-    }
-
-    function closeModal() {
-        document.getElementById('modalContainer').innerHTML = '';
-        document.getElementById('modalContainer').classList.remove('flex');
-        if (window.statResultChart && typeof window.statResultChart.destroy === 'function') {
-            window.statResultChart.destroy();
-            window.statResultChart = null;
-        }
-        updateTable();
-    }
-
-    // Validation functions
-    function validateFilterFields() {
-        const errors = {};
-        const fromDate = document.getElementById('fromDate').value;
-        const toDate = document.getElementById('toDate').value;
-        if (fromDate && toDate && new Date(fromDate) > new Date(toDate)) {
-            errors['toDate'] = 'Đến ngày phải sau Từ ngày';
-        }
-        ['fromDate', 'toDate'].forEach(field => {
-            const errorEl = document.getElementById(`${field}Error`);
-            const inputEl = document.getElementById(field);
-            if (errorEl) {
-                errorEl.style.display = errors[field] ? 'block' : 'none';
-            }
-            if (inputEl) {
-                inputEl.classList.toggle('border-red-500', !!errors[field]);
-                inputEl.classList.toggle('border-gray-300', !errors[field]);
-            }
-        });
-        return Object.keys(errors).length === 0;
-    }
-
-    function validateStatisticsFields() {
-        const errors = {};
-        const fromDate = document.getElementById('statFromDate').value;
-        const toDate = document.getElementById('statToDate').value;
-        if (!fromDate) errors['statFromDate'] = 'Trường này không được để trống';
-        if (!toDate) errors['statToDate'] = 'Trường này không được để trống';
-        if (fromDate && toDate && new Date(fromDate) > new Date(toDate)) {
-            errors['statToDate'] = 'Đến ngày phải sau Từ ngày';
-        }
-        ['statFromDate', 'statToDate'].forEach(field => {
-            const errorEl = document.getElementById(`${field}Error`);
-            const inputEl = document.getElementById(field);
-            if (errorEl) {
-                errorEl.style.display = errors[field] ? 'block' : 'none';
-            }
-            if (inputEl) {
-                inputEl.classList.toggle('border-red-500', !!errors[field]);
-                inputEl.classList.toggle('border-gray-300', !errors[field]);
-            }
-        });
-        return Object.keys(errors).length === 0;
-    }
-
-    // Format currency
-    function formatCurrency(amount) {
-        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
-    }
-
-    // Render table
-    function updateTable() {
-        const tbody = document.getElementById('salesTableBody');
-        tbody.innerHTML = '';
-        const start = (currentPage - 1) * itemsPerPage;
-        end = start + itemsPerPage;
-        const paginatedData = currentData.slice(start, end);
-
-        if (paginatedData.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-gray-700">Không tìm thấy dữ liệu</td></tr>`;
-            return;
+        // Modal management
+        function openFilterModal() {
+            openModal('filter');
         }
 
-        paginatedData.forEach((item, index) => {
-            const row = document.createElement('tr');
-            row.className = `h-16 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-gray-100 transition-colors`;
-            row.innerHTML = `
-                <td class="px-6 py-4 text-sm text-gray-700">${item.id}</td>
-                <td class="px-6 py-4 text-sm text-gray-700">${item.date}</td>
-                <td class="px-6 py-4 text-sm text-gray-700">${item.branch}</td>
-                <td class="px-6 py-4 text-sm text-gray-700">${item.employee}</td>
-                <td class="px-6 py-4 text-sm text-gray-700">${item.product}</td>
-                <td class="px-6 py-4 text-sm text-gray-700">${formatCurrency(item.revenue)}</td>
-            `;
-            tbody.appendChild(row);
-        });
-        updatePagination();
-    }
-
-    // Pagination
-    function updatePagination() {
-        const totalPages = Math.ceil(currentData.length / itemsPerPage);
-        document.getElementById('prevPage').disabled = currentPage === 1;
-        document.getElementById('nextPage').disabled = currentPage >= totalPages;
-
-        const pageButtons = document.getElementById('pageButtons');
-        pageButtons.innerHTML = '';
-
-        for (let i = 1; i <= totalPages; i++) {
-            const button = document.createElement('button');
-            button.className = `px-3 py-1 rounded transition-colors ${i === currentPage ? 'bg-purple-600 text-white' : 'bg-gray-100 hover:bg-gray-200'}`;
-            button.textContent = i;
-            button.onclick = () => changePage(i);
-            pageButtons.appendChild(button);
-        }
-    }
-
-    function changePage(page) {
-        currentPage = page;
-        updateTable();
-    }
-
-    // Filter function
-    function applyFilter() {
-        if (!validateFilterFields()) return;
-
-        const product = document.getElementById('productFilter').value;
-        let fromDate = document.getElementById('fromDate').value;
-        let toDate = document.getElementById('toDate').value;
-
-        // Default to today if either date is empty
-        if (!fromDate || !toDate) {
-            const today = new Date().toISOString().split('T')[0];
-            fromDate = fromDate || today;
-            toDate = toDate || today;
+        function openStatisticsModal() {
+            openModal('statistics');
+            const statBy = document.querySelector('input[name="statBy"]:checked').value;
+            document.getElementById('timeOptions').style.display = statBy === 'time' ? 'block' : 'none';
         }
 
-        let filteredData = [...invoices];
-
-        if (product) {
-            filteredData = filteredData.filter(item => {
-                // Check if item.product is an array or a string
-                if (Array.isArray(item.product)) {
-                    return item.product.includes(product);
-                } else {
-                    return item.product === product;
-                }
-            });
-        }
-        if (fromDate && toDate) {
-            filteredData = filteredData.filter(item => {
-                const itemDate = new Date(item.date.split('/').reverse().join('-'));
-                const from = new Date(fromDate);
-                const to = new Date(toDate);
-                return itemDate >= from && itemDate <= to;
-            });
-        }
-
-        currentData = filteredData;
-        currentPage = 1;
-        closeModal();
-    }
-
-    // Statistics function
-    function createStatistics() {
-        if (!validateStatisticsFields()) return;
-
-        const statBy = document.querySelector('input[name="statBy"]:checked').value;
-        const branch = document.getElementById('statBranch').value;
-        const fromDate = document.getElementById('statFromDate').value;
-        const toDate = document.getElementById('statToDate').value;
-        const timeType = document.getElementById('statTimeType').value;
-
-        let filteredData = [...invoices];
-
-        if (fromDate && toDate) {
-            filteredData = filteredData.filter(item => {
-                const itemDate = new Date(item.date.split('/').reverse().join('-'));
-                const from = new Date(fromDate);
-                const to = new Date(toDate);
-                return itemDate >= from && itemDate <= to;
-            });
-        }
-
-        if (branch) {
-            filteredData = filteredData.filter(item => item.branch === branch);
-        }
-
-        // Aggregate data
-        let labels, revenueData, totalRevenue;
-
-        if (statBy === 'time') {
-            const dateMap = {};
-            filteredData.forEach(item => {
-                let key;
-                const date = new Date(item.date.split('/').reverse().join('-'));
-                if (timeType === 'day') {
-                    key = item.date;
-                } else if (timeType === 'week') {
-                    const weekStart = new Date(date);
-                    weekStart.setDate(date.getDate() - date.getDay());
-                    key = `${weekStart.getDate().toString().padStart(2, '0')}/${(weekStart.getMonth() + 1).toString().padStart(2, '0')}/${weekStart.getFullYear()}`;
-                } else {
-                    key = `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
-                }
-                if (!dateMap[key]) {
-                    dateMap[key] = { revenue: 0, count: 0 };
-                }
-                dateMap[key].revenue += item.revenue;
-                dateMap[key].count += 1;
-            });
-            labels = Object.keys(dateMap).sort();
-            revenueData = labels.map(key => dateMap[key].revenue);
-            totalRevenue = filteredData.reduce((sum, item) => sum + item.revenue, 0);
-        } else { // statBy === 'product'
-            const productMap = {};
-            filteredData.forEach(item => {
-                if (Array.isArray(item.product)) {
-                    item.product.forEach(prod => {
-                        if (!productMap[prod]) {
-                            productMap[prod] = { revenue: 0, count: 0 };
-                        }
-                        productMap[prod].revenue += item.revenue / item.product.length; // Distribute revenue evenly
-                        productMap[prod].count += 1;
+        function openModal(type) {
+            document.getElementById('modalContainer').innerHTML = modalTemplates[type];
+            document.getElementById('modalContainer').classList.add('flex');
+            if (type === 'statistics') {
+                document.querySelectorAll('input[name="statBy"]').forEach(radio => {
+                    radio.addEventListener('change', function () {
+                        const timeOptions = document.getElementById('timeOptions');
+                        timeOptions.style.display = this.value === 'time' ? 'block' : 'none';
                     });
-                } else {
-                    if (!productMap[item.product]) {
-                        productMap[item.product] = { revenue: 0, count: 0 };
-                    }
-                    productMap[item.product].revenue += item.revenue;
-                    productMap[item.product].count += 1;
-                }
-            });
-            labels = Object.keys(productMap);
-            revenueData = labels.map(prod => productMap[prod].revenue);
-            totalRevenue = filteredData.reduce((sum, item) => sum + item.revenue, 0);
+                });
+            }
         }
 
-        // Render statistics
-        openModal('statisticsResult');
-        setTimeout(() => {
-            document.getElementById('statResultRevenue').textContent = formatCurrency(totalRevenue);
-
-            const ctx = document.getElementById('statResultChart').getContext('2d');
+        function closeModal() {
+            document.getElementById('modalContainer').innerHTML = '';
+            document.getElementById('modalContainer').classList.remove('flex');
             if (window.statResultChart && typeof window.statResultChart.destroy === 'function') {
                 window.statResultChart.destroy();
+                window.statResultChart = null;
             }
-            window.statResultChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Doanh thu',
-                        data: revenueData,
-                        backgroundColor: '#2196F3',
-                        borderRadius: 4,
-                        barPercentage: 0.5
-                    }]
-                },
-                options: {
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { callback: value => formatCurrency(value) }
-                        },
-                        x: { ticks: { font: { size: 10 } } }
-                    },
-                    maintainAspectRatio: false
+            updateTable();
+        }
+
+        // Validation functions
+        function validateFilterFields() {
+            const errors = {};
+            const fromDate = document.getElementById('fromDate').value;
+            const toDate = document.getElementById('toDate').value;
+            if (fromDate && toDate && new Date(fromDate) > new Date(toDate)) {
+                errors['toDate'] = 'Đến ngày phải sau Từ ngày';
+            }
+            ['fromDate', 'toDate'].forEach(field => {
+                const errorEl = document.getElementById(`${field}Error`);
+                const inputEl = document.getElementById(field);
+                if (errorEl) {
+                    errorEl.style.display = errors[field] ? 'block' : 'none';
+                }
+                if (inputEl) {
+                    inputEl.classList.toggle('border-red-500', !!errors[field]);
+                    inputEl.classList.toggle('border-gray-300', !errors[field]);
                 }
             });
-        }, 100);
-    }
+            return Object.keys(errors).length === 0;
+        }
 
-    // Event listeners
-    document.getElementById('prevPage').addEventListener('click', () => changePage(currentPage - 1));
-    document.getElementById('nextPage').addEventListener('click', () => changePage(currentPage + 1));
-    document.getElementById('modalContainer').addEventListener('click', function(e) {
-        if (e.target === this) closeModal();
-    });
+        function validateStatisticsFields() {
+            const errors = {};
+            const fromDate = document.getElementById('statFromDate').value;
+            const toDate = document.getElementById('statToDate').value;
+            if (!fromDate) errors['statFromDate'] = 'Trường này không được để trống';
+            if (!toDate) errors['statToDate'] = 'Trường này không được để trống';
+            if (fromDate && toDate && new Date(fromDate) > new Date(toDate)) {
+                errors['statToDate'] = 'Đến ngày phải sau Từ ngày';
+            }
+            ['statFromDate', 'statToDate'].forEach(field => {
+                const errorEl = document.getElementById(`${field}Error`);
+                const inputEl = document.getElementById(field);
+                if (errorEl) {
+                    errorEl.style.display = errors[field] ? 'block' : 'none';
+                }
+                if (inputEl) {
+                    inputEl.classList.toggle('border-red-500', !!errors[field]);
+                    inputEl.classList.toggle('border-gray-300', !errors[field]);
+                }
+            });
+            return Object.keys(errors).length === 0;
+        }
 
-    // Initialize
-    updateTable();
-</script>
+        // Format currency
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+        }
+
+        // Render table
+        function updateTable() {
+            const tbody = document.getElementById('salesTableBody');
+            tbody.innerHTML = '';
+            const start = (currentPage - 1) * itemsPerPage;
+            end = start + itemsPerPage;
+            const paginatedData = currentData.slice(start, end);
+
+            if (paginatedData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-gray-700">Không tìm thấy dữ liệu</td></tr>`;
+                return;
+            }
+
+            paginatedData.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.className = `h-16 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-gray-100 transition-colors`;
+                row.innerHTML = `
+                <td class="px-6 py-4 text-sm text-gray-700">${item.date}</td>
+                <td class="px-6 py-4 text-sm text-gray-700">${item.branch}</td>
+                <td class="px-6 py-4 text-sm text-gray-700">${formatCurrency(item.cost)}</td>
+                <td class="px-6 py-4 text-sm text-gray-700">${formatCurrency(item.revenue)}</td>
+                <td class="px-6 py-4 text-sm text-gray-700">${formatCurrency(item.profit)}</td>
+            `;
+                tbody.appendChild(row);
+            });
+            updatePagination();
+        }
+
+        // Pagination
+        function updatePagination() {
+            const totalPages = Math.ceil(currentData.length / itemsPerPage);
+            document.getElementById('prevPage').disabled = currentPage === 1;
+            document.getElementById('nextPage').disabled = currentPage >= totalPages;
+
+            const pageButtons = document.getElementById('pageButtons');
+            pageButtons.innerHTML = '';
+
+            for (let i = 1; i <= totalPages; i++) {
+                const button = document.createElement('button');
+                button.className = `px-3 py-1 rounded transition-colors ${i === currentPage ? 'bg-purple-600 text-white' : 'bg-gray-100 hover:bg-gray-200'}`;
+                button.textContent = i;
+                button.onclick = () => changePage(i);
+                pageButtons.appendChild(button);
+            }
+        }
+
+        function changePage(page) {
+            currentPage = page;
+            updateTable();
+        }
+
+        // Filter function
+        function applyFilter() {
+            if (!validateFilterFields()) return;
+
+            const product = document.getElementById('productFilter').value;
+            let fromDate = document.getElementById('fromDate').value;
+            let toDate = document.getElementById('toDate').value;
+
+            // Default to today if either date is empty
+            if (!fromDate || !toDate) {
+                const today = new Date().toISOString().split('T')[0];
+                fromDate = fromDate || today;
+                toDate = toDate || today;
+            }
+
+            let filteredData = [...invoices];
+
+            if (product) {
+                filteredData = filteredData.filter(item => {
+                    // Check if item.product is an array or a string
+                    if (Array.isArray(item.product)) {
+                        return item.product.includes(product);
+                    } else {
+                        return item.product === product;
+                    }
+                });
+            }
+            if (fromDate && toDate) {
+                filteredData = filteredData.filter(item => {
+                    const itemDate = new Date(item.date.split('/').reverse().join('-'));
+                    const from = new Date(fromDate);
+                    const to = new Date(toDate);
+                    return itemDate >= from && itemDate <= to;
+                });
+            }
+
+            currentData = filteredData;
+            currentPage = 1;
+            closeModal();
+        }
+
+        // Statistics function
+        // Sửa hàm createStatistics để lấy dữ liệu từ currentData (dữ liệu mẫu)
+        function createStatistics() {
+            if (!validateStatisticsFields()) return;
+
+            const fromDate = document.getElementById('statFromDate').value;
+            const toDate = document.getElementById('statToDate').value;
+
+            // Lọc dữ liệu theo ngày
+            let filteredData = currentData.filter(item => {
+                // item.date dạng dd/mm/yyyy
+                const [d, m, y] = item.date.split('/');
+                const itemDate = new Date(`${y}-${m}-${d}`);
+                return (!fromDate || itemDate >= new Date(fromDate)) && (!toDate || itemDate <= new Date(toDate));
+            });
+
+            // Gom nhóm doanh thu theo ngày
+            const dateMap = {};
+            filteredData.forEach(item => {
+                if (!dateMap[item.date]) dateMap[item.date] = 0;
+                dateMap[item.date] += item.revenue;
+            });
+            const labels = Object.keys(dateMap).sort((a, b) => {
+                // sort dd/mm/yyyy
+                const [da, ma, ya] = a.split('/');
+                const [db, mb, yb] = b.split('/');
+                return new Date(`${ya}-${ma}-${da}`) - new Date(`${yb}-${mb}-${db}`);
+            });
+            const revenueData = labels.map(date => dateMap[date] / 1000000); // Đơn vị triệu
+            const totalRevenue = filteredData.reduce((sum, item) => sum + item.revenue, 0);
+
+            // Hiển thị modal thống kê
+            openModal('statisticsResult');
+            setTimeout(() => {
+                document.getElementById('statResultRevenue').textContent = totalRevenue.toLocaleString('vi-VN') + ' VND';
+                const ctx = document.getElementById('statResultChart').getContext('2d');
+                if (window.statResultChart && typeof window.statResultChart.destroy === 'function') {
+                    window.statResultChart.destroy();
+                }
+                window.statResultChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Doanh thu (triệu)',
+                            data: revenueData,
+                            backgroundColor: '#4F8EF7',
+                            borderRadius: 4,
+                            barPercentage: 0.5
+                        }]
+                    },
+                    options: {
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: { callback: value => value }
+                            },
+                            x: { ticks: { font: { size: 10 } } }
+                        },
+                        maintainAspectRatio: false
+                    }
+                });
+            }, 100);
+        }
+
+        // Khi trang tải xong, hiển thị bảng đúng dữ liệu mẫu
+        window.addEventListener('DOMContentLoaded', updateTable);
+    </script>
 </body>
+
 </html>
